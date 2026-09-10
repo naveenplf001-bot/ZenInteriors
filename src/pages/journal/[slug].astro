@@ -5,13 +5,26 @@ import type { GetStaticPaths } from 'astro';
 
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/ui/Container.astro';
+import Eyebrow from '@components/ui/Eyebrow.astro';
 import Reveal from '@components/ui/Reveal.astro';
+import Button from '@components/ui/Button.astro';
+import SplitHeading from '@components/ui/SplitHeading.astro';
 import ProjectCard from '@components/projects/ProjectCard.astro';
 import CTASection from '@components/sections/CTASection.astro';
 
 import { getArticles, getProjects } from '@lib/content';
 import { articleSchema, breadcrumbSchema } from '@lib/seo';
-import { formatDate } from '@lib/format';
+import { formatDate, readingTime } from '@lib/format';
+
+/**
+ * The article template.
+ *
+ * Reading comfort outranks decoration here. Everything above the body is
+ * staged — a dark header band with the cover photograph lifted up across its
+ * lower edge — and then the page hands over to a single narrow column of
+ * text and stops interrupting it. The body stays at the reading measure with
+ * `.prose-zen` doing all of the work.
+ */
 
 export const getStaticPaths = (async () => {
   const articles = await getArticles();
@@ -22,16 +35,55 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { article } = Astro.props;
-const { title, excerpt, category, cover, coverAlt, publishedAt, author, relatedProjects } =
-  article.data;
+const {
+  title,
+  excerpt,
+  category,
+  cover,
+  coverAlt,
+  publishedAt,
+  updatedAt,
+  author,
+  relatedProjects,
+} = article.data;
 
 const { Content } = await render(article);
+
+const minutes = readingTime(article.body ?? '');
 
 // Resolve the related project references against the published project list.
 const projects = await getProjects();
 const related = relatedProjects
   .map((ref) => projects.find((project) => project.id === ref.id))
   .filter((project): project is (typeof projects)[number] => Boolean(project));
+
+/*
+  Adjacent articles, in published order. Not wrapped: the newest article has
+  nothing newer, and pretending otherwise sends the reader in a circle.
+*/
+const articles = await getArticles();
+const position = articles.findIndex((entry) => entry.id === article.id);
+const newer = position > 0 ? articles[position - 1] : undefined;
+const older =
+  position > -1 && position < articles.length - 1 ? articles[position + 1] : undefined;
+
+/*
+  One related project reads better as a wide editorial frame than as a lone
+  portrait card stranded in a three-column grid.
+*/
+const relatedSolo = related.length === 1;
+const relatedGrid = relatedSolo
+  ? 'lg:grid-cols-2'
+  : related.length === 2
+    ? 'sm:grid-cols-2'
+    : 'sm:grid-cols-2 lg:grid-cols-3';
+
+const meta = [
+  { label: 'Published', value: formatDate(publishedAt), time: publishedAt },
+  ...(updatedAt ? [{ label: 'Updated', value: formatDate(updatedAt), time: updatedAt }] : []),
+  { label: 'Written by', value: author, time: undefined },
+  { label: 'Reading time', value: `${minutes} min`, time: undefined },
+];
 
 const path = `/journal/${article.id}`;
 
@@ -59,61 +111,180 @@ const schema = [
   schema={schema}
 >
   <article>
-    <Container width="reading" class="pt-[clamp(3rem,6vw,6rem)]">
-      <Reveal variant="fade">
-        <p class="label text-teal/55">
-          Journal &nbsp;/&nbsp; {category}
-        </p>
-      </Reveal>
+    {/*
+      Dark header band. The padding at the bottom is deliberately deep: the
+      cover photograph is pulled back up into it below, so this measurement
+      and the negative margin on the figure are a pair.
+    */}
+    <header class="bg-teal text-ivory on-dark">
+      <Container width="narrow" class="pt-[clamp(2.5rem,5vw,4.5rem)] pb-[clamp(6.5rem,13vw,12rem)]">
+        <div data-reveal-group>
+          <Reveal variant="fade">
+            <a
+              href="/journal"
+              class="label inline-flex items-center gap-3 text-brass-soft transition-colors duration-300 hover:text-ivory focus-visible:outline-offset-4"
+            >
+              <span aria-hidden="true">&#8592;</span>
+              The Journal
+            </a>
+          </Reveal>
 
-      <Reveal delay={70}>
-        <h1 class="mt-7 font-display text-display-lg text-teal">{title}</h1>
-      </Reveal>
+          <Reveal variant="fade" class="mt-9">
+            <Eyebrow tone="inverse">{category}</Eyebrow>
+          </Reveal>
 
-      <Reveal variant="fade" delay={140}>
-        <div class="mt-9 flex flex-wrap items-center gap-5 border-t border-beige pt-6">
-          <time datetime={publishedAt.toISOString()} class="label text-teal/45">
-            {formatDate(publishedAt)}
-          </time>
-          <span class="h-px w-6 bg-beige" aria-hidden="true"></span>
-          <span class="label text-teal/45">{author}</span>
+          <Reveal>
+            <h1 class="mt-6 max-w-[18ch] font-display text-display-xl text-ivory">{title}</h1>
+          </Reveal>
+
+          <Reveal>
+            <p class="lede mt-8 max-w-[54ch] text-ivory/65">{excerpt}</p>
+          </Reveal>
+
+          <Reveal variant="fade" class="mt-[--stack-md]">
+            <dl class="grid grid-cols-2 gap-x-8 gap-y-6 border-t border-ivory/15 pt-7 sm:grid-cols-4">
+              {
+                meta.map((item) => (
+                  <div>
+                    <dt class="label text-ivory/35">{item.label}</dt>
+                    <dd class="mt-2.5 text-small text-ivory/80">
+                      {item.time ? (
+                        <time datetime={item.time.toISOString()}>{item.value}</time>
+                      ) : (
+                        item.value
+                      )}
+                    </dd>
+                  </div>
+                ))
+              }
+            </dl>
+          </Reveal>
         </div>
-      </Reveal>
-    </Container>
+      </Container>
+    </header>
 
-    <Container class="mt-14">
+    {/*
+      The cover straddles the boundary between the header and the page, which
+      is what stops the article opening as two stacked blocks. Portrait on a
+      phone, landscape once there is width for it.
+    */}
+    <Container class="relative z-[1] mt-[calc(clamp(4.5rem,9.5vw,9rem)*-1)]">
       <Reveal variant="clip">
-        <div class="aspect-[16/9] overflow-hidden rounded-zen bg-stone">
-          <Image
-            src={cover}
-            alt={coverAlt}
-            widths={[768, 1280, 1600, 2000]}
-            sizes="92vw"
-            loading="eager"
-            fetchpriority="high"
-            class="h-full w-full object-cover"
-          />
-        </div>
+        <figure class="overflow-hidden rounded-zen bg-stone">
+          <div class="aspect-[4/5] sm:aspect-[3/2] lg:aspect-[16/9]">
+            <Image
+              src={cover}
+              alt={coverAlt}
+              widths={[768, 1280, 1600, 2000]}
+              sizes="92vw"
+              loading="eager"
+              fetchpriority="high"
+              class="h-full w-full object-cover"
+            />
+          </div>
+        </figure>
       </Reveal>
     </Container>
 
-    <Container width="reading" class="pt-[clamp(3.5rem,7vw,6rem)] pb-[--section-y]">
+    {/* ---------------------------------------------------------------- body */}
+    <Container width="reading" class="pt-[--section-y-tight] pb-[--section-y-tight]">
       <div class="prose-zen">
         <Content />
       </div>
+
+      <footer class="mt-[--stack-lg] border-t border-beige pt-7">
+        <div class="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
+          <p class="label text-teal/45">{author}</p>
+          <p class="label text-teal/30">
+            {category} &nbsp;·&nbsp; <time datetime={publishedAt.toISOString()}>
+              {formatDate(publishedAt)}
+            </time>
+          </p>
+        </div>
+      </footer>
     </Container>
+
+    {/* ------------------------------------------------------ newer / older */}
+    {
+      (newer || older) && (
+        <nav aria-label="More from the journal" class="bg-ivory">
+          <Container class="pb-[--section-y]">
+            <div class="grid border-t border-beige sm:grid-cols-2" data-reveal-group>
+              {newer && (
+                <Reveal variant="fade" class="border-b border-beige sm:border-b-0 sm:border-r sm:pr-10">
+                  <a
+                    href={`/journal/${newer.id}`}
+                    class="group block py-8 focus-visible:outline-offset-4 sm:py-10"
+                  >
+                    <p class="label flex items-center gap-3 text-teal/40 transition-colors duration-300 group-hover:text-brass">
+                      <span aria-hidden="true">&#8592;</span>
+                      Newer Article
+                    </p>
+                    <p class="mt-4 max-w-[24ch] font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass">
+                      {newer.data.title}
+                    </p>
+                  </a>
+                </Reveal>
+              )}
+
+              {older && (
+                <Reveal
+                  variant="fade"
+                  class:list={[
+                    'sm:pl-10',
+                    newer ? '' : 'sm:col-start-2 sm:border-l sm:border-beige',
+                  ]}
+                >
+                  <a
+                    href={`/journal/${older.id}`}
+                    class="group block py-8 focus-visible:outline-offset-4 sm:py-10 sm:text-right"
+                  >
+                    <p class="label flex items-center gap-3 text-teal/40 transition-colors duration-300 group-hover:text-brass sm:justify-end">
+                      Older Article
+                      <span aria-hidden="true">&#8594;</span>
+                    </p>
+                    <p class="mt-4 max-w-[24ch] font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass sm:ml-auto">
+                      {older.data.title}
+                    </p>
+                  </a>
+                </Reveal>
+              )}
+            </div>
+          </Container>
+        </nav>
+      )
+    }
   </article>
 
+  {/* ------------------------------------------------------------- related */}
   {
     related.length > 0 && (
       <section class="bg-stone">
         <Container class="section-tight">
-          <Reveal variant="fade">
-            <p class="label text-teal/55">Related Work</p>
-          </Reveal>
-          <div class="mt-12 grid gap-16 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3">
-            {related.map((project, index) => (
-              <ProjectCard project={project} delay={index * 90} />
+          <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-8" data-reveal-group>
+            <div>
+              <Reveal variant="fade">
+                <Eyebrow>Related Work</Eyebrow>
+              </Reveal>
+
+              <SplitHeading
+                lines={['The same thinking,', 'already built.']}
+                accentFrom={1}
+                class="mt-6"
+              />
+            </div>
+
+            <Reveal variant="fade">
+              <Button href="/projects" variant="link">All Projects</Button>
+            </Reveal>
+          </div>
+
+          <div
+            class:list={['mt-[--stack-lg] grid gap-x-10 gap-y-14', relatedGrid]}
+            data-reveal-group
+          >
+            {related.map((project) => (
+              <ProjectCard project={project} ratio={relatedSolo ? 'wide' : 'portrait'} />
             ))}
           </div>
         </Container>

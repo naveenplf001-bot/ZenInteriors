@@ -14,13 +14,39 @@ import { projectTypes, investmentBands } from '@data/enquiry';
  *   2. The same enquiry is posted to Netlify Forms. This is the safety net.
  *      A deep link only pre-fills a message — if the visitor closes the tab
  *      without pressing Send, the lead is gone unless it was captured here.
+ *
+ * Visually the form is a document, not a widget: hairline underlines rather
+ * than boxes, numbered fieldsets, and one solid action at the end. Error and
+ * focus states are carried on the underline, which is the only part of a
+ * field that has any weight to give.
  */
 
-const fieldClass =
-  'w-full rounded-zen border-0 border-b border-beige bg-transparent px-0 py-3.5 text-charcoal placeholder:text-charcoal/35 focus:border-teal focus:outline-none focus:ring-0 transition-colors duration-300';
+/*
+  Shared field shape. `aria-invalid` is what the script sets, so the error
+  colour is driven by the same attribute assistive technology reads rather
+  than by a second, parallel class.
+*/
+const fieldBase = [
+  'w-full rounded-none border-0 border-b border-beige bg-transparent px-0 py-3.5',
+  'text-charcoal transition-colors duration-300',
+  'hover:border-charcoal/40',
+  'focus:border-teal focus:outline-none focus:ring-0',
+  'aria-[invalid=true]:border-brass',
+].join(' ');
 
-const labelClass = 'label text-teal/60';
-const errorClass = 'mt-2 text-[0.8125rem] text-brass hidden';
+const inputClass = `${fieldBase} mt-1.5 placeholder:text-charcoal/30`;
+
+/*
+  The select keeps its own chevron, so the wrapper carries the spacing and the
+  control itself sits flush. `invalid:` greys the placeholder option until a
+  real choice is made — the form is novalidate, which suppresses browser
+  validation UI but not the pseudo-class.
+*/
+const selectClass = `${fieldBase} appearance-none pr-8 invalid:text-charcoal/40`;
+
+const labelClass = 'label block text-teal/60';
+const errorClass = 'mt-2.5 text-micro text-brass hidden';
+const legendClass = 'label p-0 text-teal';
 ---
 
 <form
@@ -44,14 +70,20 @@ const errorClass = 'mt-2 text-[0.8125rem] text-brass hidden';
     </label>
   </p>
 
-  <fieldset class="border-0 p-0">
-    <legend class="label mb-8 text-teal">Your Details</legend>
+  <fieldset class="m-0 border-0 p-0">
+    <legend class={legendClass}>
+      <span class="inline-flex items-center gap-3">
+        <span class="text-brass" aria-hidden="true">01</span>
+        <span class="h-px w-8 bg-brass/40" aria-hidden="true"></span>
+        Your Details
+      </span>
+    </legend>
 
-    <div class="grid gap-8 sm:grid-cols-2">
+    <div class="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2">
       <div>
         <label class={labelClass} for="name">Full Name</label>
         <input
-          class={fieldClass}
+          class={inputClass}
           id="name"
           name="name"
           type="text"
@@ -65,7 +97,7 @@ const errorClass = 'mt-2 text-[0.8125rem] text-brass hidden';
       <div>
         <label class={labelClass} for="phone">Phone</label>
         <input
-          class={fieldClass}
+          class={inputClass}
           id="phone"
           name="phone"
           type="tel"
@@ -80,7 +112,7 @@ const errorClass = 'mt-2 text-[0.8125rem] text-brass hidden';
       <div>
         <label class={labelClass} for="email">Email</label>
         <input
-          class={fieldClass}
+          class={inputClass}
           id="email"
           name="email"
           type="email"
@@ -94,7 +126,7 @@ const errorClass = 'mt-2 text-[0.8125rem] text-brass hidden';
       <div>
         <label class={labelClass} for="location">Project Location</label>
         <input
-          class={fieldClass}
+          class={inputClass}
           id="location"
           name="location"
           type="text"
@@ -106,16 +138,36 @@ const errorClass = 'mt-2 text-[0.8125rem] text-brass hidden';
     </div>
   </fieldset>
 
-  <fieldset class="mt-16 border-0 p-0">
-    <legend class="label mb-8 text-teal">Your Project</legend>
+  <fieldset class="m-0 mt-[--stack-lg] border-0 p-0">
+    <legend class={legendClass}>
+      <span class="inline-flex items-center gap-3">
+        <span class="text-brass" aria-hidden="true">02</span>
+        <span class="h-px w-8 bg-brass/40" aria-hidden="true"></span>
+        Your Project
+      </span>
+    </legend>
 
-    <div class="grid gap-8 sm:grid-cols-2">
+    <div class="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2">
       <div>
         <label class={labelClass} for="projectType">Project Type</label>
-        <select class={fieldClass} id="projectType" name="projectType" required>
-          <option value="">Please select</option>
-          {projectTypes.map((type) => <option value={type}>{type}</option>)}
-        </select>
+        <div class="relative mt-1.5">
+          <select class={selectClass} id="projectType" name="projectType" required>
+            <option value="">Please select</option>
+            {projectTypes.map((type) => <option value={type}>{type}</option>)}
+          </select>
+          <span
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center text-teal/45"
+            aria-hidden="true"
+          >
+            <svg width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true">
+              <path
+                d="M1 1L5.5 5.5L10 1"
+                stroke="currentColor"
+                stroke-width="1"
+                stroke-linecap="square"></path>
+            </svg>
+          </span>
+        </div>
         <p class={errorClass} data-error-for="projectType" role="alert"></p>
       </div>
 
@@ -125,18 +177,35 @@ const errorClass = 'mt-2 text-[0.8125rem] text-brass hidden';
           communicate the level the studio operates at.
         */}
         <label class={labelClass} for="investment">Estimated Project Investment</label>
-        <select class={fieldClass} id="investment" name="investment" required>
-          <option value="">Please select</option>
-          {investmentBands.map((band) => <option value={band}>{band}</option>)}
-        </select>
+        <div class="relative mt-1.5">
+          <select class={selectClass} id="investment" name="investment" required>
+            <option value="">Please select</option>
+            {investmentBands.map((band) => <option value={band}>{band}</option>)}
+          </select>
+          <span
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center text-teal/45"
+            aria-hidden="true"
+          >
+            <svg width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true">
+              <path
+                d="M1 1L5.5 5.5L10 1"
+                stroke="currentColor"
+                stroke-width="1"
+                stroke-linecap="square"></path>
+            </svg>
+          </span>
+        </div>
         <p class={errorClass} data-error-for="investment" role="alert"></p>
       </div>
     </div>
 
     <div class="mt-8">
-      <label class={labelClass} for="requirements">Requirements</label>
+      <label class={labelClass} for="requirements">
+        Requirements
+        <span class="ml-3 text-teal/35">Optional</span>
+      </label>
       <textarea
-        class={`${fieldClass} resize-y`}
+        class={`${inputClass} resize-y`}
         id="requirements"
         name="requirements"
         rows="4"
@@ -146,48 +215,58 @@ const errorClass = 'mt-2 text-[0.8125rem] text-brass hidden';
     </div>
   </fieldset>
 
-  <div class="mt-14 flex flex-wrap items-center gap-8">
-    <button
-      type="submit"
-      data-enquiry-submit
-      class="label inline-flex items-center gap-3 rounded-zen bg-teal px-9 py-4.5 text-ivory transition-colors duration-300 hover:bg-teal-deep disabled:pointer-events-none disabled:opacity-50"
-    >
-      <span data-submit-label>Send Enquiry</span>
-      <span aria-hidden="true">&#8594;</span>
-    </button>
+  <div class="mt-[--stack-lg] border-t border-beige pt-8">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between sm:gap-10">
+      <button
+        type="submit"
+        data-enquiry-submit
+        class="group label inline-flex shrink-0 items-center justify-center gap-3 rounded-zen bg-teal px-9 py-4 text-ivory transition-colors duration-300 hover:bg-teal-deep disabled:pointer-events-none disabled:opacity-50"
+      >
+        <span data-submit-label>Send Enquiry</span>
+        <span
+          class="inline-block transition-transform duration-[--duration-base] ease-[--ease-zen] group-hover:translate-x-1"
+          aria-hidden="true">&#8594;</span
+        >
+      </button>
 
-    <p class="max-w-[34ch] text-[0.8125rem] text-charcoal/55">
-      Submitting opens WhatsApp with your enquiry ready to send. You stay in control of
-      the message.
+      <p class="max-w-[36ch] text-micro text-charcoal/55">
+        Submitting opens WhatsApp with your enquiry ready to send. You stay in control of
+        the message.
+      </p>
+    </div>
+
+    <p class="mt-6 hidden border-l border-brass pl-4 text-micro text-brass" data-form-error role="alert">
     </p>
   </div>
-
-  <p
-    class="mt-8 hidden text-[0.8125rem] text-brass"
-    data-form-error
-    role="alert"
-  >
-  </p>
 </form>
 
 {/* Success state. Replaces the form once the enquiry has been handed over. */}
-<div data-enquiry-success hidden class="border-t border-beige pt-12">
-  <p class="label text-teal/55">Enquiry Received</p>
+<div data-enquiry-success hidden class="border-t border-brass/40 pt-10">
+  <p class="label text-brass">Enquiry Received</p>
   <h3 class="mt-6 font-display text-display-md text-teal">Thank you. We have it.</h3>
   <p class="lede mt-6 max-w-[46ch] text-charcoal/72">
     WhatsApp should have opened with your enquiry ready to send. If it did not, use the
     link below and we will pick it up from there.
   </p>
+
   <a
     href="#"
     data-enquiry-fallback
     target="_blank"
     rel="noopener noreferrer"
-    class="label mt-8 inline-flex items-center gap-3 border-b border-beige py-1 text-teal transition-colors duration-300 hover:border-brass hover:text-brass"
+    class="group label mt-8 inline-flex items-center gap-3 border-b border-beige py-1 text-teal transition-colors duration-300 hover:border-brass hover:text-brass"
   >
     Open WhatsApp
-    <span aria-hidden="true">&#8594;</span>
+    <span
+      class="inline-block transition-transform duration-[--duration-base] ease-[--ease-zen] group-hover:translate-x-1"
+      aria-hidden="true">&#8594;</span
+    >
   </a>
+
+  <p class="mt-10 border-t border-beige pt-6 text-micro text-charcoal/55">
+    We will follow up personally on the details you sent. Nothing you shared goes any
+    further than the studio.
+  </p>
 </div>
 
 <script>

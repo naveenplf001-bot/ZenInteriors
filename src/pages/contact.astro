@@ -3,20 +3,58 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/ui/Container.astro';
 import Reveal from '@components/ui/Reveal.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
+import Button from '@components/ui/Button.astro';
+import SplitHeading from '@components/ui/SplitHeading.astro';
+import SectionNumber from '@components/ui/SectionNumber.astro';
 import EnquiryForm from '@components/forms/EnquiryForm.astro';
+
 import { site } from '@config/site';
 import { breadcrumbSchema } from '@lib/seo';
+import { buildDirectWhatsAppUrl } from '@lib/whatsapp';
 
 /**
  * The contact page is a qualification mechanism, not a contact form.
  * It reads as an invitation into a private consultation.
+ *
+ * Three movements: the invitation, the enquiry itself sitting on an ivory
+ * panel with the process stated beside it, and a quieter way in for anyone
+ * who would rather speak than write. The form is never the first thing on
+ * the page, because at this value a form is the last step of a conversation
+ * rather than the first.
  */
+
+const whatsappHref = buildDirectWhatsAppUrl();
+const regionNames = site.regions.map((region) => region.name).join(' · ');
+
+const directLines = [
+  { label: 'Telephone', value: site.contact.phone, href: site.contact.phoneHref },
+  { label: 'Email', value: site.contact.email, href: `mailto:${site.contact.email}` },
+  { label: 'WhatsApp', value: 'Message the studio', href: whatsappHref, external: true },
+];
 
 const schema = [
   breadcrumbSchema([
     { name: 'Home', path: '/' },
     { name: 'Contact', path: '/contact' },
   ]),
+];
+
+const steps = [
+  {
+    index: '01',
+    title: 'A personal reply',
+    body: 'Your enquiry is read by the studio, not a call centre. You will hear back from the people who would actually run the project.',
+  },
+  {
+    index: '02',
+    title: 'A conversation',
+    body: 'We talk about how you want to live in the space, the timeline you are working to and the level of finish you have in mind.',
+  },
+  {
+    index: '03',
+    title: 'An honest answer',
+    body: 'If we are the right studio for the project we say so and set out the next step. If we are not, we say that too.',
+  },
 ];
 ---
 
@@ -25,73 +63,159 @@ const schema = [
   description="Begin a private consultation with Zen Interior. Premium interior design, global sourcing and turnkey execution across Tamil Nadu and Bangalore."
   schema={schema}
 >
+  {/* ------------------------------------------------------- invitation */}
   <section class="bg-ivory">
-    <Container class="pt-[clamp(3.5rem,7vw,7rem)] pb-[--section-y]">
-      <div class="grid gap-16 lg:grid-cols-12 lg:gap-20">
-        <div class="lg:col-span-5">
+    <Container class="pt-[clamp(3.5rem,7vw,7rem)] pb-[--section-y-tight]">
+      <div
+        class="grid gap-y-12 md:grid-cols-12 md:gap-x-10 lg:items-end lg:gap-x-16"
+        data-reveal-group
+      >
+        <div class="md:col-span-12 lg:col-span-7">
           <Reveal variant="fade">
             <Eyebrow>Private Project Enquiry</Eyebrow>
           </Reveal>
 
-          <Reveal delay={70}>
-            <h1 class="mt-7 font-display text-display-lg text-teal">
-              Let&#8217;s create a space worth coming home to.
-            </h1>
-          </Reveal>
+          <SplitHeading
+            as="h1"
+            size="xl"
+            lines={['A private', 'consultation begins', 'with a conversation.']}
+            accentFrom={2}
+            class="mt-7"
+          />
 
-          <Reveal delay={140}>
-            <p class="lede mt-9 text-charcoal/75">
+          <Reveal>
+            <p class="lede mt-[--stack-md] max-w-[50ch] text-charcoal/75">
               Tell us what you are planning. We will come back to you personally, and we
               will tell you honestly whether we are the right studio for the project.
             </p>
           </Reveal>
-
-          <div class="mt-14">
-            <Reveal variant="fade" delay={200}>
-              <p class="label text-teal/55">Direct</p>
-            </Reveal>
-            <dl class="mt-6">
-              <Reveal delay={220}>
-                <div class="flex items-baseline justify-between gap-6 border-t border-beige py-5">
-                  <dt class="label text-teal/45">Telephone</dt>
-                  <dd>
-                    <a
-                      href={site.contact.phoneHref}
-                      class="text-small text-teal transition-colors duration-300 hover:text-brass"
-                    >
-                      {site.contact.phone}
-                    </a>
-                  </dd>
-                </div>
-              </Reveal>
-              <Reveal delay={260}>
-                <div class="flex items-baseline justify-between gap-6 border-t border-beige py-5">
-                  <dt class="label text-teal/45">Email</dt>
-                  <dd>
-                    <a
-                      href={`mailto:${site.contact.email}`}
-                      class="text-small text-teal transition-colors duration-300 hover:text-brass"
-                    >
-                      {site.contact.email}
-                    </a>
-                  </dd>
-                </div>
-              </Reveal>
-              <Reveal delay={300}>
-                <div class="flex items-baseline justify-between gap-6 border-t border-beige py-5">
-                  <dt class="label text-teal/45">Regions</dt>
-                  <dd class="text-small text-charcoal/70">
-                    {site.regions.map((region) => region.name).join(' · ')}
-                  </dd>
-                </div>
-              </Reveal>
-            </dl>
-          </div>
         </div>
 
-        <div class="lg:col-span-6 lg:col-start-7">
-          <Reveal delay={100}>
-            <EnquiryForm />
+        {/* Direct lines sit beside the invitation rather than under the form,
+            where they would only be found by someone who had already decided
+            not to fill it in. */}
+        <div class="md:col-span-12 lg:col-span-4 lg:col-start-9">
+          <Reveal variant="fade">
+            <p class="label text-teal/50">Direct</p>
+          </Reveal>
+
+          <dl class="mt-6 sm:grid sm:grid-cols-3 sm:gap-x-8 lg:block">
+            {
+              directLines.map((line) => (
+                <Reveal>
+                  <div class="border-t border-beige py-5 lg:flex lg:items-baseline lg:justify-between lg:gap-6">
+                    <dt class="label text-teal/45">{line.label}</dt>
+                    <dd class="mt-2 lg:mt-0">
+                      <a
+                        href={line.href}
+                        {...line.external
+                          ? { target: '_blank', rel: 'noopener noreferrer' }
+                          : {}}
+                        class="text-small text-teal transition-colors duration-300 hover:text-brass"
+                      >
+                        {line.value}
+                      </a>
+                    </dd>
+                  </div>
+                </Reveal>
+              ))
+            }
+          </dl>
+
+          <Reveal variant="fade">
+            <p class="label mt-6 text-teal/40">{regionNames}</p>
+          </Reveal>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  {/* -------------------------------------------- the enquiry and process */}
+  <section class="bg-stone">
+    <Container class="section">
+      <div class="grid gap-y-14 md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
+        <div class="md:col-span-12 lg:col-span-4" data-reveal-group>
+          <Reveal variant="fade">
+            <SectionNumber value="01" />
+          </Reveal>
+          <Reveal variant="fade" class="mt-4">
+            <Eyebrow>What Happens Next</Eyebrow>
+          </Reveal>
+          <SplitHeading lines={['Three steps,', 'no obligation.']} size="md" class="mt-6" />
+
+          <ol class="mt-[--stack-md] grid gap-x-10 sm:grid-cols-3 lg:block">
+            {
+              steps.map((step) => (
+                <Reveal as="li">
+                  <div class="border-t border-beige py-6">
+                    <span class="label text-brass" aria-hidden="true">
+                      {step.index}
+                    </span>
+                    <h3 class="mt-4 font-display text-display-sm text-teal">{step.title}</h3>
+                    <p class="mt-2.5 max-w-[40ch] text-micro text-charcoal/65">{step.body}</p>
+                  </div>
+                </Reveal>
+              ))
+            }
+          </ol>
+
+          <Reveal variant="fade">
+            <p class="mt-8 max-w-[40ch] text-micro text-charcoal/55">
+              Everything you send stays between you and the studio. We do not share enquiry
+              details, and we do not add you to a mailing list.
+            </p>
+          </Reveal>
+        </div>
+
+        {/* The form sits on its own ivory field so it reads as a document
+            handed across a table rather than as a web form on a page. */}
+        <div class="md:col-span-12 lg:col-span-7 lg:col-start-6">
+          <Reveal>
+            <div
+              class="rounded-zen-lg bg-ivory px-[clamp(1.25rem,3.5vw,3rem)] py-[clamp(2rem,4vw,3.5rem)]"
+            >
+              <EnquiryForm />
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  {/* ------------------------------------------------- speak, don't type */}
+  <section class="bg-teal text-ivory on-dark">
+    <Container class="section-tight">
+      <div
+        class="grid gap-y-10 md:grid-cols-12 md:items-end md:gap-x-10 lg:gap-x-16"
+        data-reveal-group
+      >
+        <div class="md:col-span-7">
+          <Reveal variant="fade">
+            <Eyebrow tone="inverse">Prefer to Speak</Eyebrow>
+          </Reveal>
+          <SplitHeading
+            lines={['Some projects start', 'with a phone call.']}
+            tone="dark"
+            accentFrom={1}
+            class="mt-6"
+          />
+        </div>
+
+        <div class="md:col-span-5 md:col-start-8">
+          <Reveal>
+            <p class="lede text-ivory/65">
+              If it is easier to talk it through, call the studio directly or send a
+              message. No brief required.
+            </p>
+          </Reveal>
+
+          <Reveal class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <Button href={site.contact.phoneHref} variant="primary" tone="dark">
+              {site.contact.phone}
+            </Button>
+            <Button href={whatsappHref} variant="link" tone="dark" external>
+              WhatsApp the Studio
+            </Button>
           </Reveal>
         </div>
       </div>

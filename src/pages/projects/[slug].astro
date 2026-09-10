@@ -6,11 +6,14 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/ui/Container.astro';
 import Reveal from '@components/ui/Reveal.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
+import SplitHeading from '@components/ui/SplitHeading.astro';
+import SectionNumber from '@components/ui/SectionNumber.astro';
 import ProjectGallery from '@components/projects/ProjectGallery.astro';
 import CTASection from '@components/sections/CTASection.astro';
 
 import { getProjects, siblings } from '@lib/content';
 import { breadcrumbSchema } from '@lib/seo';
+import { counter, pad } from '@lib/format';
 
 /**
  * Every project is a real, statically generated HTML page at a readable URL.
@@ -46,6 +49,9 @@ const {
 const allProjects = await getProjects();
 const { previous, next } = siblings(allProjects, project.id);
 
+const position = allProjects.findIndex((entry) => entry.id === project.id) + 1;
+const total = allProjects.length;
+
 const meta = [
   { label: 'Location', value: `${location}, ${region}` },
   { label: 'Typology', value: category },
@@ -62,6 +68,14 @@ const schema = [
 ];
 
 const paragraphs = (text: string) => text.trim().split(/\n{2,}/);
+
+/*
+  The opening paragraph of the concept is set as a statement and the rest run
+  as a pair of shorter columns. A single 60ch column three paragraphs deep is
+  the thing that makes a project page read like a brochure.
+*/
+const [conceptOpening, ...conceptRest] = paragraphs(concept);
+const executionParagraphs = paragraphs(execution);
 ---
 
 <BaseLayout
@@ -88,52 +102,168 @@ const paragraphs = (text: string) => text.trim().split(/\n{2,}/);
     >
     </div>
 
-    <Container class="relative z-[1] pt-[--header-h] pb-[clamp(3rem,7vh,6rem)]">
-      <p class="label text-brass-soft">
-        {location} &nbsp;/&nbsp; {category}
-      </p>
-      <h1 class="mt-7 max-w-[16ch] font-display text-display-xl text-ivory">
-        {title}
-      </h1>
-      <p class="lede mt-8 max-w-[52ch] text-ivory/75">{summary}</p>
+    <Container class="relative z-[1] pt-[--header-h] pb-[clamp(2.5rem,6vh,5rem)]">
+      <div class="grid gap-y-8 lg:grid-cols-12 lg:items-end lg:gap-x-16">
+        <div class="lg:col-span-8">
+          <p class="label text-brass-soft">
+            {location} &nbsp;/&nbsp; {category}
+          </p>
+          <SplitHeading
+            as="h1"
+            size="xl"
+            lines={[title]}
+            tone="dark"
+            class="mt-7 max-w-[16ch]"
+          />
+          <p class="lede mt-8 max-w-[50ch] text-ivory/75">{summary}</p>
+        </div>
+
+        {/* Sheet number, bottom right, the way a drawing is marked up. */}
+        <div class="lg:col-span-3 lg:col-start-10 lg:text-right">
+          <p class="label text-ivory/45">{counter(position, total)}</p>
+          <p class="mt-3 font-display text-display-sm text-ivory/80">{year}</p>
+        </div>
+      </div>
     </Container>
   </section>
 
   {/* Project facts, read as a specification rather than a paragraph. */}
   <section class="bg-stone">
     <Container class="section-tight">
-      <dl class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-        {
-          meta.map((item, index) => (
-            <Reveal delay={index * 60}>
-              <div class="border-t border-beige pt-6">
-                <dt class="label text-teal/50">{item.label}</dt>
-                <dd class="mt-3 font-display text-display-sm text-teal">{item.value}</dd>
-              </div>
-            </Reveal>
-          ))
-        }
-      </dl>
+      <div class="grid gap-y-[--stack-md] md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
+        <div class="md:col-span-3">
+          <Reveal variant="fade">
+            <Eyebrow>Project Record</Eyebrow>
+          </Reveal>
+        </div>
+
+        <dl
+          class="grid gap-x-8 gap-y-8 sm:grid-cols-2 md:col-span-9 lg:grid-cols-4 lg:gap-x-10"
+          data-reveal-group="70"
+        >
+          {
+            meta.map((item) => (
+              <Reveal variant="fade">
+                <div class="border-t border-beige pt-5">
+                  <dt class="label text-teal/50">{item.label}</dt>
+                  <dd class="mt-3 text-small text-charcoal/78 lg:text-body">{item.value}</dd>
+                </div>
+              </Reveal>
+            ))
+          }
+        </dl>
+      </div>
     </Container>
   </section>
 
-  {/* Concept */}
+  {/* ---------------------------------------------------------------- concept */}
   <section class="bg-ivory">
     <Container class="section">
-      <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
-        <div class="lg:col-span-4">
+      <div class="grid gap-y-[--stack-md] md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
+        <div class="md:col-span-4" data-reveal-group>
           <Reveal variant="fade">
-            <Eyebrow index="01">The Concept</Eyebrow>
+            <SectionNumber value="01" />
+          </Reveal>
+          <Reveal variant="fade" class="mt-4">
+            <Eyebrow>The Concept</Eyebrow>
+          </Reveal>
+          <SplitHeading lines={['The design', 'intent.']} size="lg" class="mt-6" />
+        </div>
+
+        <div class="md:col-span-8 lg:col-span-7 lg:col-start-6">
+          {
+            conceptOpening && (
+              <Reveal>
+                <p class="max-w-[30ch] font-display text-display-md text-teal">
+                  {conceptOpening}
+                </p>
+              </Reveal>
+            )
+          }
+
+          {
+            conceptRest.length > 0 && (
+              <div
+                class="mt-[--stack-md] grid gap-x-10 gap-y-7 border-t border-beige pt-[--stack-md] md:grid-cols-2"
+                data-reveal-group="70"
+              >
+                {conceptRest.map((paragraph) => (
+                  <Reveal>
+                    <p class="max-w-[46ch] text-body text-charcoal/78">{paragraph}</p>
+                  </Reveal>
+                ))}
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <ProjectGallery gallery={gallery} title={title} index="02" />
+
+  {/* ------------------------------------------------------- material palette */}
+  <section class="bg-teal text-ivory on-dark">
+    <Container class="section">
+      <div class="grid gap-y-[--stack-lg] md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
+        <div class="md:col-span-5 lg:col-span-4" data-reveal-group>
+          <Reveal variant="fade">
+            <SectionNumber value="03" tone="dark" />
+          </Reveal>
+          <Reveal variant="fade" class="mt-4">
+            <Eyebrow tone="inverse">Material Palette</Eyebrow>
+          </Reveal>
+          <SplitHeading lines={['What the room', 'is made of.']} tone="dark" class="mt-6" />
+          <Reveal variant="fade">
+            <p class="label mt-8 text-ivory/35">
+              {pad(materials.length)} Specified
+            </p>
           </Reveal>
         </div>
-        <div class="lg:col-span-7">
+
+        <ul
+          class="md:col-span-7 md:grid md:grid-cols-2 md:gap-x-10 lg:col-span-7 lg:col-start-6"
+          data-reveal-group="70"
+        >
           {
-            paragraphs(concept).map((paragraph, index) => (
-              <Reveal delay={index * 70}>
+            materials.map((material, index) => (
+              <Reveal as="li" variant="fade">
+                <div class="flex gap-5 border-t border-ivory/15 py-6">
+                  <span class="label shrink-0 pt-1 text-brass-soft/70" aria-hidden="true">
+                    {pad(index + 1)}
+                  </span>
+                  <p class="max-w-[38ch] text-small text-ivory/72">{material}</p>
+                </div>
+              </Reveal>
+            ))
+          }
+        </ul>
+      </div>
+    </Container>
+  </section>
+
+  {/* -------------------------------------------------------------- execution */}
+  <section class="bg-ivory">
+    <Container class="section">
+      <div class="grid gap-y-[--stack-lg] md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
+        <div class="md:col-span-4" data-reveal-group>
+          <Reveal variant="fade">
+            <SectionNumber value="04" />
+          </Reveal>
+          <Reveal variant="fade" class="mt-4">
+            <Eyebrow>Execution</Eyebrow>
+          </Reveal>
+          <SplitHeading lines={['Delivered', 'on site.']} size="lg" class="mt-6" />
+        </div>
+
+        <div class="md:col-span-8 lg:col-span-4 lg:col-start-6" data-reveal-group="70">
+          {
+            executionParagraphs.map((paragraph, index) => (
+              <Reveal>
                 <p
                   class:list={[
-                    'max-w-[62ch] text-charcoal/78',
-                    index === 0 ? 'lede text-charcoal/85' : 'mt-7',
+                    'max-w-[46ch] text-charcoal/78',
+                    index === 0 ? 'lede text-charcoal/85' : 'mt-6 text-body',
                   ]}
                 >
                   {paragraph}
@@ -142,90 +272,92 @@ const paragraphs = (text: string) => text.trim().split(/\n{2,}/);
             ))
           }
         </div>
-      </div>
-    </Container>
-  </section>
 
-  <ProjectGallery gallery={gallery} title={title} />
-
-  {/* Materials and execution */}
-  <section class="bg-teal text-ivory on-dark">
-    <Container class="section">
-      <div class="grid gap-16 lg:grid-cols-12 lg:gap-16">
-        <div class="lg:col-span-5">
-          <Reveal variant="fade">
-            <Eyebrow index="02" tone="inverse">Material Palette</Eyebrow>
-          </Reveal>
-          <ul class="mt-10 flex flex-col">
-            {
-              materials.map((material, index) => (
-                <Reveal as="li" delay={index * 55}>
-                  <p class="border-t border-ivory/15 py-5 text-small text-ivory/72">
-                    {material}
-                  </p>
-                </Reveal>
-              ))
-            }
-          </ul>
-        </div>
-
-        <div class="lg:col-span-6 lg:col-start-7">
-          <Reveal variant="fade">
-            <Eyebrow index="03" tone="inverse">Execution</Eyebrow>
-          </Reveal>
-          {
-            paragraphs(execution).map((paragraph, index) => (
-              <Reveal delay={index * 70}>
-                <p class:list={['max-w-[58ch] text-ivory/72', index === 0 ? 'mt-10' : 'mt-6']}>
-                  {paragraph}
-                </p>
+        {
+          highlights.length > 0 && (
+            <div class="md:col-span-8 md:col-start-5 lg:col-span-3 lg:col-start-10">
+              <Reveal variant="fade">
+                <p class="label text-teal/45">What It Delivers</p>
               </Reveal>
-            ))
-          }
-
-          {
-            highlights.length > 0 && (
-              <ul class="mt-12">
+              <ul class="mt-6" data-reveal-group="70">
                 {highlights.map((highlight, index) => (
-                  <Reveal as="li" delay={index * 55}>
-                    <div class="flex gap-5 border-t border-ivory/15 py-5">
-                      <span class="label shrink-0 pt-1 text-brass-soft" aria-hidden="true">
-                        {String(index + 1).padStart(2, '0')}
+                  <Reveal as="li" variant="fade">
+                    <div class="flex gap-4 border-t border-beige py-5">
+                      <span class="label shrink-0 pt-1 text-brass" aria-hidden="true">
+                        {pad(index + 1)}
                       </span>
-                      <p class="text-small text-ivory/72">{highlight}</p>
+                      <p class="text-micro text-charcoal/70">{highlight}</p>
                     </div>
                   </Reveal>
                 ))}
               </ul>
-            )
-          }
-        </div>
+            </div>
+          )
+        }
       </div>
     </Container>
   </section>
 
-  {/* Adjacent projects */}
-  <section class="bg-ivory">
+  {/* ------------------------------------------------------ adjacent projects */}
+  <section class="bg-stone">
     <Container class="section-tight">
-      <div class="grid gap-10 border-t border-beige pt-10 sm:grid-cols-2">
+      <Reveal variant="fade">
+        <Eyebrow>Continue</Eyebrow>
+      </Reveal>
+
+      <div
+        class="mt-[--stack-md] grid gap-x-10 gap-y-10 sm:grid-cols-2"
+        data-reveal-group="90"
+      >
         {
           previous && (
-            <a href={`/projects/${previous.id}`} class="group">
-              <p class="label text-teal/45">Previous</p>
-              <p class="mt-3 font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass">
-                {previous.data.title}
-              </p>
-            </a>
+            <Reveal variant="fade">
+              <a
+                href={`/projects/${previous.id}`}
+                class="group block focus-visible:outline-offset-6"
+              >
+                <div class="aspect-[16/10] overflow-hidden rounded-zen bg-beige">
+                  <Image
+                    src={previous.data.cover}
+                    alt={previous.data.coverAlt}
+                    widths={[480, 800, 1200]}
+                    sizes="(min-width: 640px) 46vw, 92vw"
+                    loading="lazy"
+                    class="h-full w-full object-cover transition-transform duration-[1200ms] ease-[--ease-zen] group-hover:scale-[1.04]"
+                  />
+                </div>
+                <p class="label mt-6 text-teal/45">Previous</p>
+                <p class="mt-3 font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass">
+                  {previous.data.title}
+                </p>
+              </a>
+            </Reveal>
           )
         }
+
         {
           next && (
-            <a href={`/projects/${next.id}`} class="group sm:text-right">
-              <p class="label text-teal/45">Next</p>
-              <p class="mt-3 font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass">
-                {next.data.title}
-              </p>
-            </a>
+            <Reveal variant="fade">
+              <a
+                href={`/projects/${next.id}`}
+                class="group block focus-visible:outline-offset-6 sm:text-right"
+              >
+                <div class="aspect-[16/10] overflow-hidden rounded-zen bg-beige">
+                  <Image
+                    src={next.data.cover}
+                    alt={next.data.coverAlt}
+                    widths={[480, 800, 1200]}
+                    sizes="(min-width: 640px) 46vw, 92vw"
+                    loading="lazy"
+                    class="h-full w-full object-cover transition-transform duration-[1200ms] ease-[--ease-zen] group-hover:scale-[1.04]"
+                  />
+                </div>
+                <p class="label mt-6 text-teal/45">Next</p>
+                <p class="mt-3 font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass">
+                  {next.data.title}
+                </p>
+              </a>
+            </Reveal>
           )
         }
       </div>

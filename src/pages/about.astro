@@ -5,19 +5,32 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/ui/Container.astro';
 import Reveal from '@components/ui/Reveal.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
+import Button from '@components/ui/Button.astro';
+import SplitHeading from '@components/ui/SplitHeading.astro';
+import SectionNumber from '@components/ui/SectionNumber.astro';
 import CTASection from '@components/sections/CTASection.astro';
 
 import { capabilities } from '@data/services';
 import { site } from '@config/site';
 import { breadcrumbSchema } from '@lib/seo';
+import { pad } from '@lib/format';
 
 import aboutHero from '@/assets/images/about/hero.jpg';
 import craftImage from '@/assets/images/about/craft.jpg';
+import thresholdImage from '@/assets/images/projects/the-emerald-residence/01-threshold.jpg';
+import livingVolumeImage from '@/assets/images/projects/the-quiet-villa/01-living-volume.jpg';
+import kitchenDetailImage from '@/assets/images/projects/the-slate-apartment/02-kitchen-detail.jpg';
 
 /**
  * The About page opens with philosophy, not incorporation history.
  * "Zen Interior was established in 20XX" is brochure language and it answers
  * a question nobody asked first.
+ *
+ * Structurally this page has one job beyond describing the studio: it has to
+ * make a client who is about to commit somewhere between forty lakh and fifty
+ * crore feel that the commitment is safe. Trust is built here by rhythm —
+ * philosophy, evidence, photography, process — rather than by longer columns
+ * of prose. Every claim below is either verifiable or a statement of method.
  */
 
 const commitments = [
@@ -43,6 +56,44 @@ const commitments = [
   },
 ];
 
+/*
+  The assurance band. Derived from the studio's own data rather than typed by
+  hand, so the page cannot drift out of agreement with the footer, the contact
+  page or the capability list.
+*/
+const cities = site.regions.flatMap((region) => region.cities);
+const regionNames = site.regions.map((region) => region.name).join(' · ');
+
+const assurances = [
+  {
+    value: 'One',
+    label: 'Accountable studio',
+    note: 'Design, sourcing and execution held by a single team from first drawing to handover.',
+  },
+  {
+    value: pad(capabilities.length),
+    label: 'Disciplines in-house',
+    note: 'Spatial planning, joinery, surfaces, lighting, sourcing and site supervision.',
+  },
+  {
+    value: pad(site.regions.length),
+    label: 'States covered',
+    note: cities.join(' · '),
+  },
+  {
+    value: 'Turnkey',
+    label: 'Single point of delivery',
+    note: 'From first drawing through sourcing and site to snagging and handover.',
+  },
+];
+
+/* The three checks behind the finishing claim. Short, scannable, specific. */
+const checks = [
+  { title: 'Dry-fitted joinery', note: 'Assembled and corrected in the workshop, never on your floor.' },
+  { title: 'Stone numbered at origin', note: 'Vein continuity survives the crate, the truck and the wall.' },
+  { title: 'Reveals set first', note: 'Shadow gaps are built into the substrate, not cut in afterwards.' },
+];
+
 const schema = [
   breadcrumbSchema([
     { name: 'Home', path: '/' },
@@ -56,21 +107,40 @@ const schema = [
   description="Zen Interior combines international product sourcing with local design expertise and professional execution to create distinctive, premium spaces across Tamil Nadu and Bangalore."
   schema={schema}
 >
-  {/* Philosophy first. */}
+  {/* ------------------------------------------------- philosophy first */}
   <section class="bg-ivory">
-    <Container class="pt-[clamp(3.5rem,7vw,7rem)] pb-[clamp(3rem,6vw,6rem)]">
-      <Reveal variant="fade">
-        <Eyebrow>The Studio</Eyebrow>
-      </Reveal>
-      <Reveal delay={70}>
-        <h1 class="mt-8 max-w-[20ch] font-display text-display-xl text-teal">
-          We believe exceptional interiors are not assembled. They are considered.
-        </h1>
-      </Reveal>
+    <Container class="pt-[clamp(3.5rem,7vw,7rem)] pb-[--section-y-tight]">
+      <div class="grid gap-y-10 md:grid-cols-12 md:gap-x-10 lg:gap-x-16" data-reveal-group>
+        <div class="md:col-span-8">
+          <Reveal variant="fade">
+            <Eyebrow>The Studio</Eyebrow>
+          </Reveal>
+
+          <SplitHeading
+            as="h1"
+            size="xl"
+            lines={['Exceptional interiors', 'are not assembled.', 'They are considered.']}
+            accentFrom={2}
+            class="mt-7"
+          />
+        </div>
+
+        <div class="md:col-span-4 md:self-end">
+          <Reveal>
+            <p class="lede text-charcoal/72">
+              A design and execution studio for people who intend to live with the result
+              for a very long time.
+            </p>
+          </Reveal>
+          <Reveal variant="fade">
+            <p class="label mt-7 text-teal/45">{regionNames}</p>
+          </Reveal>
+        </div>
+      </div>
     </Container>
 
     <Reveal variant="clip">
-      <div class="bleed aspect-[4/5] overflow-hidden bg-stone sm:aspect-[21/9]">
+      <div class="bleed aspect-[4/5] overflow-hidden bg-stone sm:aspect-[16/9] lg:aspect-[21/9]">
         <Image
           src={aboutHero}
           alt="Double-height lounge with a floating stone stair and a brass ring pendant above the seating"
@@ -82,27 +152,37 @@ const schema = [
         />
       </div>
     </Reveal>
+
+    <Container class="pt-5">
+      <p class="label text-teal/40">Design &nbsp;·&nbsp; Sourcing &nbsp;·&nbsp; Execution</p>
+    </Container>
   </section>
 
-  {/* Who we are */}
+  {/* ------------------------------------------------------- who we are */}
   <section class="bg-ivory">
     <Container class="section">
-      <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
-        <div class="lg:col-span-4">
+      <div class="grid items-start gap-y-12 md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
+        <div class="md:col-span-7 lg:col-span-6" data-reveal-group>
           <Reveal variant="fade">
-            <Eyebrow index="01">Who We Are</Eyebrow>
+            <SectionNumber value="01" />
           </Reveal>
-        </div>
-        <div class="lg:col-span-7">
+
+          <Reveal variant="fade" class="mt-4">
+            <Eyebrow>Who We Are</Eyebrow>
+          </Reveal>
+
+          <SplitHeading lines={['Three capabilities,', 'one accountable studio.']} class="mt-6" />
+
           <Reveal>
-            <p class="lede text-charcoal/85">
+            <p class="lede mt-[--stack-md] text-charcoal/80">
               Zen Interior is an interior design and execution studio working across Tamil
               Nadu and Bangalore, for clients who intend to live with the result for a very
               long time.
             </p>
           </Reveal>
-          <Reveal delay={80}>
-            <p class="mt-7 max-w-[62ch] text-charcoal/75">
+
+          <Reveal>
+            <p class="mt-7 max-w-[58ch] text-charcoal/72">
               We combine international product sourcing with local design expertise and
               professional execution. That combination is deliberate. Access to unusual
               materials is worth very little without the judgement to place them and the
@@ -110,87 +190,38 @@ const schema = [
               capabilities from three separate parties.
             </p>
           </Reveal>
-          <Reveal delay={140}>
-            <p class="mt-7 max-w-[62ch] text-charcoal/75">
+
+          <Reveal>
+            <p class="mt-7 max-w-[58ch] text-charcoal/72">
               We hold all three. It is slower to build a studio that way and it is the only
               way we know to be accountable for a finished space rather than a delivered
               component.
             </p>
           </Reveal>
-        </div>
-      </div>
-    </Container>
-  </section>
 
-  {/* Commitments */}
-  <section class="bg-stone">
-    <Container class="section">
-      <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
-        <div class="lg:col-span-4">
-          <Reveal variant="fade">
-            <Eyebrow index="02">How We Work</Eyebrow>
-          </Reveal>
-          <Reveal delay={70}>
-            <h2 class="mt-7 font-display text-display-md text-teal">
-              Four commitments we do not negotiate.
-            </h2>
+          <Reveal variant="fade" class="mt-9">
+            <Button href="/projects" variant="link">See the Work</Button>
           </Reveal>
         </div>
 
-        <div class="lg:col-span-7 lg:col-start-6">
-          {
-            commitments.map((item, index) => (
-              <Reveal delay={index * 70}>
-                <div class="grid grid-cols-[3rem_1fr] gap-6 border-t border-beige py-8 sm:grid-cols-[5rem_1fr] sm:gap-10">
-                  <span class="label pt-1.5 text-brass" aria-hidden="true">
-                    {item.index}
-                  </span>
-                  <div>
-                    <h3 class="font-display text-display-sm text-teal">{item.title}</h3>
-                    <p class="mt-3.5 max-w-[52ch] text-small text-charcoal/70">{item.body}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))
-          }
-        </div>
-      </div>
-    </Container>
-  </section>
-
-  {/* Craft image and quality statement */}
-  <section class="bg-ivory">
-    <Container class="section">
-      <div class="grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-16">
-        <div class="lg:col-span-7">
+        <div class="md:col-span-5 lg:col-span-5 lg:col-start-8">
           <Reveal variant="clip">
-            <div class="aspect-[3/2] overflow-hidden rounded-zen bg-stone">
+            <div class="aspect-[4/5] overflow-hidden rounded-zen bg-stone sm:aspect-[3/2] md:aspect-[4/5]">
               <Image
-                src={craftImage}
-                alt="Entrance with full-height lacquer wardrobes, a walnut console and a fluted black panel"
-                widths={[640, 1024, 1400, 1800]}
-                sizes="(min-width: 1024px) 58vw, 92vw"
+                src={thresholdImage}
+                alt="Shaped timber archway framing the dining and tea area beyond"
+                widths={[480, 800, 1200, 1600]}
+                sizes="(min-width: 1024px) 38vw, (min-width: 768px) 42vw, 92vw"
                 loading="lazy"
                 class="h-full w-full object-cover"
               />
             </div>
           </Reveal>
-        </div>
-        <div class="lg:col-span-5">
-          <Reveal variant="fade">
-            <Eyebrow index="03">Quality</Eyebrow>
-          </Reveal>
-          <Reveal delay={70}>
-            <h2 class="mt-7 font-display text-display-md text-teal">
-              The detail you notice last.
-            </h2>
-          </Reveal>
-          <Reveal delay={140}>
-            <p class="mt-8 max-w-[48ch] text-charcoal/75">
-              Joinery is dry-fitted before it reaches a house. Stone is numbered at origin
-              so vein continuity survives shipping. Reveals are set before the surfaces they
-              frame, never cut in afterwards. None of this is visible in a photograph, and
-              all of it is the reason one interior still holds five years later.
+
+          <Reveal variant="fade" class="mt-5">
+            <p class="text-micro text-charcoal/50">
+              Openings, joinery and light resolved as one composition rather than three
+              separate trades.
             </p>
           </Reveal>
         </div>
@@ -198,30 +229,20 @@ const schema = [
     </Container>
   </section>
 
-  {/* Capabilities */}
-  <section class="bg-teal text-ivory on-dark">
-    <Container class="section">
-      <Reveal variant="fade">
-        <Eyebrow index="04" tone="inverse">Capabilities</Eyebrow>
-      </Reveal>
-      <Reveal delay={70}>
-        <h2 class="mt-7 max-w-[18ch] font-display text-display-lg text-ivory">
-          Complete environments, not components.
-        </h2>
-      </Reveal>
-
-      <div class="mt-16 grid gap-x-14 gap-y-2 md:grid-cols-2 lg:grid-cols-3">
+  {/* -------------------------------------------------- assurance band */}
+  <section class="bg-ink text-ivory on-dark">
+    <Container class="section-tight">
+      <div
+        class="grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4"
+        data-reveal-group="70"
+      >
         {
-          capabilities.map((capability, index) => (
-            <Reveal delay={(index % 3) * 70}>
-              <div class="border-t border-ivory/15 py-8">
-                <p class="label text-brass-soft" aria-hidden="true">
-                  {capability.index}
-                </p>
-                <h3 class="mt-4 font-display text-display-sm text-ivory">
-                  {capability.title}
-                </h3>
-                <p class="mt-3.5 text-small text-ivory/65">{capability.description}</p>
+          assurances.map((item) => (
+            <Reveal>
+              <div class="border-t border-ivory/15 pt-6">
+                <p class="font-display text-display-lg text-ivory">{item.value}</p>
+                <p class="label mt-4">{item.label}</p>
+                <p class="mt-3 max-w-[30ch] text-micro text-ivory/55">{item.note}</p>
               </div>
             </Reveal>
           ))
@@ -230,33 +251,218 @@ const schema = [
     </Container>
   </section>
 
-  {/* Geography */}
+  {/* ------------------------------------------------------ commitments */}
   <section class="bg-stone">
-    <Container class="section-tight">
-      <div class="grid gap-12 lg:grid-cols-12 lg:items-end lg:gap-16">
-        <div class="lg:col-span-6">
+    <Container class="pt-[--section-y] pb-[--section-y-tight]">
+      <div class="grid gap-y-12 md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
+        <div class="md:col-span-12 lg:col-span-4" data-reveal-group>
           <Reveal variant="fade">
-            <Eyebrow index="05">Where We Work</Eyebrow>
+            <SectionNumber value="02" />
           </Reveal>
-          <Reveal delay={70}>
-            <h2 class="mt-7 font-display text-display-md text-teal">
-              Across South India.
-            </h2>
+          <Reveal variant="fade" class="mt-4">
+            <Eyebrow>How We Work</Eyebrow>
           </Reveal>
-          <Reveal delay={140}>
-            <p class="mt-8 max-w-[46ch] text-charcoal/72">
-              We undertake projects throughout Tamil Nadu and Bangalore, with our own team
-              supervising each site rather than a subcontracted local crew.
+          <SplitHeading lines={['Four commitments', 'we do not negotiate.']} class="mt-6" />
+          <Reveal>
+            <p class="mt-[--stack-md] max-w-[42ch] text-small text-charcoal/70">
+              None of these is a service line. They are the conditions under which we agree
+              to take a project on at all.
             </p>
           </Reveal>
         </div>
-        <div class="lg:col-span-5 lg:col-start-8">
+
+        <div
+          class="grid gap-x-10 sm:grid-cols-2 md:col-span-12 lg:col-span-7 lg:col-start-6"
+          data-reveal-group="70"
+        >
           {
-            site.regions.map((region, index) => (
-              <Reveal delay={160 + index * 70}>
-                <div class="border-t border-beige py-6">
+            commitments.map((item) => (
+              <Reveal>
+                <div class="h-full border-t border-beige py-8">
+                  <span class="label text-brass" aria-hidden="true">
+                    {item.index}
+                  </span>
+                  <h3 class="mt-5 font-display text-display-sm text-teal">{item.title}</h3>
+                  <p class="mt-3.5 max-w-[46ch] text-small text-charcoal/70">{item.body}</p>
+                </div>
+              </Reveal>
+            ))
+          }
+        </div>
+      </div>
+    </Container>
+
+    {/* A wide frame closes the stone band, so the page never runs two text
+        sections back to back. */}
+    <Reveal variant="clip" class="mt-[--section-y-tight] block">
+      <div class="bleed aspect-[4/3] overflow-hidden bg-beige sm:aspect-[16/9] lg:aspect-[21/9]">
+        <Image
+          src={livingVolumeImage}
+          alt="Open living and dining volume under layered architectural lighting"
+          widths={[768, 1280, 1600, 2000, 2400]}
+          sizes="100vw"
+          loading="lazy"
+          class="h-full w-full object-cover"
+        />
+      </div>
+    </Reveal>
+  </section>
+
+  {/* ---------------------------------------------------------- quality */}
+  <section class="bg-ivory">
+    <Container class="section">
+      <div class="grid items-center gap-y-12 md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
+        <div class="md:col-span-6 lg:col-span-6">
+          <Reveal variant="clip">
+            <div class="aspect-[4/5] overflow-hidden rounded-zen bg-stone sm:aspect-[3/2] md:aspect-[4/5]">
+              <Image
+                src={craftImage}
+                alt="Entrance with full-height lacquer wardrobes, a walnut console and a fluted black panel"
+                widths={[640, 1024, 1400, 1800]}
+                sizes="(min-width: 768px) 46vw, 92vw"
+                loading="lazy"
+                class="h-full w-full object-cover"
+              />
+            </div>
+          </Reveal>
+
+          {/* Offset second frame. Deliberately narrower and pulled in from the
+              left, so the pair reads as a spread rather than as two cards. */}
+          <Reveal variant="clip" class="mt-6 hidden w-[62%] lg:ml-auto lg:block">
+            <div class="aspect-[3/2] overflow-hidden rounded-zen bg-stone">
+              <Image
+                src={kitchenDetailImage}
+                alt="Kitchen detail showing the handleless drawer line and undercabinet lighting"
+                widths={[400, 640, 900]}
+                sizes="28vw"
+                loading="lazy"
+                class="h-full w-full object-cover"
+              />
+            </div>
+          </Reveal>
+        </div>
+
+        <div class="md:col-span-6 lg:col-span-5 lg:col-start-8" data-reveal-group>
+          <Reveal variant="fade">
+            <SectionNumber value="03" />
+          </Reveal>
+          <Reveal variant="fade" class="mt-4">
+            <Eyebrow>Quality</Eyebrow>
+          </Reveal>
+
+          <SplitHeading lines={['The detail', 'you notice last.']} class="mt-6" />
+
+          <Reveal>
+            <p class="lede mt-[--stack-md] text-charcoal/75">
+              None of this is visible in a photograph, and all of it is the reason one
+              interior still holds five years later.
+            </p>
+          </Reveal>
+
+          <dl class="mt-[--stack-md]">
+            {
+              checks.map((check) => (
+                <Reveal>
+                  <div class="border-t border-beige py-5">
+                    <dt class="label text-teal">{check.title}</dt>
+                    <dd class="mt-2.5 max-w-[42ch] text-micro text-charcoal/65">{check.note}</dd>
+                  </div>
+                </Reveal>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  {/* ----------------------------------------------------- capabilities */}
+  <section class="bg-teal text-ivory on-dark">
+    <Container class="section">
+      <div
+        class="grid gap-y-10 md:grid-cols-12 md:items-end md:gap-x-10 lg:gap-x-16"
+        data-reveal-group
+      >
+        <div class="md:col-span-7">
+          <Reveal variant="fade">
+            <SectionNumber value="04" tone="dark" />
+          </Reveal>
+          <Reveal variant="fade" class="mt-4">
+            <Eyebrow tone="inverse">Capabilities</Eyebrow>
+          </Reveal>
+          <SplitHeading
+            lines={['Complete environments,', 'not components.']}
+            tone="dark"
+            accentFrom={1}
+            class="mt-6"
+          />
+        </div>
+
+        <div class="md:col-span-5 md:col-start-8">
+          <Reveal>
+            <p class="lede text-ivory/65">
+              Stated broadly and never itemised. A client at this level is not buying a
+              modular kitchen; they are buying a resolved space.
+            </p>
+          </Reveal>
+        </div>
+      </div>
+
+      <div
+        class="mt-[--stack-lg] grid gap-x-10 gap-y-2 sm:grid-cols-2 lg:grid-cols-3"
+        data-reveal-group="70"
+      >
+        {
+          capabilities.map((capability) => (
+            <Reveal>
+              <div class="h-full border-t border-ivory/15 py-8">
+                <p class="label" aria-hidden="true">
+                  {capability.index}
+                </p>
+                <h3 class="mt-4 font-display text-display-sm text-ivory">
+                  {capability.title}
+                </h3>
+                <p class="mt-3.5 max-w-[42ch] text-small text-ivory/65">
+                  {capability.description}
+                </p>
+              </div>
+            </Reveal>
+          ))
+        }
+      </div>
+    </Container>
+  </section>
+
+  {/* -------------------------------------------------------- geography */}
+  <section class="bg-stone">
+    <Container class="section-tight">
+      <div
+        class="grid gap-y-10 md:grid-cols-12 md:items-end md:gap-x-10 lg:gap-x-16"
+        data-reveal-group
+      >
+        <div class="md:col-span-6">
+          <Reveal variant="fade">
+            <SectionNumber value="05" />
+          </Reveal>
+          <Reveal variant="fade" class="mt-4">
+            <Eyebrow>Where We Work</Eyebrow>
+          </Reveal>
+          <SplitHeading lines={['Across', 'South India.']} class="mt-6" />
+          <Reveal>
+            <p class="lede mt-[--stack-md] max-w-[44ch] text-charcoal/72">
+              Our own team supervises each site rather than a subcontracted local crew, which
+              is what makes the standard portable.
+            </p>
+          </Reveal>
+        </div>
+
+        <div class="grid gap-x-10 sm:grid-cols-2 md:col-span-5 md:col-start-8">
+          {
+            site.regions.map((region) => (
+              <Reveal>
+                <div class="border-t border-beige py-5">
                   <p class="label text-teal">{region.name}</p>
-                  <p class="mt-3 text-small text-charcoal/65">{region.cities.join(' · ')}</p>
+                  <p class="mt-2.5 text-micro text-charcoal/60">{region.cities.join(' · ')}</p>
                 </div>
               </Reveal>
             ))
