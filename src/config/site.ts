@@ -15,21 +15,19 @@ export const site = {
     'Zen Interior is a premium interior design, global sourcing and turnkey execution studio creating considered residential and commercial spaces across Tamil Nadu and Bangalore.',
 
   /**
-   * REQUIRED CONFIGURATION — replace before the site is shown to the client.
-   * International format, digits only, no plus sign, no spaces.
-   * The value below is a placeholder and will not reach a real inbox.
+   * WhatsApp business number. International format, digits only, no plus
+   * sign and no spaces, because wa.me rejects anything else.
    */
   whatsapp: {
-    number: '910000000000',
-    placeholder: true,
+    number: '919600785286',
+    placeholder: false,
   },
 
-  /** REQUIRED CONFIGURATION — replace with real business contact details. */
   contact: {
-    phone: '+91 00000 00000',
-    phoneHref: 'tel:+910000000000',
-    email: 'studio@zeninterior.in',
-    placeholder: true,
+    phone: '+91 96007 85286',
+    phoneHref: 'tel:+919600785286',
+    email: 'naveenplf001@gmail.com',
+    placeholder: false,
   },
 
   /**
@@ -50,8 +48,11 @@ export const site = {
   /** Only add a channel once it genuinely exists. Empty is better than dead. */
   social: [] as Array<{ label: string; href: string }>,
 
-  /** Default social preview image, replaced once brand photography lands. */
+  /** Default social preview. Overridden per page where a better frame exists. */
   defaultOgImage: '/brand/og-default.jpg',
+
+  /** Shown beside the navigation on very wide screens. */
+  positioning: ['Global materials.', 'Bespoke spaces.', 'Exceptional execution.'],
 
   locale: 'en_IN',
   language: 'en-IN',

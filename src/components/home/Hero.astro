@@ -1,7 +1,6 @@
 ---
 import { getImage } from 'astro:assets';
 import Container from '@components/ui/Container.astro';
-import Button from '@components/ui/Button.astro';
 
 import heroDesktop from '@/assets/images/home/hero.jpg';
 import heroMobile from '@/assets/images/home/hero-mobile.jpg';
@@ -9,17 +8,20 @@ import heroMobile from '@/assets/images/home/hero-mobile.jpg';
 /**
  * The hero.
  *
+ * Layout follows the supplied reference: eyebrow, a two-line headline with the
+ * second line in brass, a short positioning line, a paragraph, the service
+ * geography, two actions, and a capability bar pinned to the bottom edge.
+ *
  * Art directed with a real <picture> element rather than two images hidden by
  * CSS, because a display:none image is still fetched by most browsers. The
- * mobile crop is a separate portrait frame — a 16:9 cinematic composition
- * squeezed into a 390px screen loses the composition entirely.
+ * mobile crop is a separate 4:5 frame, since a 2.3:1 composition squeezed into
+ * a 390px screen loses the room entirely.
  *
- * This is the one asset on the site that is preloaded and decoded eagerly.
- * Everything else on the page loads lazily.
+ * This is the only asset on the site decoded eagerly. Everything else is lazy.
  */
 
-const widthsDesktop = [1280, 1600, 1920, 2400];
-const widthsMobile = [640, 828, 1080, 1200];
+const widthsDesktop = [1280, 1600, 1920];
+const widthsMobile = [640, 828, 1080, 1310];
 
 const [desktopAvif, desktopWebp, desktopJpeg, mobileAvif, mobileWebp, mobileJpeg] =
   await Promise.all([
@@ -31,10 +33,29 @@ const [desktopAvif, desktopWebp, desktopJpeg, mobileAvif, mobileWebp, mobileJpeg
     getImage({ src: heroMobile, widths: widthsMobile, format: 'jpeg' }),
   ]);
 
-const headline = ['Interiors', 'Crafted Beyond', 'Expectations.'];
+/**
+ * Capability bar.
+ *
+ * Three claims, stated broadly. This is positioning copy tied to this one
+ * section, so it lives here rather than in the content layer.
+ */
+const capabilities = [
+  {
+    title: 'Global Sourcing',
+    body: 'Curated products from international markets',
+  },
+  {
+    title: 'Turnkey Execution',
+    body: 'From concept through to final finishing',
+  },
+  {
+    title: 'Residential and Commercial',
+    body: 'Homes, villas, offices and workspaces',
+  },
+];
 ---
 
-<section class="relative flex min-h-[100svh] flex-col justify-end overflow-hidden bg-ink">
+<section class="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink">
   <picture>
     <source
       media="(min-width: 768px)"
@@ -72,80 +93,198 @@ const headline = ['Interiors', 'Crafted Beyond', 'Expectations.'];
   </picture>
 
   {/*
-    A single soft scrim, weighted to the bottom where the type sits. Not a
-    decorative gradient across the whole frame.
+    Two scrims rather than one. The photograph is warm and bright on the right,
+    so the horizontal pass buys legibility behind the type while leaving the
+    sunset intact, and the vertical pass anchors the capability bar.
   */}
   <div
-    class="absolute inset-0 bg-gradient-to-t from-ink/78 via-ink/28 to-ink/38"
+    class="absolute inset-0 bg-gradient-to-r from-ink/88 via-ink/45 to-ink/5"
+    aria-hidden="true"
+  >
+  </div>
+  <div
+    class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-ink/45"
     aria-hidden="true"
   >
   </div>
 
-  <Container class="relative z-[1] pb-[clamp(3.5rem,8vh,7rem)] pt-[--header-h]">
-    <p class="label text-brass-soft" data-hero-line style="--line: 0">
-      Tamil Nadu &nbsp;·&nbsp; Bangalore
+  {/*
+    A plain container element rather than the Container component, so the
+    short-viewport rules at the bottom of this file can reach it. Astro scopes
+    styles per component, and a class passed into a child component is scoped
+    to that child, not to this one.
+  */}
+  <div
+    class="hero-content container-zen relative z-[1] flex flex-1 flex-col justify-end pt-[calc(var(--header-h)+3rem)] pb-14 lg:pb-16"
+  >
+    <p class="label flex flex-wrap items-center gap-3 text-brass-soft" data-hero-line style="--line: 0">
+      <span>Zen Interior</span>
+      <span class="opacity-50" aria-hidden="true">&#183;</span>
+      <span>Design &nbsp;|&nbsp; Furnish &nbsp;|&nbsp; Execute</span>
     </p>
 
-    <h1 class="mt-8 font-display text-display-xl text-ivory">
-      {
-        headline.map((line, index) => (
-          <span class="block overflow-hidden">
-            <span class="block" data-hero-line style={`--line: ${index + 1}`}>
-              {line}
-            </span>
-          </span>
-        ))
-      }
+    <h1
+      class="hero-headline mt-7 font-display text-[clamp(2.5rem,1.2rem+5.2vw,5.75rem)] leading-[0.98] tracking-[-0.022em] font-light"
+    >
+      <span class="block overflow-hidden">
+        <span class="block text-ivory" data-hero-line style="--line: 1">Interiors Crafted</span>
+      </span>
+      <span class="block overflow-hidden">
+        <span class="block text-brass-soft" data-hero-line style="--line: 2">
+          Beyond Expectations.
+        </span>
+      </span>
     </h1>
 
-    <div class="mt-10 grid gap-10 lg:grid-cols-12 lg:items-end">
-      <p
-        class="lede max-w-[46ch] text-ivory/78 lg:col-span-6"
-        data-hero-line
-        style="--line: 4"
-      >
-        Imported materials. Refined craftsmanship. Seamless execution. We create
-        sophisticated spaces designed around the way you live, work and experience
-        luxury.
-      </p>
+    <p
+      class="mt-8 font-display text-[clamp(1.25rem,1rem+0.9vw,1.75rem)] leading-snug text-ivory/90"
+      data-hero-line
+      style="--line: 3"
+    >
+      Global materials. Refined design. Meticulous execution.
+    </p>
 
-      <div
-        class="flex flex-wrap items-center gap-6 lg:col-span-6 lg:justify-end"
-        data-hero-line
-        style="--line: 5"
+    <p class="mt-6 max-w-[52ch] text-ivory/70" data-hero-line style="--line: 4">
+      We create sophisticated residential and commercial interiors by combining globally
+      sourced products, bespoke design, premium furnishings and seamless execution, all
+      under one roof.
+    </p>
+
+    <p
+      class="mt-7 flex items-center gap-3 text-small text-ivory/75"
+      data-hero-line
+      style="--line: 5"
+    >
+      <svg
+        class="h-4 w-4 shrink-0 text-brass-soft"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.1"
+        aria-hidden="true"
       >
-        <Button href="/projects" variant="primary" tone="dark" size="lg">
-          Explore Our Projects
-        </Button>
-        <Button href="/contact" variant="outline" tone="dark" size="lg">
-          Start Your Project
-        </Button>
-      </div>
+        <path d="M8 14.5s5-4.2 5-8a5 5 0 1 0-10 0c0 3.8 5 8 5 8Z" />
+        <circle cx="8" cy="6.4" r="1.8" />
+      </svg>
+      Serving discerning clients across
+      <span class="font-medium text-ivory">Tamil Nadu &amp; Bangalore</span>
+    </p>
+
+    <div class="mt-10 flex flex-wrap items-center gap-4" data-hero-line style="--line: 6">
+      {/*
+        Brass carries the single primary action here. It stays an accent
+        everywhere else: hairlines, labels and this one button. Never a
+        gradient, never a large field.
+      */}
+      <a
+        href="/projects"
+        class="label group inline-flex items-center gap-3 rounded-zen bg-brass px-8 py-4 text-ink transition-colors duration-300 hover:bg-brass-soft"
+      >
+        Explore Our Projects
+        <span
+          class="inline-block transition-transform duration-500 ease-[--ease-zen] group-hover:translate-x-1"
+          aria-hidden="true">&#8594;</span
+        >
+      </a>
+      <a
+        href="/contact"
+        class="label group inline-flex items-center gap-3 rounded-zen border border-ivory/40 px-8 py-4 text-ivory transition-colors duration-300 hover:bg-ivory hover:text-teal"
+      >
+        Start Your Project
+        <span
+          class="inline-block transition-transform duration-500 ease-[--ease-zen] group-hover:translate-x-1"
+          aria-hidden="true">&#8594;</span
+        >
+      </a>
     </div>
-  </Container>
+  </div>
+
+  {/* Capability bar, pinned to the bottom edge of the hero. */}
+  <div class="relative z-[1] border-t border-ivory/15 bg-ink/30 backdrop-blur-[3px]">
+    <Container>
+      <ul class="grid gap-x-12 gap-y-7 py-7 sm:grid-cols-3 lg:py-8">
+        {
+          capabilities.map((capability, index) => (
+            <li
+              class="flex items-start gap-4 sm:border-l sm:border-ivory/12 sm:pl-8 sm:first:border-l-0 sm:first:pl-0"
+              data-hero-line
+              style={`--line: ${7 + index}`}
+            >
+              <span class="mt-0.5 shrink-0 text-brass-soft" aria-hidden="true">
+                {index === 0 && (
+                  <svg
+                    class="h-6 w-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1"
+                  >
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M3 12h18" />
+                    <path d="M12 3c2.6 2.6 2.6 15.4 0 18-2.6-2.6-2.6-15.4 0-18Z" />
+                  </svg>
+                )}
+                {index === 1 && (
+                  <svg
+                    class="h-6 w-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1"
+                  >
+                    <path d="M5 9h14l-7 11L5 9Z" />
+                    <path d="M8 4h8l3 5H5l3-5Z" />
+                    <path d="M9 9l3 11 3-11" />
+                  </svg>
+                )}
+                {index === 2 && (
+                  <svg
+                    class="h-6 w-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1"
+                  >
+                    <path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" />
+                    <path d="M10 20v-5.5h4V20" />
+                  </svg>
+                )}
+              </span>
+              <span>
+                <span class="label block text-ivory">{capability.title}</span>
+                <span class="mt-2 block text-[0.8125rem] leading-relaxed text-ivory/60">
+                  {capability.body}
+                </span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </div>
 </section>
 
 <style>
   /*
     The hero carries the strongest motion on the site. Everything else
-    breathes. Two effects only: a very slow scale on the image and a
+    breathes. Two effects only: a very slow scale on the photograph and a
     staggered rise on the type.
   */
   @media (prefers-reduced-motion: no-preference) {
     [data-hero-image] {
-      animation: hero-scale 14s var(--ease-zen-out) forwards;
+      animation: hero-scale 16s var(--ease-zen-out) forwards;
     }
 
     [data-hero-line] {
       opacity: 0;
-      transform: translateY(1.4em);
-      animation: hero-line 1150ms var(--ease-zen-out) forwards;
-      animation-delay: calc(140ms + var(--line) * 110ms);
+      transform: translateY(1.2em);
+      animation: hero-line 1100ms var(--ease-zen-out) forwards;
+      animation-delay: calc(120ms + var(--line) * 95ms);
     }
 
     @keyframes hero-scale {
       from {
-        transform: scale(1.08);
+        transform: scale(1.07);
       }
       to {
         transform: scale(1);
@@ -157,6 +296,21 @@ const headline = ['Interiors', 'Crafted Beyond', 'Expectations.'];
         opacity: 1;
         transform: translateY(0);
       }
+    }
+  }
+
+  /*
+    Short laptop screens. Without this the capability bar is pushed below the
+    fold on a 1366x768 display, which is the most common business laptop.
+  */
+  @media (min-width: 1024px) and (max-height: 840px) {
+    .hero-content {
+      padding-top: calc(var(--header-h) + 1.25rem);
+      padding-bottom: 2.5rem;
+    }
+
+    .hero-headline {
+      font-size: clamp(2.25rem, 0.5rem + 3.6vw, 4.25rem);
     }
   }
 </style>
