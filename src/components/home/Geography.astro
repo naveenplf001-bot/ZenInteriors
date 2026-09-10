@@ -1,49 +1,169 @@
 ---
+import { Image } from 'astro:assets';
+
 import Container from '@components/ui/Container.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
 import Reveal from '@components/ui/Reveal.astro';
 import SplitHeading from '@components/ui/SplitHeading.astro';
-import SectionNumber from '@components/ui/SectionNumber.astro';
 import { site } from '@config/site';
+import { pad } from '@lib/format';
+
+import geographyBg from '@/assets/images/geography.jpg';
+
+interface Props {
+  /** Running order, which differs between the home page and the About page. */
+  index?: string;
+  lines?: string[];
+  lede?: string;
+}
+
+const {
+  index = '05',
+  lines = ['Across', 'South India.'],
+  lede = 'Our own team supervises each site rather than a subcontracted local crew, which is what makes the standard portable.',
+} = Astro.props;
 
 /**
  * Service geography.
  *
- * A statement, not a map. The cities are listed because they signal reach,
- * but no claim is made about completed work in any of them.
+ * A statement, not a map. The cities are listed because they signal reach, and
+ * no claim is made about completed work in any of them.
+ *
+ * The photograph is the ground rather than a panel beside the text. A wash runs
+ * from the left so the type sits on plaster rather than on an image, and the
+ * frame is anchored right so the relief map survives every crop. Below lg the
+ * wash covers the whole width, because at that size the text would otherwise
+ * land on the plinth.
+ *
+ * Counts are derived from site config. Nothing here is typed by hand, so the
+ * band cannot claim a city the rest of the site does not.
  */
+
+const cityCount = site.regions.reduce((total, region) => total + region.cities.length, 0);
+
+const figures = [
+  { value: pad(site.regions.length), label: 'States' },
+  { value: pad(cityCount), label: 'Cities' },
+];
+
+const belonging = ['People', 'Places', 'Spaces', 'That', 'Belong'];
 ---
 
-<section class="bg-stone">
-  <Container class="section-tight">
-    <div class="grid gap-y-10 lg:grid-cols-12 lg:items-end lg:gap-x-16" data-reveal-group>
-      <div class="lg:col-span-6">
-        <Reveal variant="fade">
-          <SectionNumber value="08" />
+<section class="relative isolate overflow-hidden bg-stone">
+  <Image
+    src={geographyBg}
+    alt=""
+    aria-hidden="true"
+    widths={[900, 1400, 2076]}
+    sizes="100vw"
+    loading="lazy"
+    class="absolute inset-0 -z-20 h-full w-full object-cover object-[78%_center] lg:object-right"
+  />
+
+  {/* Readability wash. Opaque where the type sits, clear where the relief map
+      and the plinth carry the frame. */}
+  <div
+    class="absolute inset-0 -z-10 bg-gradient-to-r from-stone via-stone/92 to-stone/60 lg:via-stone/80 lg:to-transparent"
+    aria-hidden="true"
+  >
+  </div>
+
+  <Container class="section">
+    <div class="grid gap-y-12 lg:grid-cols-12 lg:gap-x-12" data-reveal-group>
+      {/* ---------------------------------------------------- the statement */}
+      <div class="lg:col-span-5">
+        <Reveal variant="fade" class="flex items-center gap-5">
+          <span
+            class="font-display text-[clamp(2.25rem,1.7rem+1.6vw,3.25rem)] leading-none text-teal/30"
+            aria-hidden="true">{index}</span
+          >
+          <span class="h-px w-14 bg-teal/25" aria-hidden="true"></span>
         </Reveal>
-        <Reveal variant="fade" class="mt-4">
+
+        <Reveal variant="fade" class="mt-5">
           <Eyebrow>Where We Work</Eyebrow>
         </Reveal>
-        <SplitHeading lines={['Tamil Nadu', 'and Bangalore.']} class="mt-6" />
+
+        <SplitHeading lines={lines} accentFrom={1} class="mt-6" />
+
         <Reveal>
-          <p class="lede mt-[--stack-md] max-w-[44ch] text-charcoal/70">
-            Selected residences, villas, apartments and commercial spaces across South
-            India.
+          <p class="mt-(--stack-md) max-w-[38ch] text-small text-charcoal/70">{lede}</p>
+        </Reveal>
+
+        <Reveal class="mt-(--stack-md)">
+          <a href="/projects" class="group inline-flex items-center gap-5">
+            <span
+              class="label text-teal transition-colors duration-500 ease-(--ease-zen) group-hover:text-brass"
+            >
+              Explore Our Presence
+            </span>
+            <span
+              class="relative block h-px w-[clamp(3rem,6vw,6rem)] bg-teal/35 transition-all duration-500 ease-(--ease-zen) group-hover:w-[clamp(4rem,8vw,8rem)] group-hover:bg-brass"
+              aria-hidden="true"
+            >
+              <span
+                class="absolute -top-[3px] right-0 block size-[7px] rotate-45 border-t border-r border-current"
+              ></span>
+            </span>
+          </a>
+        </Reveal>
+      </div>
+
+      {/* -------------------------------------------------------- the reach */}
+      <div class="lg:col-span-4 lg:border-l lg:border-teal/15 lg:pl-12">
+        <div class="grid grid-cols-2 gap-x-8">
+          {
+            figures.map((figure) => (
+              <Reveal variant="fade">
+                <div class="flex items-baseline gap-3">
+                  <span class="font-display text-[clamp(1.875rem,1.4rem+1.4vw,2.75rem)] leading-none text-teal">
+                    {figure.value}
+                  </span>
+                  <span class="label text-teal/55">{figure.label}</span>
+                </div>
+                <span class="mt-4 block h-px w-full bg-teal/15" aria-hidden="true" />
+              </Reveal>
+            ))
+          }
+        </div>
+
+        <div class="mt-9 grid grid-cols-2 gap-x-8">
+          {
+            site.regions.map((region, position) => (
+              <Reveal
+                class:list={[position > 0 && 'border-l border-teal/12 pl-6 sm:pl-8']}
+              >
+                <p class="label text-teal/55">{region.name}</p>
+                <ul class="mt-4 flex flex-col gap-2">
+                  {region.cities.map((city) => (
+                    <li class="text-small text-charcoal/75">{city}</li>
+                  ))}
+                </ul>
+              </Reveal>
+            ))
+          }
+        </div>
+
+        <Reveal variant="fade" class="mt-10 border-t border-teal/15 pt-6">
+          <p class="label leading-[1.9] text-teal/50">
+            Rooted locally.<br />Delivering exceptionally.
           </p>
         </Reveal>
       </div>
 
-      <div class="grid gap-x-10 sm:grid-cols-2 lg:col-span-5 lg:col-start-8">
-        {
-          site.regions.map((region) => (
-            <Reveal>
-              <div class="border-t border-beige py-5">
-                <p class="label text-teal">{region.name}</p>
-                <p class="mt-2.5 text-micro text-charcoal/60">{region.cities.join(' · ')}</p>
-              </div>
-            </Reveal>
-          ))
-        }
+      {/* ------------------------------------------------------ the closing */}
+      {/* Sits over the plaster, clear of the relief map, and steps out of the
+          way entirely on narrow screens where there is no plaster to sit on. */}
+      <div class="hidden lg:col-span-3 lg:flex lg:flex-col lg:items-end lg:justify-between">
+        <Reveal variant="fade" class="text-right">
+          {belonging.map((word) => <p class="label leading-[2] text-teal/45">{word}</p>)}
+          <span class="mt-5 ml-auto block h-px w-12 bg-teal/25" aria-hidden="true"></span>
+        </Reveal>
+
+        <Reveal variant="fade" class="mt-12 flex items-center gap-4 text-right">
+          <span class="h-px w-8 shrink-0 bg-teal/25" aria-hidden="true"></span>
+          <p class="label leading-[1.9] text-teal/40">A more considered<br />tomorrow.</p>
+        </Reveal>
       </div>
     </div>
   </Container>
