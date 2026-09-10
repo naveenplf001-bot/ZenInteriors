@@ -26,20 +26,20 @@ const aspect = variant === 'feature' ? 'aspect-[16/9]' : 'aspect-[3/2]';
         alt={coverAlt}
         widths={[480, 800, 1200, 1600]}
         sizes={variant === 'feature'
-          ? '(min-width: 1024px) 66vw, 92vw'
-          : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 92vw'}
+          ? '(min-width: 1024px) 76vw, 92vw'
+          : '(min-width: 1024px) 44vw, 92vw'}
         loading="lazy"
         class="h-full w-full object-cover transition-transform duration-[1200ms] ease-[--ease-zen] group-hover:scale-[1.03]"
       />
     </div>
 
-    <p class="label mt-6 text-teal/55">
+    <p class="label mt-5 text-teal/50">
       Journal &nbsp;/&nbsp; {category}
     </p>
 
     <h3
       class:list={[
-        'mt-3 font-display text-teal',
+        'mt-2.5 font-display text-teal transition-colors duration-300 group-hover:text-brass',
         variant === 'feature' ? 'text-display-md' : 'text-display-sm',
       ]}
     >
@@ -51,13 +51,13 @@ const aspect = variant === 'feature' ? 'aspect-[16/9]' : 'aspect-[3/2]';
       It is deliberately not clamped shorter, because the whole point is that
       the reader gets far enough in to want the rest.
     */}
-    <p class="mt-4 max-w-[52ch] text-small leading-[1.75] text-charcoal/72">
+    <p class="mt-3.5 max-w-[54ch] text-micro leading-[1.8] text-charcoal/68">
       {excerpt}
     </p>
 
-    <div class="mt-6 flex items-center gap-5">
+    <div class="mt-5 flex items-center gap-5">
       <span
-        class="label inline-flex items-center gap-2.5 text-teal transition-colors duration-300 group-hover:text-brass"
+        class="label inline-flex shrink-0 items-center gap-2.5 text-teal transition-colors duration-300 group-hover:text-brass"
       >
         Read Article
         <span
@@ -65,8 +65,10 @@ const aspect = variant === 'feature' ? 'aspect-[16/9]' : 'aspect-[3/2]';
           aria-hidden="true">&#8594;</span
         >
       </span>
-      <span class="h-px flex-1 bg-beige" aria-hidden="true"></span>
-      <time datetime={publishedAt.toISOString()} class="label text-teal/40">
+      <span
+        class="h-px flex-1 bg-beige transition-colors duration-500 group-hover:bg-brass"
+        aria-hidden="true"></span>
+      <time datetime={publishedAt.toISOString()} class="label shrink-0 text-teal/35">
         {formatDate(publishedAt)}
       </time>
     </div>

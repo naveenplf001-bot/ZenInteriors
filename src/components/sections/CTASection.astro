@@ -20,32 +20,28 @@ const {
 
 <section class="bg-teal text-ivory on-dark">
   <Container class="section">
-    <div class="grid gap-14 lg:grid-cols-12 lg:items-end lg:gap-16">
-      <div class="lg:col-span-7">
+    <div class="grid gap-y-10 lg:grid-cols-12 lg:items-end lg:gap-x-16" data-reveal-group>
+      <div class="lg:col-span-6">
         <Reveal variant="fade">
           <Eyebrow tone="inverse">{eyebrow}</Eyebrow>
         </Reveal>
-        <Reveal delay={80}>
-          <h2 class="mt-7 font-display text-display-lg text-ivory">
+        <Reveal>
+          <h2 class="mt-6 max-w-[16ch] font-display text-display-lg text-ivory">
             {title}
           </h2>
         </Reveal>
       </div>
 
-      <div class="lg:col-span-5">
-        <Reveal delay={140}>
-          <p class="lede text-ivory/70">{lede}</p>
+      <div class="lg:col-span-5 lg:col-start-8">
+        <Reveal>
+          <p class="lede max-w-[46ch] text-ivory/65">{lede}</p>
         </Reveal>
-        <Reveal delay={200} class="mt-10 flex flex-wrap items-center gap-6">
-          <Button href="/contact" variant="primary" tone="dark" size="lg">
-            Start Your Project
-          </Button>
-          <Button href="/projects" variant="link" tone="dark">
-            Explore Our Projects
-          </Button>
+        <Reveal class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
+          <Button href="/contact" variant="primary" tone="dark">Start Your Project</Button>
+          <Button href="/projects" variant="link" tone="dark">Explore Our Projects</Button>
         </Reveal>
-        <Reveal variant="fade" delay={260}>
-          <p class="label mt-10 text-ivory/40">
+        <Reveal variant="fade">
+          <p class="label mt-9 text-ivory/35">
             {site.regions.map((region) => region.name).join(' · ')}
           </p>
         </Reveal>

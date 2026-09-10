@@ -18,47 +18,46 @@ const [lead, ...rest] = projects;
 ---
 
 <section class="bg-ivory">
-  <Container class="section">
-    <div class="flex flex-wrap items-end justify-between gap-8">
+  <Container class="pt-[--section-y] pb-[--section-y]">
+    <div class="flex flex-wrap items-end justify-between gap-6" data-reveal-group>
       <Reveal variant="fade">
         <Eyebrow index="02">Signature Projects</Eyebrow>
       </Reveal>
-      <Reveal variant="fade" delay={60}>
+      <Reveal variant="fade">
         <Button href="/projects" variant="link">All Projects</Button>
       </Reveal>
     </div>
-  </Container>
 
-  {
-    lead && (
-      <>
-        {/*
-          The lead project breaks the container deliberately. An architecture
-          studio shows one project at full width before it shows six in a grid.
-        */}
-        <Reveal variant="clip" class="mt-14 block">
-          <a href={`/projects/${lead.id}`} class="group block">
-            <div class="bleed aspect-[4/5] overflow-hidden bg-stone sm:aspect-[16/9]">
-              <Image
-                src={lead.data.cover}
-                alt={lead.data.coverAlt}
-                widths={[768, 1280, 1600, 2000, 2400]}
-                sizes="100vw"
-                loading="lazy"
-                class="h-full w-full object-cover transition-transform duration-[1400ms] ease-[--ease-zen] group-hover:scale-[1.03]"
-              />
-            </div>
+    {
+      lead && (
+        <>
+          {/*
+            The lead project runs the full width of the container. An
+            architecture studio shows one project properly before it shows
+            six in a grid.
+          */}
+          <Reveal variant="clip" class="mt-[--stack-lg] block">
+            <a href={`/projects/${lead.id}`} class="group block focus-visible:outline-offset-8">
+              <div class="aspect-[4/5] overflow-hidden rounded-zen bg-stone sm:aspect-[16/9] lg:aspect-[21/9]">
+                <Image
+                  src={lead.data.cover}
+                  alt={lead.data.coverAlt}
+                  widths={[768, 1280, 1600, 1920]}
+                  sizes="(min-width: 1440px) 1360px, 92vw"
+                  loading="lazy"
+                  class="h-full w-full object-cover transition-transform duration-[1400ms] ease-[--ease-zen] group-hover:scale-[1.03]"
+                />
+              </div>
 
-            <Container class="mt-8">
-              <div class="flex flex-wrap items-end justify-between gap-8">
+              <div class="mt-6 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
                 <div>
                   <p class="label text-teal/55">
                     {lead.data.location} &nbsp;/&nbsp; {lead.data.category}
                   </p>
-                  <h3 class="mt-4 font-display text-display-md text-teal">
+                  <h3 class="mt-3 font-display text-display-md text-teal transition-colors duration-300 group-hover:text-brass">
                     {lead.data.title}
                   </h3>
-                  <p class="mt-4 max-w-[54ch] text-small text-charcoal/70">
+                  <p class="mt-3 max-w-[58ch] text-small text-charcoal/65">
                     {lead.data.summary}
                   </p>
                 </div>
@@ -66,26 +65,26 @@ const [lead, ...rest] = projects;
                   {counter(1, total)}
                 </p>
               </div>
-            </Container>
-          </a>
-        </Reveal>
+            </a>
+          </Reveal>
 
-        {rest.length > 0 && (
-          <Container class="mt-24 lg:mt-32">
-            {/*
-              Offset composition rather than a uniform row, so the second and
-              third projects do not read as a catalogue.
-            */}
-            <div class="grid gap-16 sm:grid-cols-2 sm:gap-10 lg:gap-16">
+          {rest.length > 0 && (
+            <div class="mt-[--section-y-tight] grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:gap-x-14">
               {rest.map((project, index) => (
-                <div class:list={[index % 2 === 1 && 'sm:mt-24 lg:mt-32']}>
+                /*
+                  Offset composition rather than a uniform row, so the second
+                  and third projects do not read as a catalogue. The offset is
+                  dropped below the two-column breakpoint, where it would only
+                  create a stray gap.
+                */
+                <div class:list={[index % 2 === 1 && 'sm:mt-16 lg:mt-24']}>
                   <ProjectCard project={project} index={index + 2} delay={index * 90} />
                 </div>
               ))}
             </div>
-          </Container>
-        )}
-      </>
-    )
-  }
+          )}
+        </>
+      )
+    }
+  </Container>
 </section>

@@ -115,7 +115,7 @@ const capabilities = [
     to that child, not to this one.
   */}
   <div
-    class="hero-content container-zen relative z-[1] flex flex-1 flex-col justify-end pt-[calc(var(--header-h)+3rem)] pb-14 lg:pb-16"
+    class="hero-content container-zen relative z-[1] flex flex-1 flex-col justify-end pt-[calc(var(--header-h)+2.5rem)] pb-12 lg:pb-14"
   >
     <p class="label flex flex-wrap items-center gap-3 text-brass-soft" data-hero-line style="--line: 0">
       <span>Zen Interior</span>
@@ -124,7 +124,7 @@ const capabilities = [
     </p>
 
     <h1
-      class="hero-headline mt-7 font-display text-[clamp(2.5rem,1.2rem+5.2vw,5.75rem)] leading-[0.98] tracking-[-0.022em] font-light"
+      class="hero-headline mt-6 font-display text-[clamp(2.125rem,1.25rem+3.2vw,4.25rem)] leading-[1.02] tracking-[-0.022em] font-light"
     >
       <span class="block overflow-hidden">
         <span class="block text-ivory" data-hero-line style="--line: 1">Interiors Crafted</span>
@@ -137,21 +137,21 @@ const capabilities = [
     </h1>
 
     <p
-      class="mt-8 font-display text-[clamp(1.25rem,1rem+0.9vw,1.75rem)] leading-snug text-ivory/90"
+      class="mt-7 font-display text-[clamp(1.125rem,1rem+0.55vw,1.5rem)] leading-snug text-ivory/85"
       data-hero-line
       style="--line: 3"
     >
       Global materials. Refined design. Meticulous execution.
     </p>
 
-    <p class="mt-6 max-w-[52ch] text-ivory/70" data-hero-line style="--line: 4">
+    <p class="mt-5 max-w-[50ch] text-small text-ivory/65" data-hero-line style="--line: 4">
       We create sophisticated residential and commercial interiors by combining globally
       sourced products, bespoke design, premium furnishings and seamless execution, all
       under one roof.
     </p>
 
     <p
-      class="mt-7 flex items-center gap-3 text-small text-ivory/75"
+      class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-micro text-ivory/70"
       data-hero-line
       style="--line: 5"
     >
@@ -170,7 +170,7 @@ const capabilities = [
       <span class="font-medium text-ivory">Tamil Nadu &amp; Bangalore</span>
     </p>
 
-    <div class="mt-10 flex flex-wrap items-center gap-4" data-hero-line style="--line: 6">
+    <div class="mt-9 flex flex-wrap items-center gap-3.5" data-hero-line style="--line: 6">
       {/*
         Brass carries the single primary action here. It stays an accent
         everywhere else: hairlines, labels and this one button. Never a
@@ -178,7 +178,7 @@ const capabilities = [
       */}
       <a
         href="/projects"
-        class="label group inline-flex items-center gap-3 rounded-zen bg-brass px-8 py-4 text-ink transition-colors duration-300 hover:bg-brass-soft"
+        class="label group inline-flex items-center gap-3 rounded-zen bg-brass px-7 py-3.5 text-ink transition-colors duration-300 hover:bg-brass-soft"
       >
         Explore Our Projects
         <span
@@ -188,7 +188,7 @@ const capabilities = [
       </a>
       <a
         href="/contact"
-        class="label group inline-flex items-center gap-3 rounded-zen border border-ivory/40 px-8 py-4 text-ivory transition-colors duration-300 hover:bg-ivory hover:text-teal"
+        class="label group inline-flex items-center gap-3 rounded-zen border border-ivory/40 px-7 py-3.5 text-ivory transition-colors duration-300 hover:bg-ivory hover:text-teal"
       >
         Start Your Project
         <span
@@ -202,7 +202,7 @@ const capabilities = [
   {/* Capability bar, pinned to the bottom edge of the hero. */}
   <div class="relative z-[1] border-t border-ivory/15 bg-ink/30 backdrop-blur-[3px]">
     <Container>
-      <ul class="grid gap-x-12 gap-y-7 py-7 sm:grid-cols-3 lg:py-8">
+      <ul class="grid gap-x-10 gap-y-6 py-6 sm:grid-cols-3 lg:py-7">
         {
           capabilities.map((capability, index) => (
             <li
@@ -213,7 +213,7 @@ const capabilities = [
               <span class="mt-0.5 shrink-0 text-brass-soft" aria-hidden="true">
                 {index === 0 && (
                   <svg
-                    class="h-6 w-6"
+                    class="h-5 w-5"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -226,7 +226,7 @@ const capabilities = [
                 )}
                 {index === 1 && (
                   <svg
-                    class="h-6 w-6"
+                    class="h-5 w-5"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -239,7 +239,7 @@ const capabilities = [
                 )}
                 {index === 2 && (
                   <svg
-                    class="h-6 w-6"
+                    class="h-5 w-5"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -252,7 +252,7 @@ const capabilities = [
               </span>
               <span>
                 <span class="label block text-ivory">{capability.title}</span>
-                <span class="mt-2 block text-[0.8125rem] leading-relaxed text-ivory/60">
+                <span class="mt-1.5 block text-micro leading-relaxed text-ivory/55">
                   {capability.body}
                 </span>
               </span>
@@ -310,7 +310,7 @@ const capabilities = [
     }
 
     .hero-headline {
-      font-size: clamp(2.25rem, 0.5rem + 3.6vw, 4.25rem);
+      font-size: clamp(2rem, 0.5rem + 2.6vw, 3.25rem);
     }
   }
 </style>

@@ -5,14 +5,23 @@
  * The hidden initial state is defined in global.css behind `.js` and behind a
  * prefers-reduced-motion query, so this component is inert for visitors who
  * have reduced motion enabled or JavaScript disabled.
+ *
+ * For a run of siblings, put `data-reveal-group` on their parent instead of
+ * numbering each `delay` by hand. The script assigns the stagger in document
+ * order and caps the total so the last item never feels detached.
  */
 
 interface Props {
-  /** rise: fade and move up · fade: opacity only · clip: wipe, for imagery */
-  variant?: 'rise' | 'fade' | 'clip';
-  /** Stagger in milliseconds. Keep sequences under roughly 400ms in total. */
+  /**
+   * rise — fade and move up, the default for text
+   * fade — opacity only, for labels and small marks
+   * clip — frame wipes up while the photograph settles back from an over-scale
+   * line — hairline rules draw in from the left
+   */
+  variant?: 'rise' | 'fade' | 'clip' | 'line';
+  /** Explicit stagger in milliseconds. Overrides any group value. */
   delay?: number;
-  as?: 'div' | 'section' | 'article' | 'li' | 'figure' | 'span';
+  as?: 'div' | 'section' | 'article' | 'li' | 'figure' | 'span' | 'p';
   class?: string;
 }
 

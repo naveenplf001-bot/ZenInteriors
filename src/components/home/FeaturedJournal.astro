@@ -15,16 +15,16 @@ const { articles } = Astro.props;
 
 <section class="bg-ivory">
   <Container class="section">
-    <div class="flex flex-wrap items-end justify-between gap-8">
+    <div class="flex flex-wrap items-end justify-between gap-6" data-reveal-group>
       <Reveal variant="fade">
         <Eyebrow index="08">The Journal</Eyebrow>
       </Reveal>
-      <Reveal variant="fade" delay={60}>
+      <Reveal variant="fade">
         <Button href="/journal" variant="link">All Articles</Button>
       </Reveal>
     </div>
 
-    <div class="mt-14 grid gap-16 lg:grid-cols-2 lg:gap-14">
+    <div class="mt-[--stack-lg] grid gap-x-14 gap-y-14 lg:grid-cols-2">
       {articles.map((article, index) => <ArticleCard article={article} delay={index * 90} />)}
     </div>
   </Container>

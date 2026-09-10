@@ -9,34 +9,30 @@ import materialsImage from '@/assets/images/home/materials.jpg';
 
 <section class="bg-ivory">
   <Container class="section">
-    <div class="grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-16">
-      <div class="lg:col-span-5 lg:order-2">
+    <div class="grid items-center gap-y-12 lg:grid-cols-12 lg:gap-x-16">
+      <div class="lg:order-2 lg:col-span-5 lg:col-start-8" data-reveal-group>
         <Reveal variant="fade">
           <Eyebrow index="06">Material Story</Eyebrow>
         </Reveal>
 
-        <Reveal delay={80}>
-          <h2 class="mt-7 font-display text-display-lg text-teal">
-            Chosen for how they age.
-          </h2>
+        <Reveal>
+          <h2 class="mt-6 font-display text-display-lg text-teal">Chosen for how they age.</h2>
         </Reveal>
 
-        <Reveal delay={150}>
-          <p class="lede mt-9 text-charcoal/75">
-            Every material is selected for how it looks, feels, ages and belongs within
-            the larger composition.
+        <Reveal>
+          <p class="lede mt-[--stack-md] max-w-[44ch] text-charcoal/72">
+            Every material is selected for how it looks, feels, ages and belongs within the
+            larger composition.
           </p>
         </Reveal>
 
-        <ul class="mt-12 flex flex-col">
+        <ul class="mt-[--stack-lg]">
           {
-            materials.map((material, index) => (
-              <Reveal as="li" delay={180 + index * 45}>
-                <div class="flex items-baseline gap-6 border-t border-beige py-5">
-                  <span class="font-display text-display-sm text-teal">
-                    {material.name}
-                  </span>
-                  <span class="text-small text-charcoal/60">{material.note}</span>
+            materials.map((material) => (
+              <Reveal as="li">
+                <div class="flex flex-wrap items-baseline gap-x-5 gap-y-1 border-t border-beige py-4">
+                  <span class="font-display text-display-sm text-teal">{material.name}</span>
+                  <span class="text-micro text-charcoal/55">{material.note}</span>
                 </div>
               </Reveal>
             ))
@@ -44,14 +40,14 @@ import materialsImage from '@/assets/images/home/materials.jpg';
         </ul>
       </div>
 
-      <div class="lg:col-span-6 lg:order-1">
+      <div class="lg:order-1 lg:col-span-6">
         <Reveal variant="clip">
-          <div class="aspect-[4/5] overflow-hidden rounded-zen bg-stone">
+          <div class="aspect-[4/3] overflow-hidden rounded-zen bg-stone sm:aspect-[16/10] lg:aspect-[4/5]">
             <Image
               src={materialsImage}
               alt="Kitchen elevation in low-sheen grey lacquer with a curved end return"
               widths={[640, 1024, 1400, 1800]}
-              sizes="(min-width: 1024px) 48vw, 92vw"
+              sizes="(min-width: 1024px) 46vw, 92vw"
               loading="lazy"
               class="h-full w-full object-cover"
             />

@@ -7,7 +7,7 @@ import { pad } from '@lib/format';
 interface Props {
   project: Project;
   index?: number;
-  /** portrait for the grid, wide for editorial rows on the homepage. */
+  /** portrait for the grid, wide for editorial rows. */
   ratio?: 'portrait' | 'wide';
   delay?: number;
   /** Only the first card above the fold should load eagerly. */
@@ -21,7 +21,7 @@ const href = `/projects/${project.id}`;
 const aspect = ratio === 'portrait' ? 'aspect-[4/5]' : 'aspect-[16/10]';
 const sizes =
   ratio === 'portrait'
-    ? '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 92vw'
+    ? '(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw'
     : '(min-width: 1024px) 60vw, 92vw';
 ---
 
@@ -39,19 +39,26 @@ const sizes =
       />
     </div>
 
-    <div class="mt-6 flex items-start justify-between gap-6">
+    {/* Hairline that draws across on hover, so the card responds without moving. */}
+    <span
+      class="mt-5 block h-px w-full origin-left scale-x-100 bg-beige transition-colors duration-500 ease-[--ease-zen] group-hover:bg-brass"
+      aria-hidden="true"></span>
+
+    <div class="mt-4 flex items-start justify-between gap-5">
       <div>
-        <p class="label text-teal/55">
+        <p class="label text-teal/50">
           {location} &nbsp;/&nbsp; {category}
         </p>
-        <h3 class="mt-3 font-display text-display-sm text-teal">
+        <h3
+          class="mt-2.5 font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass"
+        >
           {title}
         </h3>
-        <p class="mt-3 max-w-[42ch] text-small text-charcoal/70">
+        <p class="mt-2.5 max-w-[44ch] text-micro text-charcoal/65">
           {summary}
         </p>
         <span
-          class="label mt-6 inline-flex items-center gap-2.5 text-teal transition-colors duration-300 group-hover:text-brass"
+          class="label mt-5 inline-flex items-center gap-2.5 text-teal transition-colors duration-300 group-hover:text-brass"
         >
           View Project
           <span
@@ -63,7 +70,7 @@ const sizes =
 
       {
         typeof index === 'number' && (
-          <span class="label shrink-0 pt-1 text-teal/30" aria-hidden="true">
+          <span class="label shrink-0 pt-0.5 text-teal/25" aria-hidden="true">
             {pad(index)}
           </span>
         )
