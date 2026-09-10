@@ -51,9 +51,6 @@ export const site = {
   /** Default social preview. Overridden per page where a better frame exists. */
   defaultOgImage: '/brand/og-default.jpg',
 
-  /** Shown beside the navigation on very wide screens. */
-  positioning: ['Global materials.', 'Bespoke spaces.', 'Exceptional execution.'],
-
   locale: 'en_IN',
   language: 'en-IN',
 } as const;

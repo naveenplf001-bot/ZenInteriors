@@ -2,7 +2,6 @@
 import Logo from './Logo.astro';
 import MobileMenu from './MobileMenu.astro';
 import { primaryNav, primaryAction, isActive } from '@data/navigation';
-import { site } from '@config/site';
 
 interface Props {
   /**
@@ -66,14 +65,6 @@ const ctaSkin = isOverlay
     </nav>
 
     <div class="flex items-center gap-7">
-      {/*
-        The positioning statement only appears where there is genuinely room
-        for it. Below 1536px the navigation and the action need the width more.
-      */}
-      <p class="label hidden leading-[1.9] opacity-55 2xl:block" aria-hidden="true">
-        {site.positioning.map((line) => <span class="block">{line}</span>)}
-      </p>
-
       <a
         href={primaryAction.href}
         class:list={[
