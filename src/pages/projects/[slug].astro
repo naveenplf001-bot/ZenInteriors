@@ -9,7 +9,6 @@ import Eyebrow from '@components/ui/Eyebrow.astro';
 import SplitHeading from '@components/ui/SplitHeading.astro';
 import SectionNumber from '@components/ui/SectionNumber.astro';
 import ProjectGallery from '@components/projects/ProjectGallery.astro';
-import CTASection from '@components/sections/CTASection.astro';
 
 import { getProjects, siblings } from '@lib/content';
 import { breadcrumbSchema } from '@lib/seo';
@@ -363,10 +362,4 @@ const executionParagraphs = paragraphs(execution);
       </div>
     </Container>
   </section>
-
-  <CTASection
-    eyebrow="Begin"
-    title={['Have a project', 'of your own?']}
-    lede="A considered space begins with a considered conversation. Tell us what you are planning."
-  />
 </BaseLayout>

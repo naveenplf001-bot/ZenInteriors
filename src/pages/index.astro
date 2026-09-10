@@ -10,7 +10,6 @@ import DetailStrip from '@components/home/DetailStrip.astro';
 import Method from '@components/home/Method.astro';
 import FeaturedJournal from '@components/home/FeaturedJournal.astro';
 import Geography from '@components/home/Geography.astro';
-import CTASection from '@components/sections/CTASection.astro';
 
 import { getProjects, getFeaturedArticles } from '@lib/content';
 import { site } from '@config/site';
@@ -40,5 +39,4 @@ const articles = await getFeaturedArticles(2);
   <Method />
   <FeaturedJournal articles={articles} />
   <Geography />
-  <CTASection />
 </BaseLayout>

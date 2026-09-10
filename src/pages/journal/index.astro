@@ -8,7 +8,6 @@ import Reveal from '@components/ui/Reveal.astro';
 import Button from '@components/ui/Button.astro';
 import SplitHeading from '@components/ui/SplitHeading.astro';
 import SectionNumber from '@components/ui/SectionNumber.astro';
-import CTASection from '@components/sections/CTASection.astro';
 import ArticleCard from '@components/journal/ArticleCard.astro';
 
 import { getArticles } from '@lib/content';
@@ -290,12 +289,6 @@ const schema = [
       </p>
     </Container>
   </section>
-
-  <CTASection
-    eyebrow="Private Enquiry"
-    title={['Reading is one thing.', 'Building is another.']}
-    lede="If something here matches what you are planning, tell us about the space. We will tell you honestly whether we are the right studio for it."
-  />
 </BaseLayout>
 
 <script>

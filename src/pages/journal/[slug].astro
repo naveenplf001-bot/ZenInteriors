@@ -10,7 +10,6 @@ import Reveal from '@components/ui/Reveal.astro';
 import Button from '@components/ui/Button.astro';
 import SplitHeading from '@components/ui/SplitHeading.astro';
 import ProjectCard from '@components/projects/ProjectCard.astro';
-import CTASection from '@components/sections/CTASection.astro';
 
 import { getArticles, getProjects } from '@lib/content';
 import { articleSchema, breadcrumbSchema } from '@lib/seo';
@@ -291,6 +290,4 @@ const schema = [
       </section>
     )
   }
-
-  <CTASection />
 </BaseLayout>

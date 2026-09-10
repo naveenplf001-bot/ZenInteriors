@@ -8,7 +8,6 @@ import Reveal from '@components/ui/Reveal.astro';
 import Button from '@components/ui/Button.astro';
 import SplitHeading from '@components/ui/SplitHeading.astro';
 import SectionNumber from '@components/ui/SectionNumber.astro';
-import CTASection from '@components/sections/CTASection.astro';
 import ProjectCard from '@components/projects/ProjectCard.astro';
 import { getProjects, projectCategories } from '@lib/content';
 import { slugify, pad, counter } from '@lib/format';
@@ -335,8 +334,6 @@ const schema = [
       </p>
     </Container>
   </section>
-
-  <CTASection />
 </BaseLayout>
 
 <script>
