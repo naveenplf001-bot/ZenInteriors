@@ -9,12 +9,12 @@ excerpt: |
   that at plan stage and the interior holds its composure for years. Leave it to
   furniture bought later, and no material palette will rescue it.
 cover: ../../assets/images/journal/the-architecture-of-storage/cover.jpg
-coverAlt: Full-height oak joinery with a concealed push-latch opening
+coverAlt: Entrance joinery with concealed storage below a floating walnut console
 publishedAt: 2026-01-22
 author: Zen Interior
 relatedProjects:
-  - the-quiet-villa
-  - atelier-workspace
+  - the-emerald-residence
+  - the-slate-apartment
 featured: false
 ---
 

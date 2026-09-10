@@ -354,18 +354,55 @@ restored on close, and nothing is reachable by hover alone.
 
 ## 12. Roadmap
 
-### Phase 0 — Foundation
+### Phase 0 — Foundation `complete`
 
-- [ ] Repository, Astro, TypeScript, Tailwind v4, tooling
-- [ ] Design tokens, type scale, global styles
-- [ ] BaseLayout, SEO component, JSON-LD builder
-- [ ] Header with scroll state, Footer, mobile menu with focus trap
-- [ ] Content collections, Zod schemas, seed entries
-- [ ] All routes resolving, including dynamic project and journal pages
-- [ ] Enquiry model, WhatsApp library, site config
-- [ ] Reveal system with reduced-motion support
-- [ ] netlify.toml, robots, sitemap, 404
-- [ ] Clean production build
+- [x] Repository, Astro 5, TypeScript, Tailwind v4, tooling
+- [x] Design tokens, type scale, global styles
+- [x] BaseLayout, SEO component, JSON-LD builder
+- [x] Header with scroll state, Footer, mobile menu with focus trap
+- [x] Content collections, Zod schemas, seed entries
+- [x] All routes resolving, including dynamic project and journal pages
+- [x] Enquiry model, WhatsApp library, site config
+- [x] Reveal system with reduced-motion support
+- [x] netlify.toml, robots, sitemap, 404
+- [x] Clean production build, twelve pages, zero type errors
+
+Carried forward as known gaps:
+
+- Logo renders a typographic stand-in. Activate the real artwork in
+  `src/components/layout/Logo.astro` once the SVG files are in `public/brand/`.
+- `src/config/site.ts` holds placeholder contact details and a placeholder
+  WhatsApp number. Nothing reaches a real inbox until these are set.
+- Three polymorphic components fall back to loose prop typing, so a prop typo
+  on `Container`, `Reveal` or `SectionHeading` is not caught at build time.
+
+#### Photography status
+
+Fourteen supplied images are wired in, grouped so each project reads as one
+house rather than a stock gallery.
+
+| Project | Family | Frames |
+| --- | --- | --- |
+| The Quiet Villa | Dark marble and bronze, double height | 3 |
+| The Emerald Residence | Warm timber, built-in joinery | 7 |
+| The Slate Apartment | Grey lacquer, walnut, stone | 4 |
+
+Three constraints to resolve before the client demo.
+
+- **Resolution.** The originals top out at 1600px on the long edge. Full-bleed
+  heroes want 2400px or more, so the hero currently upscales slightly on a
+  large display.
+- **Reuse.** Fourteen photographs across three projects, a homepage, an about
+  page and three journal covers means several images appear twice. No page
+  repeats an image within itself, but the site will read thin until there is
+  more work to show.
+- **Provenance.** These read as renders rather than photographs of built work.
+  That is fine for a layout demo. Before launch they must be replaced with
+  Zen Interior's own completed projects, or the site claims work it cannot
+  substantiate.
+
+`tools/import-images.mjs` holds the source-to-destination map. Re-run it after
+dropping replacements into the source folder.
 
 ### Phase 1 — Homepage to ninety percent
 

@@ -9,11 +9,11 @@ excerpt: |
   as luxury is the design that places it, the sequence that installs it and the
   hands that finish it. Three separate capabilities, and most projects buy one.
 cover: ../../assets/images/journal/imported-materials-are-not-enough/cover.jpg
-coverAlt: Stone slabs stacked at a quarry yard awaiting selection
+coverAlt: Kitchen detail showing the handleless drawer line and undercabinet lighting
 publishedAt: 2025-12-09
 author: Zen Interior
 relatedProjects:
-  - the-emerald-residence
+  - the-slate-apartment
 featured: true
 ---
 

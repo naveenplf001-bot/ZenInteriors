@@ -1,63 +1,68 @@
 ---
 title: The Emerald Residence
-summary: A city residence where a deep green stone palette anchors the public rooms and the detailing gets progressively quieter toward the private wing.
+summary: A family residence built almost entirely from timber, where every wall does something useful and the storage is invisible until you need it.
 location: Chennai
 region: Tamil Nadu
 category: Private Residence
 year: 2024
 scope: Interior design, global material sourcing and execution
 cover: ../../assets/images/projects/the-emerald-residence/cover.jpg
-coverAlt: Living room with deep green marble wall, brass reveals and low seating
+coverAlt: Living room with fluted timber joinery, a circular reveal and a raised platform seat
 featured: true
 order: 20
 concept: |
-  The apartment occupies a full floor with views on three sides, which meant the
-  usual instinct to open everything up would have left nowhere to sit quietly.
+  A three-generation household with a long list of things that needed somewhere
+  to live. The usual answer is more furniture. We went the other way and made
+  the architecture do the work.
 
-  We took the opposite approach. The public rooms are held together by a single
-  dark green stone that runs from the entrance through the living volume, and
-  the palette then lightens deliberately as the plan moves toward the bedrooms.
-  By the time you reach the private wing, the stone has disappeared entirely.
+  Almost every vertical surface in the public rooms is joinery. Seating rises
+  out of a timber platform that also stores bedding. The partition between the
+  living and dining rooms is a cabinet on one side and a display reveal on the
+  other. Nothing is applied to a wall, because there are very few plain walls
+  left.
 
-  The result is a residence that reads as generous when it is full and calm when
-  it is not.
+  The palette stays deliberately narrow. One timber, one warm neutral, and a
+  single accent that appears three times in the whole house.
 execution: |
-  The green marble was sourced through a European partner and selected slab by
-  slab against the drawings, because the vein direction determined where the
-  joints could fall.
+  Delivered over nine months with the joinery fabricated to a single
+  specification and dry-fitted in the workshop before it reached the site.
 
-  Brass reveals were fabricated to a hundredth of a millimetre and installed
-  before the stone, so every junction is a designed line rather than a tolerance
-  absorbed on site. Our team supervised the full fit-out over nine months.
+  Because so much of the house is built-in, the sequence mattered more than
+  usual. Services, lighting and joinery were coordinated as one package, so
+  every concealed light sits inside a timber reveal rather than being cut into
+  it afterwards.
 materials:
-  - Deep green marble, vein-matched, sourced through a European stone partner
-  - Solid brass reveals, machined and hand-finished
-  - Smoked oak flooring in a wide plank format
-  - Hand-troweled lime plaster in the private wing
-  - Bespoke bronze-tinted glazing to the study
+  - European oak veneer in a single flitch across all public-room joinery
+  - Fluted timber panelling with integrated vertical lighting
+  - Rattan and cane inserts to wardrobe and headboard panels
+  - Warm neutral lime-washed plaster to the remaining walls
+  - Linen and cotton upholstery, undyed, in one tonal family
 highlights:
-  - Vein-matched green marble running unbroken from entrance to living volume
-  - Machined brass reveals installed ahead of stone for a designed junction line
-  - A palette that lightens deliberately across the plan
-  - Nine-month execution under continuous site supervision
+  - Almost every vertical surface in the public rooms is functional joinery
+  - Platform seating that stores bedding for a three-generation household
+  - Single-flitch oak veneer holding tone across the entire ground floor
+  - Concealed lighting set within timber reveals, never cut in afterwards
 gallery:
-  - src: ../../assets/images/projects/the-emerald-residence/01-entrance.jpg
-    alt: Entrance hall with green marble wall and a brass-framed mirror
+  - src: ../../assets/images/projects/the-emerald-residence/01-threshold.jpg
+    alt: Shaped timber archway framing the dining and tea area beyond
     span: full
-  - src: ../../assets/images/projects/the-emerald-residence/02-living.jpg
-    alt: Living room with low seating facing a full-height window
+    caption: The arch is structural joinery, not a decorative applique.
+  - src: ../../assets/images/projects/the-emerald-residence/02-principal-bedroom.jpg
+    alt: Principal bedroom with a cane-panelled headboard wall, timber platform and a linear floor light
     span: wide
-  - src: ../../assets/images/projects/the-emerald-residence/03-stone-detail.jpg
-    alt: Close detail of green marble meeting a machined brass reveal
+  - src: ../../assets/images/projects/the-emerald-residence/03-second-bedroom.jpg
+    alt: Second bedroom with full-height timber storage and layered lighting
+    span: half
+  - src: ../../assets/images/projects/the-emerald-residence/04-childs-room.jpg
+    alt: Child bedroom with built-in timber storage and an integrated study nook
+    span: half
+  - src: ../../assets/images/projects/the-emerald-residence/05-resting-area.jpg
+    alt: Resting area with upholstered seating built into the timber joinery
+    span: half
+  - src: ../../assets/images/projects/the-emerald-residence/06-bedroom-detail.jpg
+    alt: Bedroom detail showing the headboard panel, side table and reading light
     span: detail
-    caption: The reveal is set before the stone, never cut to fit it.
-  - src: ../../assets/images/projects/the-emerald-residence/04-dining.jpg
-    alt: Dining room with a solid stone table and sculptural pendant lighting
-    span: half
-  - src: ../../assets/images/projects/the-emerald-residence/05-study.jpg
-    alt: Study with bronze-tinted glazing and smoked oak shelving
-    span: half
 ---
 
-A residence that changes temperature as you move through it, without ever
-changing its mind.
+A house where the storage was designed before the furniture, which is the only
+order that ever works.

@@ -9,7 +9,7 @@ excerpt: |
   actually reads as luxury is restraint held consistently, a palette narrow
   enough to be memorised, and detailing that survives close inspection.
 cover: ../../assets/images/journal/the-art-of-quiet-luxury/cover.jpg
-coverAlt: Detail of honed stone meeting rift-sawn oak with a narrow shadow gap
+coverAlt: Open living volume under layered architectural lighting at dusk
 publishedAt: 2025-11-18
 author: Zen Interior
 relatedProjects:
