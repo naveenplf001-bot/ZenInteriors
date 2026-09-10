@@ -12,7 +12,7 @@ import FeaturedJournal from '@components/home/FeaturedJournal.astro';
 import Geography from '@components/home/Geography.astro';
 import CTASection from '@components/sections/CTASection.astro';
 
-import { getProjects, getFeaturedProjects, getFeaturedArticles } from '@lib/content';
+import { getProjects, getFeaturedArticles } from '@lib/content';
 import { site } from '@config/site';
 
 /**
@@ -22,8 +22,6 @@ import { site } from '@config/site';
  */
 
 const allProjects = await getProjects();
-const featured = await getFeaturedProjects(3);
-const signature = featured.length > 0 ? featured : allProjects.slice(0, 3);
 const articles = await getFeaturedArticles(2);
 ---
 
@@ -35,7 +33,7 @@ const articles = await getFeaturedArticles(2);
 >
   <Hero />
   <BrandStatement />
-  <SignatureProjects projects={signature} total={allProjects.length} />
+  <SignatureProjects projects={allProjects} />
   <Sourcing />
   <Materials />
   <DetailStrip projects={allProjects} />
