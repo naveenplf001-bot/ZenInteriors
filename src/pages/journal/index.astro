@@ -40,6 +40,13 @@ const lead = articles[0];
 */
 const categories = [...new Set(articles.map((article) => article.data.category))];
 
+/* Counted per subject, so the contents strip states what has actually been
+   written rather than the full enum from the schema. */
+const categoryCounts = categories.map((category) => ({
+  name: category,
+  count: articles.filter((article) => article.data.category === category).length,
+}));
+
 const total = articles.length;
 const latest = lead ? formatDate(lead.data.publishedAt) : '';
 
@@ -59,7 +66,7 @@ const rhythm = (index: number) => {
     case 0:
       return { span: 'md:col-span-7', variant: 'feature' as const };
     case 1:
-      return { span: 'md:col-span-5 md:mt-[--stack-lg]', variant: 'default' as const };
+      return { span: 'md:col-span-5 md:mt-(--stack-lg)', variant: 'default' as const };
     default:
       return { span: 'md:col-span-6 md:col-start-4', variant: 'default' as const };
   }
@@ -79,48 +86,90 @@ const schema = [
   schema={schema}
 >
   {/* ------------------------------------------------------------ masthead */}
-  <section class="bg-ivory">
-    <Container class="pt-[clamp(3rem,6vw,6rem)] pb-[--section-y-tight]">
-      <div
-        class="grid gap-y-[--stack-md] md:grid-cols-12 md:items-end md:gap-x-12"
-        data-reveal-group
-      >
-        <div class="md:col-span-7">
-          <Reveal variant="fade">
-            <Eyebrow>The Zen Journal</Eyebrow>
-          </Reveal>
+  {/*
+    Set as a printed masthead rather than a page header: a dateline rule above
+    the title, the title at full width, then the standfirst and the issue
+    figures on one line, and the subjects as a contents strip along the foot.
 
-          <SplitHeading
-            as="h1"
-            size="xl"
-            lines={['Notes on material,', 'proportion and craft.']}
-            accentFrom={1}
-            class="mt-6"
-          />
+    Every figure here is counted from the articles themselves, so the masthead
+    cannot advertise a subject with nothing behind it.
+  */}
+  <section class="relative isolate overflow-hidden bg-ivory">
+    <span
+      class="pointer-events-none absolute -right-[2vw] -bottom-[0.3em] font-display text-[clamp(9rem,26vw,22rem)] leading-none tracking-[-0.05em] text-teal/[0.035] select-none"
+      aria-hidden="true">Journal</span
+    >
+
+    <Container class="pt-[clamp(2.5rem,4.5vw,4.5rem)] pb-(--section-y-tight)">
+      {/* ------------------------------------------------------- the dateline */}
+      <Reveal variant="fade">
+        <div
+          class="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-beige pb-4"
+        >
+          <p class="label text-teal/70">The Zen Journal</p>
+          <p class="label text-teal/35">Written from the studio</p>
         </div>
+      </Reveal>
 
-        <div class="md:col-span-5 md:col-start-8">
-          <Reveal>
-            <p class="lede text-charcoal/72">
-              What we have learned building interiors that have to hold up close, and what we
-              think is worth knowing before you commission one.
-            </p>
-          </Reveal>
+      {/* ---------------------------------------------------------- the title */}
+      <div data-reveal-group>
+        <SplitHeading
+          as="h1"
+          size="xl"
+          lines={['Notes on material,', 'proportion and craft.']}
+          accentFrom={1}
+          accentItalic
+          class="mt-[clamp(2rem,3.5vw,3.5rem)]"
+        />
 
-          <Reveal variant="fade" class="mt-[--stack-md]">
-            <dl class="grid grid-cols-3 gap-x-6">
+        <div
+          class="mt-[clamp(2rem,3.5vw,3.25rem)] grid gap-y-9 md:grid-cols-12 md:items-end md:gap-x-12"
+        >
+          <div class="md:col-span-6">
+            <Reveal>
+              <p class="lede max-w-[46ch] text-charcoal/72">
+                What we have learned building interiors that have to hold up close, and what
+                we think is worth knowing before you commission one.
+              </p>
+            </Reveal>
+          </div>
+
+          {/* The issue figures, kept on the same line as the standfirst so the
+              masthead resolves in one band instead of two stacked blocks. */}
+          <div class="md:col-span-5 md:col-start-8">
+            <dl class="grid grid-cols-3 gap-x-6" data-reveal-group="60">
               {
-                issueFacts.map((fact) => (
-                  <div class="border-t border-beige pt-4">
+                issueFacts.map((fact, index) => (
+                  <Reveal
+                    variant="fade"
+                    class:list={[index > 0 && 'border-l border-beige pl-6']}
+                  >
                     <dt class="label text-teal/40">{fact.label}</dt>
-                    <dd class="mt-2.5 font-display text-display-sm text-teal">{fact.value}</dd>
-                  </div>
+                    <dd class="mt-3 font-display text-[clamp(1.25rem,1rem+0.8vw,1.75rem)] leading-[1.2] text-teal">
+                      {fact.value}
+                    </dd>
+                  </Reveal>
                 ))
               }
             </dl>
-          </Reveal>
+          </div>
         </div>
       </div>
+
+      {/* ------------------------------------------------------ the contents */}
+      <Reveal variant="fade" class="mt-[clamp(2.25rem,4vw,3.5rem)] border-t border-beige pt-5">
+        <div class="flex flex-wrap items-baseline gap-x-9 gap-y-3">
+          <p class="label text-teal/35">Subjects</p>
+          {
+            categoryCounts.map((subject) => (
+              <p class="flex items-baseline gap-2">
+                <span class="text-small text-charcoal/75">{subject.name}</span>
+                <span class="label text-teal/35">{pad(subject.count)}</span>
+              </p>
+            ))
+          }
+        </div>
+      </Reveal>
     </Container>
   </section>
 
@@ -130,7 +179,7 @@ const schema = [
       <section class="bg-teal text-ivory on-dark">
         <Container class="section-tight">
           <div
-            class="grid gap-y-[--stack-md] lg:grid-cols-12 lg:items-center lg:gap-x-16"
+            class="grid gap-y-(--stack-md) lg:grid-cols-12 lg:items-center lg:gap-x-16"
             data-reveal-group
           >
             <div class="lg:col-span-7">
@@ -149,7 +198,7 @@ const schema = [
                       sizes="(min-width: 1024px) 56vw, 92vw"
                       loading="eager"
                       fetchpriority="high"
-                      class="h-full w-full object-cover transition-transform duration-[1600ms] ease-[--ease-zen] group-hover:scale-[1.03]"
+                      class="h-full w-full object-cover transition-transform duration-[1600ms] ease-(--ease-zen) group-hover:scale-[1.03]"
                     />
                   </div>
                 </a>
@@ -223,7 +272,7 @@ const schema = [
         filter. No client-side routing, no framework.
       */}
       <div
-        class="mt-[--stack-lg] flex flex-wrap items-center gap-x-8 gap-y-4 border-y border-beige py-6"
+        class="mt-(--stack-lg) flex flex-wrap items-center gap-x-8 gap-y-4 border-y border-beige py-6"
         data-journal-filter
         role="group"
         aria-label="Filter articles by subject"
@@ -258,7 +307,7 @@ const schema = [
         breakpoint up, two even columns on small tablets, one on a phone.
       */}
       <div
-        class="mt-[--stack-lg] grid gap-x-10 gap-y-16 sm:grid-cols-2 sm:gap-y-20 md:grid-cols-12 md:gap-x-12 md:gap-y-24"
+        class="mt-(--stack-lg) grid gap-x-10 gap-y-16 sm:grid-cols-2 sm:gap-y-20 md:grid-cols-12 md:gap-x-12 md:gap-y-24"
         data-reveal-group
       >
         {
