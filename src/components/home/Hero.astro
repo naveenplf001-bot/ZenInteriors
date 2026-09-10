@@ -124,7 +124,7 @@ const capabilities = [
     </p>
 
     <h1
-      class="hero-headline mt-6 font-display text-[clamp(2.125rem,1.25rem+3.2vw,4.25rem)] leading-[1.02] tracking-[-0.022em] font-light"
+      class="hero-headline mt-6 font-display text-[clamp(2.375rem,1.3rem+4.2vw,5.5rem)] leading-[1.01] tracking-[-0.022em] font-light"
     >
       <span class="block overflow-hidden">
         <span class="block text-ivory" data-hero-line style="--line: 1">Interiors Crafted</span>
@@ -171,6 +171,10 @@ const capabilities = [
     </p>
 
     <div class="mt-9 flex flex-wrap items-center gap-3.5" data-hero-line style="--line: 6">
+      <span class="order-last ml-auto hidden items-center gap-3.5 lg:flex" aria-hidden="true">
+        <span class="label text-ivory/35">Scroll</span>
+        <span class="scroll-cue block h-11 w-px bg-ivory/20"></span>
+      </span>
       {/*
         Brass carries the single primary action here. It stays an accent
         everywhere else: hairlines, labels and this one button. Never a
@@ -300,6 +304,37 @@ const capabilities = [
   }
 
   /*
+    Scroll cue. A lit segment travelling down a hairline, not a bouncing
+    mouse icon. Runs only where motion is welcome.
+  */
+  .scroll-cue {
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-cue::after {
+      content: '';
+      position: absolute;
+      inset-inline: 0;
+      top: 0;
+      height: 45%;
+      background: var(--color-brass-soft);
+      animation: scroll-cue 2.4s var(--ease-zen) infinite;
+    }
+
+    @keyframes scroll-cue {
+      0% {
+        transform: translateY(-110%);
+      }
+      65%,
+      100% {
+        transform: translateY(240%);
+      }
+    }
+  }
+
+  /*
     Short laptop screens. Without this the capability bar is pushed below the
     fold on a 1366x768 display, which is the most common business laptop.
   */
@@ -310,7 +345,7 @@ const capabilities = [
     }
 
     .hero-headline {
-      font-size: clamp(2rem, 0.5rem + 2.6vw, 3.25rem);
+      font-size: clamp(2rem, 0.6rem + 3vw, 4rem);
     }
   }
 </style>

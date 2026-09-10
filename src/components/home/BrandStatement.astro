@@ -3,6 +3,8 @@ import Container from '@components/ui/Container.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
 import Reveal from '@components/ui/Reveal.astro';
 import Button from '@components/ui/Button.astro';
+import SplitHeading from '@components/ui/SplitHeading.astro';
+import SectionNumber from '@components/ui/SectionNumber.astro';
 ---
 
 <section class="bg-ivory">
@@ -10,17 +12,19 @@ import Button from '@components/ui/Button.astro';
     <div class="grid gap-y-10 md:grid-cols-12 md:gap-x-10 lg:gap-x-16" data-reveal-group>
       <div class="md:col-span-4 lg:col-span-3">
         <Reveal variant="fade">
-          <Eyebrow index="01">The Studio</Eyebrow>
+          <SectionNumber value="01" />
         </Reveal>
-        <Reveal variant="line" class="mt-6 hidden h-px w-full bg-beige md:block" />
+        <Reveal variant="fade" class="mt-4">
+          <Eyebrow>The Studio</Eyebrow>
+        </Reveal>
+        <Reveal variant="line" class="mt-7 hidden h-px w-full bg-beige md:block" />
       </div>
 
       <div class="md:col-span-8 lg:col-span-8 lg:col-start-5">
-        <Reveal>
-          <h2 class="max-w-[20ch] font-display text-display-lg text-teal">
-            A considered approach to extraordinary living.
-          </h2>
-        </Reveal>
+        <SplitHeading
+          lines={['A considered approach', 'to extraordinary living.']}
+          class="max-w-[22ch]"
+        />
 
         <Reveal>
           <p class="lede mt-[--stack-md] max-w-[56ch] text-charcoal/72">

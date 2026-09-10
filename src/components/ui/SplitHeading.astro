@@ -1,0 +1,75 @@
+---
+/**
+ * Editorial headline with a masked line reveal.
+ *
+ * Lines are supplied explicitly rather than measured and split at runtime.
+ * Auto-splitting needs the text to be laid out before it can be broken, which
+ * means a flash of unstyled headline and a layout dependency on JavaScript.
+ * Declaring the breaks keeps the reveal free and makes the line rhythm a
+ * design decision instead of an accident of viewport width.
+ *
+ * `accentFrom` puts the remaining lines in brass, which is how the hero and
+ * the closing call to action carry emphasis without a second typeface.
+ */
+
+interface Props {
+  lines: string[];
+  as?: 'h1' | 'h2' | 'h3';
+  size?: 'xl' | 'lg' | 'md' | 'hero';
+  tone?: 'light' | 'dark';
+  /** Index of the first line to render in brass. Omit for a single colour. */
+  accentFrom?: number;
+  /** Milliseconds between lines. */
+  stagger?: number;
+  class?: string;
+}
+
+const {
+  lines,
+  as: Tag = 'h2',
+  size = 'lg',
+  tone = 'light',
+  accentFrom,
+  stagger = 85,
+  class: className = '',
+} = Astro.props;
+
+const sizes: Record<string, string> = {
+  // Reserved for the hero alone. Scale contrast is the point: two or three
+  // things on the page are large, and nothing else moves.
+  hero: 'text-[clamp(2.375rem,1.3rem+4.2vw,5.5rem)] leading-[1.01] tracking-[-0.025em] font-light',
+  xl: 'text-display-xl',
+  lg: 'text-display-lg',
+  md: 'text-display-md',
+};
+
+/*
+  Re-declared with an explicit type. This component renders through a dynamic
+  <Tag>, and Astro does not wire the Props interface to Astro.props in that
+  case, so `lines` arrives untyped. Casting Astro.props itself was tried and
+  breaks type checking at every call site instead.
+*/
+const items: string[] = lines;
+
+const base = tone === 'dark' ? 'text-ivory' : 'text-teal';
+const accent = tone === 'dark' ? 'text-brass-soft' : 'text-brass';
+---
+
+<Tag class:list={['font-display', sizes[size], className]}>
+  {
+    items.map((line, index) => (
+      <span class="block overflow-hidden pb-[0.08em]">
+        <span
+          class:list={[
+            'block',
+            accentFrom !== undefined && index >= accentFrom ? accent : base,
+          ]}
+          data-reveal="mask"
+          data-reveal-delay={index * stagger}
+        >
+          {line}
+        </span>
+      </span>
+    ))
+  }
+</Tag>

@@ -1,0 +1,32 @@
+---
+/**
+ * Oversized section numeral.
+ *
+ * An editorial navigation device borrowed from print. It gives each section a
+ * graphic anchor without adding another sentence to read, and it is the
+ * cheapest way to stop a page reading as an undifferentiated stack.
+ *
+ * Set very low in contrast on purpose. It is a texture, not information, so
+ * it is hidden from assistive technology entirely.
+ */
+
+interface Props {
+  value: string;
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+
+const { value, tone = 'light', class: className = '' } = Astro.props;
+---
+
+<span
+  aria-hidden="true"
+  class:list={[
+    'pointer-events-none block select-none font-display leading-[0.78] tracking-[-0.04em]',
+    'text-[clamp(3.5rem,8vw,7rem)]',
+    tone === 'dark' ? 'text-ivory/[0.11]' : 'text-teal/[0.09]',
+    className,
+  ]}
+>
+  {value}
+</span>

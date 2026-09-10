@@ -211,6 +211,19 @@
     transform: none;
   }
 
+  /*
+    Masked line reveal. The line rises from behind its own overflow-hidden
+    parent with no fade, which is what makes an editorial headline land rather
+    than drift in. Opacity stays at 1 on purpose: fading a masked reveal makes
+    it read as a slideshow.
+  */
+  .js [data-reveal='mask'] {
+    opacity: 1;
+    transform: translate3d(0, 110%, 0);
+    transition: transform 1150ms var(--ease-zen-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
   /* Hairline rules draw in from the left. */
   .js [data-reveal='line'] {
     opacity: 1;

@@ -2,6 +2,8 @@
 import Container from '@components/ui/Container.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
 import Reveal from '@components/ui/Reveal.astro';
+import SplitHeading from '@components/ui/SplitHeading.astro';
+import SectionNumber from '@components/ui/SectionNumber.astro';
 import { site } from '@config/site';
 
 /**
@@ -17,13 +19,12 @@ import { site } from '@config/site';
     <div class="grid gap-y-10 lg:grid-cols-12 lg:items-end lg:gap-x-16" data-reveal-group>
       <div class="lg:col-span-6">
         <Reveal variant="fade">
-          <Eyebrow index="09">Where We Work</Eyebrow>
+          <SectionNumber value="07" />
         </Reveal>
-        <Reveal>
-          <h2 class="mt-6 font-display text-display-lg text-teal">
-            Tamil Nadu &nbsp;·&nbsp; Bangalore
-          </h2>
+        <Reveal variant="fade" class="mt-4">
+          <Eyebrow>Where We Work</Eyebrow>
         </Reveal>
+        <SplitHeading lines={['Tamil Nadu', 'and Bangalore.']} class="mt-6" />
         <Reveal>
           <p class="lede mt-[--stack-md] max-w-[44ch] text-charcoal/70">
             Selected residences, villas, apartments and commercial spaces across South

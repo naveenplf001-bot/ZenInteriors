@@ -2,7 +2,10 @@
 import Container from '@components/ui/Container.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
 import Reveal from '@components/ui/Reveal.astro';
+import SplitHeading from '@components/ui/SplitHeading.astro';
+import SectionNumber from '@components/ui/SectionNumber.astro';
 import { methodStages } from '@data/methodology';
+import { pad } from '@lib/format';
 
 /**
  * The Zen method.
@@ -10,44 +13,115 @@ import { methodStages } from '@data/methodology';
  * High-value clients are not buying interiors. They are buying certainty.
  * A named, sequenced process is what communicates that a studio is not
  * improvising on site.
+ *
+ * Built as a sticky scroll sequence: the statement holds still on the left
+ * while the five stages move past it. This is the one interaction on the page
+ * that is meant to be remembered, and it is `position: sticky` plus one small
+ * observer, not an animation library.
  */
+const total = methodStages.length;
 ---
 
 <section class="bg-teal text-ivory on-dark">
   <Container class="section">
-    <div class="grid gap-y-12 lg:grid-cols-12 lg:gap-x-16">
-      <div class="lg:col-span-4" data-reveal-group>
+    <div class="lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-16">
+      <div
+        class="lg:sticky lg:top-[calc(var(--header-h)+clamp(2rem,6vh,5rem))] lg:col-span-4"
+        data-reveal-group
+      >
         <Reveal variant="fade">
-          <Eyebrow index="05" tone="inverse">The Zen Method</Eyebrow>
+          <SectionNumber value="05" tone="dark" />
         </Reveal>
-        <Reveal>
-          <h2 class="mt-6 font-display text-display-lg text-ivory">Certainty, in five stages.</h2>
+
+        <Reveal variant="fade" class="mt-4">
+          <Eyebrow tone="inverse">The Zen Method</Eyebrow>
         </Reveal>
+
+        <SplitHeading
+          lines={['Certainty,', 'in five stages.']}
+          tone="dark"
+          class="mt-6"
+        />
+
         <Reveal>
-          <p class="lede mt-[--stack-md] max-w-[38ch] text-ivory/65">
+          <p class="lede mt-[--stack-md] max-w-[36ch] text-ivory/60">
             A controlled process from first conversation to handover, held by one
             accountable team throughout.
           </p>
         </Reveal>
+
+        {/* Progress. Reads as a chapter marker rather than a scrollbar. */}
+        <div class="mt-12 hidden items-center gap-5 lg:flex" aria-hidden="true">
+          <div class="flex gap-1.5" data-method-track>
+            {
+              methodStages.map(() => (
+                <span class="block h-px w-9 bg-ivory/20 transition-colors duration-500 ease-[--ease-zen]" />
+              ))
+            }
+          </div>
+          <span class="label text-brass-soft">
+            <span data-method-current>01</span> / {pad(total)}
+          </span>
+        </div>
       </div>
 
-      <ol class="lg:col-span-7 lg:col-start-6" data-reveal-group="70">
+      <ol class="mt-12 lg:col-span-7 lg:col-start-6 lg:mt-0">
         {
-          methodStages.map((stage) => (
-            <Reveal as="li">
-              <div class="grid grid-cols-[2.5rem_1fr] gap-x-5 border-t border-ivory/15 py-7 sm:grid-cols-[4rem_1fr] sm:gap-x-8">
-                <span class="label pt-1.5 text-brass-soft" aria-hidden="true">
+          methodStages.map((stage, index) => (
+            <li
+              data-method-stage={index}
+              class="flex items-center border-t border-ivory/12 py-10 lg:min-h-[46vh] lg:py-0"
+            >
+              <Reveal class="w-full">
+                <span
+                  class="block font-display text-[clamp(2.75rem,4.6vw,4.25rem)] leading-none tracking-[-0.03em] text-brass-soft/25"
+                  aria-hidden="true"
+                >
                   {stage.index}
                 </span>
-                <div>
-                  <h3 class="font-display text-display-sm text-ivory">{stage.title}</h3>
-                  <p class="mt-2.5 max-w-[52ch] text-micro text-ivory/60">{stage.description}</p>
-                </div>
-              </div>
-            </Reveal>
+                <h3 class="mt-4 font-display text-display-md text-ivory">{stage.title}</h3>
+                <p class="mt-4 max-w-[46ch] text-small text-ivory/60">{stage.description}</p>
+              </Reveal>
+            </li>
           ))
         }
       </ol>
     </div>
   </Container>
 </section>
+
+<script>
+  /**
+   * Lights the progress marks as each stage passes the middle of the viewport.
+   * A narrow band rather than a threshold, so the active stage is unambiguous
+   * and never two at once.
+   */
+  const stages = Array.from(document.querySelectorAll<HTMLElement>('[data-method-stage]'));
+  const track = document.querySelector<HTMLElement>('[data-method-track]');
+  const current = document.querySelector<HTMLElement>('[data-method-current]');
+
+  if (stages.length > 0 && track && 'IntersectionObserver' in window) {
+    const marks = Array.from(track.children) as HTMLElement[];
+
+    const setActive = (index: number) => {
+      marks.forEach((mark, i) => {
+        mark.classList.toggle('bg-brass', i <= index);
+        mark.classList.toggle('bg-ivory/20', i > index);
+      });
+      if (current) current.textContent = String(index + 1).padStart(2, '0');
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          setActive(Number((entry.target as HTMLElement).dataset.methodStage ?? 0));
+        }
+      },
+      { rootMargin: '-48% 0px -48% 0px' },
+    );
+
+    stages.forEach((stage) => observer.observe(stage));
+    setActive(0);
+  }
+</script>

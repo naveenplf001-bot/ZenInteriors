@@ -3,6 +3,8 @@ import { Image } from 'astro:assets';
 import Container from '@components/ui/Container.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
 import Reveal from '@components/ui/Reveal.astro';
+import SplitHeading from '@components/ui/SplitHeading.astro';
+import SectionNumber from '@components/ui/SectionNumber.astro';
 import sourcingImage from '@/assets/images/home/sourcing.jpg';
 
 /**
@@ -34,14 +36,14 @@ const pillars = [
     <div class="grid items-start gap-y-12 lg:grid-cols-12 lg:gap-x-16">
       <div class="lg:col-span-5" data-reveal-group>
         <Reveal variant="fade">
-          <Eyebrow index="04">Global Sourcing</Eyebrow>
+          <SectionNumber value="03" />
         </Reveal>
 
-        <Reveal>
-          <h2 class="mt-6 font-display text-display-lg text-teal">
-            Global materials.<br />Local mastery.
-          </h2>
+        <Reveal variant="fade" class="mt-4">
+          <Eyebrow>Global Sourcing</Eyebrow>
         </Reveal>
+
+        <SplitHeading lines={['Global materials.', 'Local mastery.']} class="mt-6" />
 
         <Reveal>
           <p class="lede mt-[--stack-md] max-w-[46ch] text-charcoal/72">

@@ -3,17 +3,19 @@ import Container from '@components/ui/Container.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
 import Reveal from '@components/ui/Reveal.astro';
 import Button from '@components/ui/Button.astro';
+import SplitHeading from '@components/ui/SplitHeading.astro';
 import { site } from '@config/site';
 
 interface Props {
   eyebrow?: string;
-  title?: string;
+  /** Supplied as explicit lines so the break is a design decision. */
+  title?: string[];
   lede?: string;
 }
 
 const {
   eyebrow = 'Private Enquiry',
-  title = 'Your space deserves a considered beginning.',
+  title = ['Your space deserves', 'a considered beginning.'],
   lede = 'Every project starts with a conversation about how you want to live, not a price list. Tell us what you are planning and we will tell you honestly whether we are the right studio for it.',
 } = Astro.props;
 ---
@@ -25,11 +27,7 @@ const {
         <Reveal variant="fade">
           <Eyebrow tone="inverse">{eyebrow}</Eyebrow>
         </Reveal>
-        <Reveal>
-          <h2 class="mt-6 max-w-[16ch] font-display text-display-lg text-ivory">
-            {title}
-          </h2>
-        </Reveal>
+        <SplitHeading lines={title} tone="dark" accentFrom={1} class="mt-6" />
       </div>
 
       <div class="lg:col-span-5 lg:col-start-8">
