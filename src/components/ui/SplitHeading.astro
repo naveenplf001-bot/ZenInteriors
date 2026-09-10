@@ -19,6 +19,8 @@ interface Props {
   tone?: 'light' | 'dark';
   /** Index of the first line to render in brass. Omit for a single colour. */
   accentFrom?: number;
+  /** Sets the accented lines in italic, for headings that turn on the last line. */
+  accentItalic?: boolean;
   /** Milliseconds between lines. */
   stagger?: number;
   class?: string;
@@ -30,6 +32,7 @@ const {
   size = 'lg',
   tone = 'light',
   accentFrom,
+  accentItalic = false,
   stagger = 85,
   class: className = '',
 } = Astro.props;
@@ -63,6 +66,7 @@ const accent = tone === 'dark' ? 'text-brass-soft' : 'text-brass';
           class:list={[
             'block',
             accentFrom !== undefined && index >= accentFrom ? accent : base,
+            accentFrom !== undefined && index >= accentFrom && accentItalic ? 'italic' : '',
           ]}
           data-reveal="mask"
           data-reveal-delay={index * stagger}

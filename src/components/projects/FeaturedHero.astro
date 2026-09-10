@@ -1,0 +1,599 @@
+---
+import { Image } from 'astro:assets';
+import type { Project } from '@lib/content';
+import { pad } from '@lib/format';
+
+/**
+ * The featured project hero.
+ *
+ * An editorial spread rather than a section: the project written out on the
+ * left, the photograph running to the right edge of the screen, and a dark
+ * index panel set into it carrying the running order and the scroll cue.
+ *
+ * Every project is a slide, and all slides are rendered into the same grid
+ * cell, so the band never changes height as you move through it and every
+ * photograph is decoded before it is needed. Movement is CSS only: entering
+ * text is animated rather than transitioned, which is what lets the same
+ * keyframes replay each time a slide becomes active.
+ */
+
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+const total = projects.length;
+
+/*
+  The title breaks before its last word so the second line can carry the brass
+  accent the display headings use elsewhere. Declared, not measured: a headline
+  that has to be laid out before it can be broken cannot be revealed for free.
+*/
+function splitTitle(title: string): [string, string] {
+  const words = title.trim().split(/\s+/);
+  if (words.length < 2) return [title, ''];
+  return [words.slice(0, -1).join(' '), words[words.length - 1]!];
+}
+
+const slides = projects.map((project, index) => {
+  const [head, tail] = splitTitle(project.data.title);
+  return {
+    index,
+    id: project.id,
+    data: project.data,
+    head,
+    tail,
+    frames: project.data.gallery.length,
+    /* A line of the project's own copy, set over the photograph. */
+    caption: project.data.highlights[0] ?? project.data.summary,
+    facts: [
+      { label: 'Year', value: String(project.data.year) },
+      { label: 'Typology', value: project.data.category },
+      { label: 'Location', value: project.data.location },
+      { label: 'Scope', value: project.data.scope },
+    ],
+  };
+});
+---
+
+<section
+  class="zen-hero relative bg-ivory"
+  data-hero
+  aria-roledescription="carousel"
+  aria-label="Featured projects"
+>
+  <div
+    class="lg:grid lg:min-h-[min(88vh,900px)] lg:grid-cols-[minmax(0,35fr)_minmax(0,65fr)] lg:items-stretch"
+  >
+    {/* ----------------------------------------------------------- written */}
+    <div
+      class="relative z-10 flex flex-col justify-center px-[--gutter] pt-[clamp(1.75rem,4vh,2.75rem)] pb-[clamp(2.25rem,5vh,3.25rem)] lg:py-[clamp(2.5rem,6vh,4.5rem)] lg:pr-[clamp(1.5rem,2.6vw,2.75rem)]"
+    >
+      {/*
+        The page heading, set as the stacked vertical label the reference puts
+        against the frame. Small on purpose: the project title is the largest
+        thing on the screen, and two display headings would fight.
+      */}
+      <h1 class="label leading-[2.2] text-teal/40">
+        Spaces that hold<br />their composure.
+      </h1>
+      <span class="mt-6 block h-px w-12 bg-beige" aria-hidden="true"></span>
+
+      <div class="relative mt-[clamp(1.75rem,3.5vh,2.75rem)] grid">
+        {
+          slides.map((slide) => (
+            <div
+              data-hero-panel={slide.index}
+              data-active={slide.index === 0 ? '' : undefined}
+              aria-hidden={slide.index === 0 ? 'false' : 'true'}
+              class="col-start-1 row-start-1"
+            >
+              <p class="hero-in label flex items-center gap-4 text-teal/50" style="--d:40ms">
+                <span>
+                  {pad(slide.index + 1)}
+                  <span class="px-1 opacity-40">/</span>
+                  {pad(total)}
+                </span>
+                <span class="h-px w-7 bg-teal/25" aria-hidden="true" />
+                <span>Featured Project</span>
+                <span class="hidden h-px flex-1 bg-beige sm:block" aria-hidden="true" />
+              </p>
+
+              <h2 class="mt-[clamp(1.25rem,2.6vh,2rem)] font-display text-[clamp(2.5rem,1.1rem+4.4vw,4.75rem)] leading-[0.98] font-light tracking-[-0.028em]">
+                <span class="block overflow-hidden pb-[0.06em]">
+                  <span class="hero-line block text-teal" style="--d:110ms">
+                    {slide.head}
+                  </span>
+                </span>
+                {slide.tail && (
+                  <span class="block overflow-hidden pb-[0.06em]">
+                    <span class="hero-line block text-brass" style="--d:200ms">
+                      {slide.tail}
+                    </span>
+                  </span>
+                )}
+              </h2>
+
+              <p
+                class="hero-in label mt-[clamp(0.875rem,2vh,1.375rem)] text-teal/55"
+                style="--d:300ms"
+              >
+                {slide.data.location} &nbsp;/&nbsp; {slide.data.category}
+              </p>
+
+              <p
+                class="hero-in mt-[clamp(1.125rem,2.4vh,1.75rem)] max-w-[38ch] text-small leading-[1.75] text-charcoal/70"
+                style="--d:360ms"
+              >
+                {slide.data.summary}
+              </p>
+
+              <div class="hero-in mt-[clamp(1.5rem,3vh,2.25rem)]" style="--d:430ms">
+                <a
+                  href={`/projects/${slide.id}`}
+                  data-hero-link
+                  tabindex={slide.index === 0 ? undefined : '-1'}
+                  class="label group inline-flex items-center gap-4 rounded-zen border border-teal/30 px-8 py-4 text-teal transition-colors duration-[--duration-base] ease-[--ease-zen] hover:border-teal hover:bg-teal hover:text-ivory"
+                >
+                  View Project
+                  <span
+                    class="inline-block transition-transform duration-500 ease-[--ease-zen] group-hover:translate-x-1"
+                    aria-hidden="true"
+                  >
+                    &#8594;
+                  </span>
+                </a>
+              </div>
+
+              {/* A title block, read the way a drawing sheet is read. */}
+              <dl class="hero-facts mt-[clamp(1.75rem,4vh,3rem)] grid grid-cols-2 gap-y-6 xl:grid-cols-4">
+                {slide.facts.map((fact, i) => (
+                  <div class="hero-in" style={`--d:${480 + i * 60}ms`}>
+                    <dt class="label text-teal/40">{fact.label}</dt>
+                    <dd class="mt-2.5 max-w-[18ch] text-micro leading-[1.55] text-charcoal/75">
+                      {fact.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    {/* ------------------------------------------------------------- framed */}
+    <div class="relative flex flex-col lg:pt-[--hero-top]">
+      {/* Dark flag hung from the top edge, breaking the ivory band. */}
+      <span
+        class="absolute top-0 right-[calc(var(--hero-panel-right)+var(--hero-panel-w)+clamp(2rem,5vw,5rem))] hidden h-[--hero-top] w-[clamp(3.5rem,6vw,7rem)] bg-teal lg:block"
+        aria-hidden="true"></span>
+
+      <div
+        class="relative grid aspect-[4/5] w-full overflow-hidden bg-stone sm:aspect-[16/10] lg:aspect-auto lg:flex-1"
+        data-hero-frame
+      >
+        <div class="col-start-1 row-start-1 grid overflow-hidden" data-hero-parallax>
+          {
+            slides.map((slide) => (
+              <Image
+                src={slide.data.cover}
+                alt={slide.data.coverAlt}
+                widths={[640, 1024, 1400, 1800, 2200]}
+                sizes="(min-width: 1024px) 65vw, 100vw"
+                loading={slide.index === 0 ? 'eager' : 'lazy'}
+                fetchpriority={slide.index === 0 ? 'high' : 'auto'}
+                data-hero-image={slide.index}
+                data-active={slide.index === 0 ? '' : undefined}
+                class="col-start-1 row-start-1 h-full w-full object-cover"
+              />
+            ))
+          }
+        </div>
+
+        {/* Scrim, so ivory type over a bright interior stays legible. */}
+        <div
+          class="pointer-events-none col-start-1 row-start-1 bg-gradient-to-t from-ink/60 via-ink/5 to-transparent"
+          aria-hidden="true"
+        >
+        </div>
+
+        <div
+          class="col-start-1 row-start-1 grid items-end gap-6 self-end p-[clamp(1.25rem,2.6vw,2.5rem)] sm:grid-cols-[auto_minmax(0,1fr)] lg:pr-[calc(var(--hero-panel-right)+var(--hero-panel-w)+1.5rem)]"
+        >
+          <div class="grid">
+            {
+              slides.map((slide) => (
+                <a
+                  href={`/projects/${slide.id}`}
+                  data-hero-panel={slide.index}
+                  data-active={slide.index === 0 ? '' : undefined}
+                  data-hero-link
+                  tabindex={slide.index === 0 ? undefined : '-1'}
+                  aria-hidden={slide.index === 0 ? 'false' : 'true'}
+                  class="group col-start-1 row-start-1 flex items-center gap-4 self-end justify-self-start"
+                >
+                  <span class="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-ivory/45 text-ivory transition-colors duration-500 ease-[--ease-zen] group-hover:border-ivory lg:h-16 lg:w-16">
+                    <span
+                      class="hero-ring pointer-events-none absolute inset-0 rounded-full border border-ivory/40"
+                      aria-hidden="true"
+                    />
+                    <span
+                      class="inline-block transition-transform duration-500 ease-[--ease-zen] group-hover:translate-x-1"
+                      aria-hidden="true"
+                    >
+                      &#8594;
+                    </span>
+                  </span>
+                  <span class="label leading-[1.9] text-ivory/85">
+                    Explore the project
+                    <br />
+                    <span class="text-ivory/50">{pad(slide.frames)} frames</span>
+                  </span>
+                </a>
+              ))
+            }
+          </div>
+
+          <div class="hidden max-w-[32ch] justify-self-end sm:grid">
+            {
+              slides.map((slide) => (
+                <p
+                  data-hero-panel={slide.index}
+                  data-active={slide.index === 0 ? '' : undefined}
+                  aria-hidden="true"
+                  class="col-start-1 row-start-1 self-end text-right font-display text-[clamp(1rem,1.4vw,1.375rem)] leading-[1.45] text-ivory italic"
+                >
+                  <span class="hero-in block" style="--d:260ms">
+                    &ldquo;{slide.caption}.&rdquo;
+                  </span>
+                </p>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+
+      {/* ------------------------------------------------------- index panel */}
+      <div
+        class="absolute right-[--hero-panel-right] bottom-0 hidden w-[--hero-panel-w] flex-col items-center bg-teal pt-[clamp(1.75rem,3.4vh,2.75rem)] pb-[clamp(1.5rem,3vh,2.5rem)] lg:flex"
+        style="top: calc(var(--hero-top) + clamp(2.5rem, 7vh, 5.5rem))"
+      >
+        <div
+          class="flex flex-col items-center gap-3"
+          role="tablist"
+          aria-label="Choose a project"
+        >
+          {
+            slides.map((slide) => (
+              <button
+                type="button"
+                role="tab"
+                data-hero-dot={slide.index}
+                aria-selected={slide.index === 0 ? 'true' : 'false'}
+                aria-label={`${slide.data.title}, project ${slide.index + 1} of ${total}`}
+                class="label relative px-2 py-1 text-ivory/35 transition-colors duration-500 ease-[--ease-zen] hover:text-ivory/80 aria-selected:text-ivory"
+              >
+                {pad(slide.index + 1)}
+                <span
+                  class="absolute inset-x-1 -bottom-1 h-px origin-left scale-x-0 bg-brass-soft transition-transform duration-700 ease-[--ease-zen]"
+                  data-hero-dot-rule
+                  aria-hidden="true"
+                />
+              </button>
+            ))
+          }
+        </div>
+
+        <a
+          href="#more-projects"
+          class="group mt-auto flex flex-col items-center gap-5 pt-10 text-ivory/70 transition-colors duration-500 hover:text-ivory"
+        >
+          <span
+            class="relative block h-[clamp(2.5rem,9vh,5rem)] w-px overflow-hidden bg-ivory/25"
+            aria-hidden="true"
+          >
+            <span class="hero-cue absolute inset-x-[-1px] top-0 block h-1/4 bg-brass-soft"></span>
+          </span>
+          <span aria-hidden="true" class="text-[0.75rem] leading-none">&#8595;</span>
+          <span class="label text-center leading-[1.9]">Scroll<br />to explore</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {/* Running order for narrow screens, where the panel is not rendered. */}
+  <div class="flex items-center gap-4 px-[--gutter] pt-6 pb-2 lg:hidden">
+    {
+      slides.map((slide) => (
+        <button
+          type="button"
+          data-hero-dot={slide.index}
+          aria-label={`${slide.data.title}, project ${slide.index + 1} of ${total}`}
+          aria-current={slide.index === 0 ? 'true' : 'false'}
+          class="label flex-1 border-t border-beige pt-3 text-left text-teal/30 transition-colors duration-500 aria-[current=true]:border-brass aria-[current=true]:text-teal"
+        >
+          {pad(slide.index + 1)}
+        </button>
+      ))
+    }
+  </div>
+
+  <p class="visually-hidden" aria-live="polite" data-hero-live></p>
+</section>
+
+<style>
+  .zen-hero {
+    /* Geometry of the right-hand furniture, declared once. */
+    --hero-top: clamp(1.75rem, 5vh, 4rem);
+    --hero-panel-w: clamp(5rem, 6.4vw, 7rem);
+    --hero-panel-right: clamp(1.25rem, 2.8vw, 3.25rem);
+  }
+
+  /* Stacked slides. Only the active one is visible or clickable. */
+  [data-hero-panel] {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 460ms var(--ease-zen);
+  }
+
+  [data-hero-panel][data-active] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  [data-hero-image] {
+    opacity: 0;
+    transition: opacity 900ms var(--ease-zen);
+  }
+
+  [data-hero-image][data-active] {
+    opacity: 1;
+  }
+
+  /* Vertical rules between the fact cells, following the column count. */
+  .hero-facts > *:nth-child(2n) {
+    border-left: 1px solid var(--color-beige);
+    padding-left: clamp(0.875rem, 1.4vw, 1.5rem);
+  }
+
+  @media (min-width: 80rem) {
+    .hero-facts > *:not(:first-child) {
+      border-left: 1px solid var(--color-beige);
+      padding-left: clamp(0.875rem, 1.4vw, 1.5rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /*
+      Entering content is animated, not transitioned. A transition cannot be
+      replayed on an element that never changed its resting state, and every
+      slide has to land the same way each time it is chosen.
+    */
+    [data-hero-panel] .hero-line {
+      transform: translate3d(0, 110%, 0);
+    }
+
+    [data-hero-panel][data-active] .hero-line {
+      animation: hero-line-in 1100ms var(--ease-zen-out) var(--d, 0ms) both;
+    }
+
+    [data-hero-panel] .hero-in {
+      opacity: 0;
+    }
+
+    [data-hero-panel][data-active] .hero-in {
+      animation: hero-in 900ms var(--ease-zen-out) var(--d, 0ms) both;
+    }
+
+    /* The photograph settles back from an over-scale as it crossfades. */
+    [data-hero-image] {
+      transform: scale(1.07);
+      transition:
+        opacity 900ms var(--ease-zen),
+        transform 2200ms var(--ease-zen-out);
+    }
+
+    [data-hero-image][data-active] {
+      transform: scale(1);
+    }
+
+    [data-hero-parallax] {
+      transform: translate3d(0, var(--parallax, 0px), 0);
+      will-change: transform;
+    }
+
+    .hero-ring {
+      animation: hero-ring 3200ms var(--ease-zen) infinite;
+    }
+
+    .hero-cue {
+      animation: hero-cue 2600ms var(--ease-zen) infinite;
+    }
+  }
+
+  @keyframes hero-line-in {
+    from {
+      transform: translate3d(0, 110%, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 0.875rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes hero-ring {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    70%,
+    100% {
+      transform: scale(1.45);
+      opacity: 0;
+    }
+  }
+
+  @keyframes hero-cue {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    30% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(400%);
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Hero band.
+   *
+   * Slides are stacked and crossfaded, so only the active one may be
+   * reachable: an invisible panel that still takes focus is a keyboard trap in
+   * slow motion. Visual state, `aria-hidden` and `tabindex` therefore move
+   * together, and one live region announces the change.
+   */
+  const root = document.querySelector<HTMLElement>('[data-hero]');
+
+  if (root) {
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-hero-panel]'));
+    const images = Array.from(root.querySelectorAll<HTMLElement>('[data-hero-image]'));
+    const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-hero-dot]'));
+    const live = root.querySelector<HTMLElement>('[data-hero-live]');
+    const total = images.length;
+
+    if (total > 0) {
+      let current = 0;
+
+      const show = (next: number, announce = true) => {
+        const index = (next + total) % total;
+        if (index === current && announce) return;
+        current = index;
+
+        for (const node of [...panels, ...images]) {
+          const key = node.dataset.heroPanel ?? node.dataset.heroImage;
+          const active = Number(key) === current;
+          if (active) node.setAttribute('data-active', '');
+          else node.removeAttribute('data-active');
+
+          if (node.dataset.heroPanel !== undefined) {
+            node.setAttribute('aria-hidden', active ? 'false' : 'true');
+            const links = node.matches('[data-hero-link]')
+              ? [node]
+              : Array.from(node.querySelectorAll<HTMLElement>('[data-hero-link]'));
+            for (const link of links) link.setAttribute('tabindex', active ? '0' : '-1');
+          }
+        }
+
+        for (const dot of dots) {
+          const active = Number(dot.dataset.heroDot) === current;
+          if (dot.hasAttribute('role')) dot.setAttribute('aria-selected', String(active));
+          else dot.setAttribute('aria-current', String(active));
+          const rule = dot.querySelector<HTMLElement>('[data-hero-dot-rule]');
+          if (rule) rule.style.transform = active ? 'scaleX(1)' : 'scaleX(0)';
+        }
+
+        if (announce && live) {
+          const title = panels[current]?.querySelector('h2')?.textContent?.trim() ?? '';
+          live.textContent = `${title}, project ${current + 1} of ${total}`;
+        }
+      };
+
+      for (const dot of dots) {
+        dot.addEventListener('click', () => show(Number(dot.dataset.heroDot ?? 0)));
+      }
+
+      root.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          show(current + 1);
+        } else if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          show(current - 1);
+        }
+      });
+
+      /* Swipe, on the photograph only. Touch and pen; the mouse has the index. */
+      const frame = root.querySelector<HTMLElement>('[data-hero-frame]');
+      let startX = 0;
+      let startY = 0;
+      let tracking = false;
+
+      frame?.addEventListener(
+        'pointerdown',
+        (event) => {
+          if (event.pointerType === 'mouse') return;
+          tracking = true;
+          startX = event.clientX;
+          startY = event.clientY;
+        },
+        { passive: true },
+      );
+
+      frame?.addEventListener(
+        'pointerup',
+        (event) => {
+          if (!tracking) return;
+          tracking = false;
+          const dx = event.clientX - startX;
+          // Ignore anything that was mostly a vertical scroll.
+          if (Math.abs(dx) < 48 || Math.abs(event.clientY - startY) > Math.abs(dx)) return;
+          show(dx < 0 ? current + 1 : current - 1);
+        },
+        { passive: true },
+      );
+
+      show(0, false);
+    }
+
+    /*
+      Parallax on the photograph. A few per cent of counter-movement while the
+      band is on screen, driven off scroll rather than a timer, and skipped
+      entirely for reduced motion.
+    */
+    const layer = root.querySelector<HTMLElement>('[data-hero-parallax]');
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (layer && !still) {
+      let ticking = false;
+
+      const place = () => {
+        const rect = root.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+        // 0 at the top of the band, 1 once it has fully passed the fold.
+        const progress = Math.min(1, Math.max(0, -rect.top / (rect.height || 1)));
+        layer.style.setProperty('--parallax', `${(progress * 6).toFixed(2)}%`);
+      };
+
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (ticking) return;
+          ticking = true;
+          window.requestAnimationFrame(() => {
+            place();
+            ticking = false;
+          });
+        },
+        { passive: true },
+      );
+
+      place();
+    }
+  }
+</script>

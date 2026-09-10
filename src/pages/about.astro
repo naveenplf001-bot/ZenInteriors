@@ -5,7 +5,6 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/ui/Container.astro';
 import Reveal from '@components/ui/Reveal.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
-import Button from '@components/ui/Button.astro';
 import SplitHeading from '@components/ui/SplitHeading.astro';
 import SectionNumber from '@components/ui/SectionNumber.astro';
 
@@ -61,7 +60,6 @@ const commitments = [
   page or the capability list.
 */
 const cities = site.regions.flatMap((region) => region.cities);
-const regionNames = site.regions.map((region) => region.name).join(' · ');
 
 const assurances = [
   {
@@ -107,10 +105,28 @@ const schema = [
   schema={schema}
 >
   {/* ------------------------------------------------- philosophy first */}
-  <section class="bg-ivory">
-    <Container class="pt-[clamp(3.5rem,7vw,7rem)] pb-[--section-y-tight]">
-      <div class="grid gap-y-10 md:grid-cols-12 md:gap-x-10 lg:gap-x-16" data-reveal-group>
-        <div class="md:col-span-8">
+  {/*
+    The opening composition. A single full-bleed photograph read as a stock
+    header, so the frame is now a staggered collage: the studio's own language
+    set down the first panel, a counter, and a written line in the gutter.
+
+    The teal rail is pinned to the true right edge of the viewport rather than
+    to the container, which is what makes the band read as a printed spread.
+    It only appears once there is genuinely width for it.
+  */}
+  <section class="relative isolate overflow-hidden bg-ivory">
+    <div
+      class="absolute inset-y-0 right-0 hidden w-[clamp(8rem,11vw,12rem)] bg-teal xl:block"
+      aria-hidden="true"
+    >
+    </div>
+
+    <Container
+      class="pt-[clamp(3rem,5.5vw,5.5rem)] pb-[--section-y-tight] xl:pr-[clamp(9.5rem,13vw,15rem)]"
+    >
+      <div class="grid gap-y-14 lg:grid-cols-12 lg:gap-x-12">
+        {/* ------------------------------------------------- the statement */}
+        <div class="lg:col-span-5 lg:flex lg:flex-col" data-reveal-group>
           <Reveal variant="fade">
             <Eyebrow>The Studio</Eyebrow>
           </Reveal>
@@ -120,68 +136,165 @@ const schema = [
             size="xl"
             lines={['Exceptional interiors', 'are not assembled.', 'They are considered.']}
             accentFrom={2}
+            accentItalic
             class="mt-7"
           />
-        </div>
-
-        <div class="md:col-span-4 md:self-end">
-          <Reveal>
-            <p class="lede text-charcoal/72">
-              A design and execution studio for people who intend to live with the result
-              for a very long time.
-            </p>
-          </Reveal>
-          <Reveal variant="fade">
-            <p class="label mt-7 text-teal/45">{regionNames}</p>
-          </Reveal>
-        </div>
-      </div>
-    </Container>
-
-    <Reveal variant="clip">
-      <div class="bleed aspect-[4/5] overflow-hidden bg-stone sm:aspect-[16/9] lg:aspect-[21/9]">
-        <Image
-          src={aboutHero}
-          alt="Double-height lounge with a floating stone stair and a brass ring pendant above the seating"
-          widths={[768, 1280, 1600, 2000, 2400]}
-          sizes="100vw"
-          loading="eager"
-          fetchpriority="high"
-          class="h-full w-full object-cover"
-        />
-      </div>
-    </Reveal>
-
-    <Container class="pt-5">
-      <p class="label text-teal/40">Design &nbsp;·&nbsp; Sourcing &nbsp;·&nbsp; Execution</p>
-    </Container>
-  </section>
-
-  {/* ------------------------------------------------------- who we are */}
-  <section class="bg-ivory">
-    <Container class="section">
-      <div class="grid items-start gap-y-12 md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
-        <div class="md:col-span-7 lg:col-span-6" data-reveal-group>
-          <Reveal variant="fade">
-            <SectionNumber value="01" />
-          </Reveal>
-
-          <Reveal variant="fade" class="mt-4">
-            <Eyebrow>Who We Are</Eyebrow>
-          </Reveal>
-
-          <SplitHeading lines={['Three capabilities,', 'one accountable studio.']} class="mt-6" />
 
           <Reveal>
-            <p class="lede mt-[--stack-md] text-charcoal/80">
+            <p class="lede mt-[--stack-md] max-w-[42ch] text-charcoal/75">
               Zen Interior is an interior design and execution studio working across Tamil
               Nadu and Bangalore, for clients who intend to live with the result for a very
               long time.
             </p>
           </Reveal>
 
+          {/* The circle is the page's one drawn object. Everything else here
+              is type, rule or photograph. */}
+          <Reveal class="mt-[--stack-md]">
+            <a href="#story" class="group flex items-center gap-6">
+              <span
+                class="label flex size-[5.5rem] shrink-0 items-center justify-center rounded-full border border-teal/25 text-center leading-[1.6] text-teal transition-colors duration-500 ease-[--ease-zen] group-hover:border-brass group-hover:text-brass"
+              >
+                Our<br />Story
+              </span>
+              <span
+                class="relative block h-px w-[clamp(3rem,6vw,6rem)] bg-teal/30 transition-all duration-500 ease-[--ease-zen] group-hover:w-[clamp(4rem,8vw,8rem)] group-hover:bg-brass"
+                aria-hidden="true"
+              >
+                <span
+                  class="absolute -top-[3px] right-0 block size-[7px] rotate-45 border-t border-r border-current"
+                ></span>
+              </span>
+            </a>
+          </Reveal>
+
+          <Reveal variant="fade" class="mt-auto pt-[--stack-lg]">
+            <p class="label text-teal/35">
+              Spaces &nbsp;/&nbsp; People &nbsp;/&nbsp; Purpose
+            </p>
+          </Reveal>
+        </div>
+
+        {/* ----------------------------------------------------- the collage */}
+        <div class="lg:col-span-7" data-reveal-group="90">
+          <div class="grid grid-cols-2 gap-4 sm:gap-5">
+            <Reveal variant="clip" class="col-span-2 sm:col-span-1">
+              <div class="relative aspect-[3/4] overflow-hidden bg-stone">
+                <Image
+                  src={aboutHero}
+                  alt="Double-height lounge with a floating stone stair and a brass ring pendant above the seating"
+                  widths={[480, 800, 1200, 1600]}
+                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw"
+                  loading="eager"
+                  fetchpriority="high"
+                  class="h-full w-full object-cover"
+                />
+
+                {/* The studio's own language, set down the frame. */}
+                <div
+                  class="absolute inset-y-0 left-0 flex flex-col justify-center gap-6 bg-gradient-to-r from-ink/55 to-transparent pr-16 pl-6"
+                >
+                  <p class="label text-ivory/85">Materials</p>
+                  <p class="label text-ivory/85">People</p>
+                  <p class="label text-ivory/85">Spaces</p>
+                  <p class="label text-ivory/85">A Better Tomorrow</p>
+                </div>
+
+                <p class="label absolute right-5 bottom-5 text-ivory/70">01 / 03</p>
+              </div>
+            </Reveal>
+
+            <Reveal variant="clip" class="col-span-2 sm:col-span-1 sm:mt-[clamp(2rem,5vw,4.5rem)]">
+              <div class="aspect-[3/4] overflow-hidden bg-stone">
+                <Image
+                  src={craftImage}
+                  alt="Joinery detail under raking light, showing the reveal between two timber faces"
+                  widths={[480, 800, 1200, 1600]}
+                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw"
+                  loading="lazy"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+            </Reveal>
+          </div>
+
+          <div class="mt-6 grid gap-6 sm:grid-cols-2 sm:items-end sm:gap-8">
+            <Reveal variant="fade">
+              <p
+                class="font-display text-[clamp(1.25rem,0.95rem+1vw,1.75rem)] leading-[1.35] text-teal/70 italic"
+              >
+                Thoughtful spaces<br />last longer.
+              </p>
+              <span class="mt-4 block h-px w-10 bg-brass" aria-hidden="true"></span>
+            </Reveal>
+
+            <Reveal variant="clip">
+              <div class="aspect-[16/10] overflow-hidden bg-stone">
+                <Image
+                  src={thresholdImage}
+                  alt="Shaped timber archway framing the dining and tea area beyond"
+                  widths={[480, 800, 1200]}
+                  sizes="(min-width: 1024px) 28vw, (min-width: 640px) 46vw, 92vw"
+                  loading="lazy"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </div>
+    </Container>
+
+    {/* The rail's own type, positioned against the viewport edge so it stays
+        aligned with the strip behind it at every width above xl. */}
+    <div
+      class="absolute top-[clamp(4rem,7vw,7rem)] right-0 hidden w-[clamp(8rem,11vw,12rem)] pr-[clamp(1rem,1.6vw,1.75rem)] text-right xl:block"
+    >
+      <p class="label text-ivory/80">Design</p>
+      <p class="label mt-3.5 text-ivory/80">Execute</p>
+      <p class="label mt-3.5 text-ivory/80">Nurture</p>
+    </div>
+  </section>
+
+  {/* ------------------------------------------- who we are, as a strip */}
+  {/*
+    The four assurances read as a single ruled band rather than four cards,
+    because the point is that they belong to one studio. Values come from site
+    config and the capability list, so this cannot drift out of agreement with
+    the footer or the services page.
+  */}
+  <section id="story" class="border-y border-beige bg-ivory">
+    <Container class="py-[clamp(2.5rem,4.5vw,4.5rem)]">
+      <Reveal variant="fade">
+        <Eyebrow index="01">Who We Are</Eyebrow>
+      </Reveal>
+
+      <div class="mt-9 grid gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group="70">
+        {
+          assurances.map((item, index) => (
+            <Reveal
+              class:list={[
+                'border-t border-beige pt-6 lg:border-t-0 lg:pt-0',
+                index > 0 && 'lg:border-l lg:border-beige lg:pl-8',
+              ]}
+            >
+              <p class="font-display text-[clamp(1.875rem,1.3rem+1.6vw,2.75rem)] leading-none text-teal">
+                {item.value}
+              </p>
+              <p class="label mt-4 text-teal/55">{item.label}</p>
+              <p class="mt-3 max-w-[32ch] text-micro text-charcoal/60">{item.note}</p>
+            </Reveal>
+          ))
+        }
+      </div>
+
+      <div
+        class="mt-[clamp(2rem,3.5vw,3.25rem)] grid gap-y-9 border-t border-beige pt-[clamp(2rem,3.5vw,3.25rem)] lg:grid-cols-12 lg:items-start lg:gap-x-12"
+        data-reveal-group
+      >
+        <div class="lg:col-span-5">
           <Reveal>
-            <p class="mt-7 max-w-[58ch] text-charcoal/72">
+            <p class="text-charcoal/72">
               We combine international product sourcing with local design expertise and
               professional execution. That combination is deliberate. Access to unusual
               materials is worth very little without the judgement to place them and the
@@ -189,63 +302,37 @@ const schema = [
               capabilities from three separate parties.
             </p>
           </Reveal>
+        </div>
 
+        <div class="lg:col-span-4">
           <Reveal>
-            <p class="mt-7 max-w-[58ch] text-charcoal/72">
+            <p class="text-charcoal/72">
               We hold all three. It is slower to build a studio that way and it is the only
               way we know to be accountable for a finished space rather than a delivered
               component.
             </p>
           </Reveal>
-
-          <Reveal variant="fade" class="mt-9">
-            <Button href="/projects" variant="link">See the Work</Button>
-          </Reveal>
         </div>
 
-        <div class="md:col-span-5 lg:col-span-5 lg:col-start-8">
-          <Reveal variant="clip">
-            <div class="aspect-[4/5] overflow-hidden rounded-zen bg-stone sm:aspect-[3/2] md:aspect-[4/5]">
-              <Image
-                src={thresholdImage}
-                alt="Shaped timber archway framing the dining and tea area beyond"
-                widths={[480, 800, 1200, 1600]}
-                sizes="(min-width: 1024px) 38vw, (min-width: 768px) 42vw, 92vw"
-                loading="lazy"
-                class="h-full w-full object-cover"
-              />
-            </div>
-          </Reveal>
-
-          <Reveal variant="fade" class="mt-5">
-            <p class="text-micro text-charcoal/50">
-              Openings, joinery and light resolved as one composition rather than three
-              separate trades.
-            </p>
+        <div class="lg:col-span-3 lg:justify-self-end">
+          <Reveal>
+            <a href="#process" class="group flex items-center gap-6">
+              <span
+                class="label flex size-[5.5rem] shrink-0 items-center justify-center rounded-full border border-teal/25 text-center leading-[1.6] text-teal transition-colors duration-500 ease-[--ease-zen] group-hover:border-brass group-hover:text-brass"
+              >
+                Our<br />Approach
+              </span>
+              <span
+                class="relative block h-px w-[clamp(2.5rem,4vw,4.5rem)] bg-teal/30 transition-all duration-500 ease-[--ease-zen] group-hover:w-[clamp(3.5rem,6vw,6rem)] group-hover:bg-brass"
+                aria-hidden="true"
+              >
+                <span
+                  class="absolute -top-[3px] right-0 block size-[7px] rotate-45 border-t border-r border-current"
+                ></span>
+              </span>
+            </a>
           </Reveal>
         </div>
-      </div>
-    </Container>
-  </section>
-
-  {/* -------------------------------------------------- assurance band */}
-  <section class="bg-ink text-ivory on-dark">
-    <Container class="section-tight">
-      <div
-        class="grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4"
-        data-reveal-group="70"
-      >
-        {
-          assurances.map((item) => (
-            <Reveal>
-              <div class="border-t border-ivory/15 pt-6">
-                <p class="font-display text-display-lg text-ivory">{item.value}</p>
-                <p class="label mt-4">{item.label}</p>
-                <p class="mt-3 max-w-[30ch] text-micro text-ivory/55">{item.note}</p>
-              </div>
-            </Reveal>
-          ))
-        }
       </div>
     </Container>
   </section>
