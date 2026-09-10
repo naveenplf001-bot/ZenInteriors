@@ -1,18 +1,9 @@
 ---
-import { Image } from 'astro:assets';
 import Container from '@components/ui/Container.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
 import Reveal from '@components/ui/Reveal.astro';
 import SplitHeading from '@components/ui/SplitHeading.astro';
-import SectionNumber from '@components/ui/SectionNumber.astro';
 import { methodStages } from '@data/methodology';
-import { pad } from '@lib/format';
-
-import discover from '@/assets/images/projects/the-emerald-residence/01-threshold.jpg';
-import design from '@/assets/images/projects/the-quiet-villa/01-living-volume.jpg';
-import source from '@/assets/images/home/sourcing.jpg';
-import craft from '@/assets/images/projects/the-slate-apartment/02-kitchen-detail.jpg';
-import deliver from '@/assets/images/projects/the-quiet-villa/02-lounge.jpg';
 
 /**
  * The Zen method.
@@ -21,84 +12,70 @@ import deliver from '@/assets/images/projects/the-quiet-villa/02-lounge.jpg';
  * A named, sequenced process is what communicates that a studio is not
  * improvising on site.
  *
- * Built as a sticky scroll sequence: the statement holds still on the left
- * while the five stages move past it, and the photograph beside it changes
- * to match whichever stage is on screen. Without that image the section was
- * five paragraphs on a flat green field, which is a lot of colour asking the
- * reader to do all the work.
+ * A sticky scroll sequence: the statement holds still on the left while the
+ * five stages move past it. What changes on the left is a single enormous
+ * numeral and a stage index, not a photograph. A swapping image panel here
+ * read as a generic product-page pattern; the type is the brand, and at this
+ * size it carries the section on its own.
+ *
+ * The section numeral is deliberately omitted. Two numbering systems in one
+ * column compete, and the stage counter is the more useful of the two.
  *
  * position: sticky plus one observer. No animation library.
  */
-
-const stageImages = [
-  { src: discover, alt: 'Timber archway framing a dining and tea area beyond' },
-  { src: design, alt: 'Open living and dining volume under layered architectural lighting' },
-  { src: source, alt: 'Entrance joinery with concealed storage below a floating console' },
-  { src: craft, alt: 'Kitchen detail showing the handleless drawer line and undercabinet lighting' },
-  { src: deliver, alt: 'Double-height lounge with a floating stone stair and brass ring pendant' },
-];
-
-const total = methodStages.length;
 ---
 
 <section class="bg-teal text-ivory on-dark">
   <Container class="section">
     <div class="lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-16">
       <div
-        class="lg:sticky lg:top-[calc(var(--header-h)+clamp(1.5rem,4vh,3.5rem))] lg:col-span-5"
+        class="lg:sticky lg:top-[calc(var(--header-h)+clamp(1.5rem,5vh,4rem))] lg:col-span-5"
         data-reveal-group
       >
         <Reveal variant="fade">
-          <SectionNumber value="06" tone="dark" />
+          <Eyebrow index="06" tone="inverse">The Zen Method</Eyebrow>
         </Reveal>
 
-        <Reveal variant="fade" class="mt-4">
-          <Eyebrow tone="inverse">The Zen Method</Eyebrow>
-        </Reveal>
-
-        <SplitHeading lines={['Certainty,', 'in five stages.']} tone="dark" class="mt-6" />
+        <SplitHeading lines={['Certainty,', 'in five stages.']} tone="dark" class="mt-7" />
 
         {/*
-          The photograph tracks the stage on screen. Stacked and crossfaded
-          rather than swapped, so nothing reflows and every frame is already
-          decoded before it is needed.
+          The stage numeral, at a size that makes it a graphic rather than a
+          label. Stacked and crossfaded so the column never reflows as the
+          number changes underneath the heading.
         */}
-        <Reveal variant="clip" class="mt-[--stack-md] hidden lg:block">
-          <div class="relative aspect-[4/3] overflow-hidden rounded-zen bg-teal-deep">
-            {
-              stageImages.map((frame, index) => (
-                <Image
-                  src={frame.src}
-                  alt={frame.alt}
-                  widths={[480, 800, 1100]}
-                  sizes="40vw"
-                  loading="lazy"
-                  data-method-frame={index}
-                  class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-[900ms] ease-[--ease-zen] data-[active]:opacity-100"
-                />
-              ))
-            }
-
-            <span
-              class="label absolute bottom-4 left-4 rounded-zen bg-ink/45 px-3 py-2 text-ivory backdrop-blur-sm"
-              aria-hidden="true"
-            >
-              <span data-method-current>01</span> / {pad(total)}
-            </span>
-          </div>
-        </Reveal>
-
-        {/* Chapter marker rather than a scrollbar. */}
-        <div class="mt-8 hidden items-center gap-4 lg:flex" aria-hidden="true">
-          <div class="flex flex-1 gap-1.5" data-method-track>
-            {
-              methodStages.map(() => (
-                <span class="block h-px flex-1 bg-ivory/20 transition-colors duration-500 ease-[--ease-zen]" />
-              ))
-            }
-          </div>
-          <span class="label shrink-0 text-brass-soft" data-method-label>Discover</span>
+        <div
+          class="relative mt-[--stack-lg] hidden h-[clamp(5rem,10vw,8.5rem)] lg:block"
+          aria-hidden="true"
+        >
+          {
+            methodStages.map((stage, index) => (
+              <span
+                data-method-numeral={index}
+                class="absolute inset-0 flex items-center font-display text-[clamp(5rem,10vw,8.5rem)] leading-none tracking-[-0.045em] text-brass-soft opacity-0 transition-all duration-700 ease-[--ease-zen] data-[active]:translate-y-0 data-[active]:opacity-100"
+                style="transform: translateY(0.18em)"
+              >
+                {stage.index}
+              </span>
+            ))
+          }
         </div>
+
+        {/*
+          The stage index. Reads as a chapter list, and it is the one place
+          the whole process is visible at once.
+        */}
+        <ul class="mt-9 hidden lg:block">
+          {
+            methodStages.map((stage, index) => (
+              <li data-method-name={index} class="group flex items-center gap-5 py-2">
+                <span class="h-px w-4 shrink-0 bg-ivory/25 transition-all duration-700 ease-[--ease-zen] group-data-[active]:w-12 group-data-[active]:bg-brass" />
+                <span class="font-display text-display-sm text-ivory/30 transition-colors duration-700 ease-[--ease-zen] group-data-[active]:text-ivory">
+                  {stage.title}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
       </div>
 
       <ol class="mt-12 lg:col-span-6 lg:col-start-7 lg:mt-0">
@@ -106,29 +83,21 @@ const total = methodStages.length;
           methodStages.map((stage, index) => (
             <li
               data-method-stage={index}
-              class="border-t border-ivory/12 py-10 lg:flex lg:min-h-[52vh] lg:items-center lg:py-0"
+              class="border-t border-ivory/12 py-10 lg:flex lg:min-h-[54vh] lg:items-center lg:py-0"
             >
               <Reveal class="w-full">
+                {/* Narrow screens have no sticky column, so the row carries
+                    its own numeral. */}
                 <span
-                  class="block font-display text-[clamp(3rem,5.4vw,5rem)] leading-none tracking-[-0.035em] text-brass-soft/20"
+                  class="block font-display text-[clamp(3rem,12vw,4.5rem)] leading-none tracking-[-0.035em] text-brass-soft/25 lg:hidden"
                   aria-hidden="true"
                 >
                   {stage.index}
                 </span>
-                <h3 class="mt-4 font-display text-display-md text-ivory">{stage.title}</h3>
-                <p class="mt-4 max-w-[44ch] text-small text-ivory/60">{stage.description}</p>
-
-                {/* Narrow screens have no sticky panel, so the row shows its own frame. */}
-                <div class="mt-7 aspect-[16/10] overflow-hidden rounded-zen bg-teal-deep lg:hidden">
-                  <Image
-                    src={stageImages[index]!.src}
-                    alt={stageImages[index]!.alt}
-                    widths={[480, 800, 1100]}
-                    sizes="92vw"
-                    loading="lazy"
-                    class="h-full w-full object-cover"
-                  />
-                </div>
+                <h3 class="mt-4 font-display text-display-md text-ivory lg:mt-0">
+                  {stage.title}
+                </h3>
+                <p class="mt-4 max-w-[46ch] text-small text-ivory/60">{stage.description}</p>
               </Reveal>
             </li>
           ))
@@ -140,33 +109,25 @@ const total = methodStages.length;
 
 <script>
   /**
-   * Lights the progress marks, swaps the photograph and names the stage as
-   * each one passes the middle of the viewport. A narrow band rather than a
-   * threshold, so the active stage is unambiguous and never two at once.
+   * Drives the numeral and the stage index as each stage passes the middle of
+   * the viewport. A narrow band rather than a threshold, so the active stage
+   * is unambiguous and never two at once.
    */
   const stages = Array.from(document.querySelectorAll<HTMLElement>('[data-method-stage]'));
-  const track = document.querySelector<HTMLElement>('[data-method-track]');
-  const frames = Array.from(document.querySelectorAll<HTMLElement>('[data-method-frame]'));
-  const current = document.querySelector<HTMLElement>('[data-method-current]');
-  const label = document.querySelector<HTMLElement>('[data-method-label]');
+  const numerals = Array.from(document.querySelectorAll<HTMLElement>('[data-method-numeral]'));
+  const names = Array.from(document.querySelectorAll<HTMLElement>('[data-method-name]'));
 
   if (stages.length > 0 && 'IntersectionObserver' in window) {
-    const marks = track ? (Array.from(track.children) as HTMLElement[]) : [];
-    const names = stages.map((stage) => stage.querySelector('h3')?.textContent?.trim() ?? '');
+    const mark = (nodes: HTMLElement[], active: number) => {
+      nodes.forEach((node, i) => {
+        if (i === active) node.setAttribute('data-active', '');
+        else node.removeAttribute('data-active');
+      });
+    };
 
     const setActive = (active: number) => {
-      marks.forEach((mark, i) => {
-        mark.classList.toggle('bg-brass', i <= active);
-        mark.classList.toggle('bg-ivory/20', i > active);
-      });
-
-      frames.forEach((frame, i) => {
-        if (i === active) frame.setAttribute('data-active', '');
-        else frame.removeAttribute('data-active');
-      });
-
-      if (current) current.textContent = String(active + 1).padStart(2, '0');
-      if (label) label.textContent = names[active] ?? '';
+      mark(numerals, active);
+      mark(names, active);
     };
 
     const observer = new IntersectionObserver(
@@ -183,3 +144,10 @@ const total = methodStages.length;
     setActive(0);
   }
 </script>
+
+<style>
+  /* The inline transform is the resting state; the active state lifts it. */
+  [data-method-numeral][data-active] {
+    transform: translateY(0) !important;
+  }
+</style>
