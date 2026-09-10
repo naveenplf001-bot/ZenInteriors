@@ -1,0 +1,39 @@
+---
+import Container from '@components/ui/Container.astro';
+import Eyebrow from '@components/ui/Eyebrow.astro';
+import Reveal from '@components/ui/Reveal.astro';
+import Button from '@components/ui/Button.astro';
+---
+
+<section class="bg-ivory">
+  <Container class="section">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-4">
+        <Reveal variant="fade">
+          <Eyebrow index="01">The Studio</Eyebrow>
+        </Reveal>
+      </div>
+
+      <div class="lg:col-span-8">
+        <Reveal>
+          <h2 class="font-display text-display-lg text-teal">
+            A considered approach to extraordinary living.
+          </h2>
+        </Reveal>
+
+        <Reveal delay={120}>
+          <p class="lede mt-10 max-w-[52ch] text-charcoal/75">
+            From globally sourced materials to meticulous local execution, Zen Interior
+            creates spaces where architecture, craftsmanship and everyday life meet.
+          </p>
+        </Reveal>
+
+        <Reveal variant="fade" delay={200}>
+          <div class="mt-10">
+            <Button href="/about" variant="link">Our Approach</Button>
+          </div>
+        </Reveal>
+      </div>
+    </div>
+  </Container>
+</section>

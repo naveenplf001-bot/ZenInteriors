@@ -1,0 +1,53 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/ui/Container.astro';
+import PageHero from '@components/sections/PageHero.astro';
+import CTASection from '@components/sections/CTASection.astro';
+import ArticleCard from '@components/journal/ArticleCard.astro';
+import { getArticles } from '@lib/content';
+import { breadcrumbSchema } from '@lib/seo';
+
+/**
+ * Called the Journal, not the Blog. The word does most of the positioning
+ * work on its own, and the articles are written to demonstrate expertise
+ * rather than to chase keywords.
+ */
+
+const articles = await getArticles();
+const [lead, ...rest] = articles;
+
+const schema = [
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Journal', path: '/journal' },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Journal"
+  description="Writing on materials, craft, sourcing and considered interior design from the studio at Zen Interior."
+  schema={schema}
+>
+  <PageHero
+    eyebrow="The Zen Journal"
+    title="Notes on material, proportion and craft."
+    lede="What we have learned building interiors that have to hold up close, and what we think is worth knowing before you commission one."
+  />
+
+  <Container class="pb-[--section-y]">
+    {lead && <ArticleCard article={lead} variant="feature" />}
+
+    {
+      rest.length > 0 && (
+        <div class="mt-24 grid gap-16 lg:mt-32 lg:grid-cols-2 lg:gap-14">
+          {rest.map((article, index) => (
+            <ArticleCard article={article} delay={(index % 2) * 90} />
+          ))}
+        </div>
+      )
+    }
+  </Container>
+
+  <CTASection />
+</BaseLayout>

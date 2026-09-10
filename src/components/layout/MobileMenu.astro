@@ -1,0 +1,66 @@
+---
+import Logo from './Logo.astro';
+import { primaryNav, primaryAction } from '@data/navigation';
+import { site } from '@config/site';
+
+/**
+ * Full-screen mobile navigation.
+ *
+ * Starts `inert` so its links are unreachable by keyboard and invisible to
+ * screen readers while closed. Opening, focus trapping and restoring focus
+ * are handled in src/scripts/header.ts.
+ */
+---
+
+<div
+  id="mobile-menu"
+  data-menu
+  data-open="false"
+  inert
+  class="fixed inset-0 z-[60] flex flex-col bg-teal text-ivory transition-[opacity,visibility] duration-500 ease-[--ease-zen] data-[open=false]:invisible data-[open=false]:opacity-0 data-[open=true]:visible data-[open=true]:opacity-100 lg:hidden"
+>
+  <div class="container-zen flex h-[--header-h] shrink-0 items-center justify-between">
+    <a href="/" aria-label="Zen Interior, home">
+      <Logo />
+    </a>
+    <button type="button" data-menu-close class="label flex items-center gap-3 py-3">
+      <span>Close</span>
+      <span class="relative block h-4 w-4" aria-hidden="true">
+        <span class="absolute top-1/2 left-0 block h-px w-4 rotate-45 bg-current"></span>
+        <span class="absolute top-1/2 left-0 block h-px w-4 -rotate-45 bg-current"></span>
+      </span>
+    </button>
+  </div>
+
+  <nav class="container-zen flex flex-1 flex-col justify-center" aria-label="Mobile">
+    <ul class="flex flex-col gap-1">
+      {
+        primaryNav.map((link, index) => (
+          <li class="border-b border-ivory/12">
+            <a
+              href={link.href}
+              class="flex items-baseline gap-5 py-5 font-display text-display-sm transition-colors duration-300 hover:text-brass-soft"
+            >
+              <span class="label text-brass-soft/70">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a
+      href={primaryAction.href}
+      class="label mt-12 inline-flex items-center justify-center gap-3 rounded-zen bg-ivory px-8 py-5 text-teal"
+    >
+      {primaryAction.label}
+      <span aria-hidden="true">&#8594;</span>
+    </a>
+  </nav>
+
+  <div class="container-zen shrink-0 pb-10">
+    <p class="label text-ivory/45">{site.regions.map((r) => r.name).join(' · ')}</p>
+  </div>
+</div>

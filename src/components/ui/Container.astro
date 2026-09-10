@@ -1,0 +1,20 @@
+---
+interface Props {
+  /** zen: 1600px editorial max · narrow: 1088px · reading: 672px article measure */
+  width?: 'zen' | 'narrow' | 'reading';
+  as?: 'div' | 'section' | 'article' | 'header' | 'footer' | 'nav' | 'main';
+  class?: string;
+}
+
+const { width = 'zen', as: Tag = 'div', class: className = '' } = Astro.props;
+
+const widths: Record<string, string> = {
+  zen: 'container-zen',
+  narrow: 'container-narrow',
+  reading: 'container-reading',
+};
+---
+
+<Tag class:list={[widths[width], className]}>
+  <slot />
+</Tag>

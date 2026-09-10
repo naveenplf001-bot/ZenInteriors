@@ -1,0 +1,13 @@
+---
+interface Props {
+  schema: Record<string, unknown> | Array<Record<string, unknown>>;
+}
+
+const { schema } = Astro.props;
+
+// `set:html` on a JSON-LD script is the documented Astro pattern. The payload
+// is generated from typed builders in src/lib/seo.ts, never from user input.
+const json = JSON.stringify(schema);
+---
+
+<script type="application/ld+json" is:inline set:html={json} />

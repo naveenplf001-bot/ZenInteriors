@@ -1,0 +1,38 @@
+---
+import Container from '@components/ui/Container.astro';
+import Eyebrow from '@components/ui/Eyebrow.astro';
+import Reveal from '@components/ui/Reveal.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lede?: string;
+  tone?: 'ivory' | 'stone';
+}
+
+const { eyebrow, title, lede, tone = 'ivory' } = Astro.props;
+---
+
+<section class:list={[tone === 'stone' ? 'bg-stone' : 'bg-ivory']}>
+  <Container class="pt-[clamp(3.5rem,7vw,7rem)] pb-[clamp(2.5rem,5vw,5rem)]">
+    <Reveal variant="fade">
+      <Eyebrow>{eyebrow}</Eyebrow>
+    </Reveal>
+
+    <Reveal delay={70}>
+      <h1 class="mt-7 max-w-[16ch] font-display text-display-xl text-teal">
+        {title}
+      </h1>
+    </Reveal>
+
+    {
+      lede && (
+        <Reveal delay={140}>
+          <p class="lede mt-9 max-w-[54ch] text-charcoal/72">{lede}</p>
+        </Reveal>
+      )
+    }
+
+    <slot />
+  </Container>
+</section>

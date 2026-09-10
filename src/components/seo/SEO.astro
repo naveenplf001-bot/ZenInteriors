@@ -1,0 +1,56 @@
+---
+import { site } from '@config/site';
+import { absoluteUrl, buildTitle } from '@lib/seo';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  noindex?: boolean;
+  isHome?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  image = site.defaultOgImage,
+  type = 'website',
+  publishedTime,
+  noindex = false,
+  isHome = false,
+} = Astro.props;
+
+const fullTitle = buildTitle(title, isHome);
+const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', site.url).href;
+const ogImage = absoluteUrl(image);
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+{/*
+  Open Graph carries disproportionate weight for this brand, because these
+  links get shared on WhatsApp. A project link must preview as the photograph
+  and the project name.
+*/}
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:locale" content={site.locale} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />

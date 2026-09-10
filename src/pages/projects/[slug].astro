@@ -1,0 +1,240 @@
+---
+import { Image } from 'astro:assets';
+import type { GetStaticPaths } from 'astro';
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/ui/Container.astro';
+import Reveal from '@components/ui/Reveal.astro';
+import Eyebrow from '@components/ui/Eyebrow.astro';
+import ProjectGallery from '@components/projects/ProjectGallery.astro';
+import CTASection from '@components/sections/CTASection.astro';
+
+import { getProjects, siblings } from '@lib/content';
+import { breadcrumbSchema } from '@lib/seo';
+
+/**
+ * Every project is a real, statically generated HTML page at a readable URL.
+ * Nothing here depends on client-side routing, which is also why deep links
+ * and social previews work on Netlify without a rewrite rule.
+ */
+export const getStaticPaths = (async () => {
+  const projects = await getProjects();
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}) satisfies GetStaticPaths;
+
+const { project } = Astro.props;
+const {
+  title,
+  summary,
+  location,
+  region,
+  category,
+  year,
+  scope,
+  cover,
+  coverAlt,
+  concept,
+  materials,
+  execution,
+  highlights,
+  gallery,
+} = project.data;
+
+const allProjects = await getProjects();
+const { previous, next } = siblings(allProjects, project.id);
+
+const meta = [
+  { label: 'Location', value: `${location}, ${region}` },
+  { label: 'Typology', value: category },
+  { label: 'Year', value: String(year) },
+  { label: 'Scope', value: scope },
+];
+
+const schema = [
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Projects', path: '/projects' },
+    { name: title, path: `/projects/${project.id}` },
+  ]),
+];
+
+const paragraphs = (text: string) => text.trim().split(/\n{2,}/);
+---
+
+<BaseLayout
+  title={title}
+  description={summary}
+  header="overlay"
+  type="article"
+  schema={schema}
+>
+  {/* Full-bleed hero. The photograph is the argument; the text sits under it. */}
+  <section class="relative flex min-h-[86svh] items-end overflow-hidden bg-ink">
+    <Image
+      src={cover}
+      alt={coverAlt}
+      widths={[768, 1280, 1600, 2000, 2400]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="absolute inset-0 h-full w-full object-cover"
+    />
+    <div
+      class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/25 to-ink/30"
+      aria-hidden="true"
+    >
+    </div>
+
+    <Container class="relative z-[1] pt-[--header-h] pb-[clamp(3rem,7vh,6rem)]">
+      <p class="label text-brass-soft">
+        {location} &nbsp;/&nbsp; {category}
+      </p>
+      <h1 class="mt-7 max-w-[16ch] font-display text-display-xl text-ivory">
+        {title}
+      </h1>
+      <p class="lede mt-8 max-w-[52ch] text-ivory/75">{summary}</p>
+    </Container>
+  </section>
+
+  {/* Project facts, read as a specification rather than a paragraph. */}
+  <section class="bg-stone">
+    <Container class="section-tight">
+      <dl class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          meta.map((item, index) => (
+            <Reveal delay={index * 60}>
+              <div class="border-t border-beige pt-6">
+                <dt class="label text-teal/50">{item.label}</dt>
+                <dd class="mt-3 font-display text-display-sm text-teal">{item.value}</dd>
+              </div>
+            </Reveal>
+          ))
+        }
+      </dl>
+    </Container>
+  </section>
+
+  {/* Concept */}
+  <section class="bg-ivory">
+    <Container class="section">
+      <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-4">
+          <Reveal variant="fade">
+            <Eyebrow index="01">The Concept</Eyebrow>
+          </Reveal>
+        </div>
+        <div class="lg:col-span-7">
+          {
+            paragraphs(concept).map((paragraph, index) => (
+              <Reveal delay={index * 70}>
+                <p
+                  class:list={[
+                    'max-w-[62ch] text-charcoal/78',
+                    index === 0 ? 'lede text-charcoal/85' : 'mt-7',
+                  ]}
+                >
+                  {paragraph}
+                </p>
+              </Reveal>
+            ))
+          }
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <ProjectGallery gallery={gallery} title={title} />
+
+  {/* Materials and execution */}
+  <section class="bg-teal text-ivory on-dark">
+    <Container class="section">
+      <div class="grid gap-16 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-5">
+          <Reveal variant="fade">
+            <Eyebrow index="02" tone="inverse">Material Palette</Eyebrow>
+          </Reveal>
+          <ul class="mt-10 flex flex-col">
+            {
+              materials.map((material, index) => (
+                <Reveal as="li" delay={index * 55}>
+                  <p class="border-t border-ivory/15 py-5 text-small text-ivory/72">
+                    {material}
+                  </p>
+                </Reveal>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="lg:col-span-6 lg:col-start-7">
+          <Reveal variant="fade">
+            <Eyebrow index="03" tone="inverse">Execution</Eyebrow>
+          </Reveal>
+          {
+            paragraphs(execution).map((paragraph, index) => (
+              <Reveal delay={index * 70}>
+                <p class:list={['max-w-[58ch] text-ivory/72', index === 0 ? 'mt-10' : 'mt-6']}>
+                  {paragraph}
+                </p>
+              </Reveal>
+            ))
+          }
+
+          {
+            highlights.length > 0 && (
+              <ul class="mt-12">
+                {highlights.map((highlight, index) => (
+                  <Reveal as="li" delay={index * 55}>
+                    <div class="flex gap-5 border-t border-ivory/15 py-5">
+                      <span class="label shrink-0 pt-1 text-brass-soft" aria-hidden="true">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <p class="text-small text-ivory/72">{highlight}</p>
+                    </div>
+                  </Reveal>
+                ))}
+              </ul>
+            )
+          }
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  {/* Adjacent projects */}
+  <section class="bg-ivory">
+    <Container class="section-tight">
+      <div class="grid gap-10 border-t border-beige pt-10 sm:grid-cols-2">
+        {
+          previous && (
+            <a href={`/projects/${previous.id}`} class="group">
+              <p class="label text-teal/45">Previous</p>
+              <p class="mt-3 font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass">
+                {previous.data.title}
+              </p>
+            </a>
+          )
+        }
+        {
+          next && (
+            <a href={`/projects/${next.id}`} class="group sm:text-right">
+              <p class="label text-teal/45">Next</p>
+              <p class="mt-3 font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass">
+                {next.data.title}
+              </p>
+            </a>
+          )
+        }
+      </div>
+    </Container>
+  </section>
+
+  <CTASection
+    eyebrow="Begin"
+    title="Have a project of your own?"
+    lede="A considered space begins with a considered conversation. Tell us what you are planning."
+  />
+</BaseLayout>

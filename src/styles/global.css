@@ -1,0 +1,242 @@
+@import 'tailwindcss';
+@import './tokens.css';
+@import './typography.css';
+
+/*
+  Zen Interior — global base and shared primitives.
+
+  Order matters: Tailwind first, then tokens, then typography, then the base
+  and component layers below.
+*/
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-block-start: var(--header-h);
+    background-color: var(--color-ivory);
+    color-scheme: light;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100svh;
+    background-color: var(--color-ivory);
+    color: var(--color-charcoal);
+    overflow-x: hidden;
+  }
+
+  /* Locked while the mobile menu or lightbox is open. */
+  body[data-scroll-locked] {
+    overflow: hidden;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  img,
+  video {
+    height: auto;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  ::selection {
+    background-color: var(--color-teal);
+    color: var(--color-ivory);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 3px;
+    border-radius: var(--radius-zen);
+  }
+
+  /* Never remove the focus ring. Reduce it only where it is genuinely redundant. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+@layer components {
+  /* -----------------------------------------------------------------------
+     Containers
+     ----------------------------------------------------------------------- */
+  .container-zen {
+    width: 100%;
+    max-width: var(--container-zen);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .container-narrow {
+    width: 100%;
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .container-reading {
+    width: 100%;
+    max-width: var(--container-reading);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* Full-bleed escape from a container, for imagery that should break out. */
+  .bleed {
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+  }
+
+  .section {
+    padding-block: var(--section-y);
+  }
+
+  .section-tight {
+    padding-block: var(--section-y-tight);
+  }
+
+  /* -----------------------------------------------------------------------
+     Rules and dividers — hairlines, never heavy borders.
+     ----------------------------------------------------------------------- */
+  .rule {
+    border: 0;
+    border-block-start: 1px solid var(--color-beige);
+    margin: 0;
+  }
+
+  .rule-inverse {
+    border: 0;
+    border-block-start: 1px solid color-mix(in srgb, var(--color-ivory) 22%, transparent);
+    margin: 0;
+  }
+
+  /* -----------------------------------------------------------------------
+     Dark ground. Used for teal and black sections so nested text, rules and
+     accents flip in one place rather than per element.
+     ----------------------------------------------------------------------- */
+  .on-dark {
+    color: color-mix(in srgb, var(--color-ivory) 82%, transparent);
+  }
+
+  .on-dark h1,
+  .on-dark h2,
+  .on-dark h3,
+  .on-dark h4,
+  .on-dark .display {
+    color: var(--color-ivory);
+  }
+
+  .on-dark .label {
+    color: var(--color-brass-soft);
+  }
+
+  /* -----------------------------------------------------------------------
+     Accessibility helpers
+     ----------------------------------------------------------------------- */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .skip-link {
+    position: absolute;
+    inset-block-start: 0.5rem;
+    inset-inline-start: 0.5rem;
+    z-index: var(--z-lightbox);
+    transform: translateY(-200%);
+    background: var(--color-teal);
+    color: var(--color-ivory);
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-zen);
+    transition: transform var(--duration-fast) var(--ease-zen);
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================================
+   Reveal system
+
+   Scoped to `.js` so that with JavaScript disabled every element renders
+   visible instead of staying at opacity 0. Wrapped in a no-preference query
+   so reduced-motion users skip the animation entirely rather than running a
+   shortened version of it.
+   ========================================================================= */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(1.75rem);
+    transition:
+      opacity var(--duration-reveal) var(--ease-zen),
+      transform var(--duration-reveal) var(--ease-zen);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .js [data-reveal='fade'] {
+    transform: none;
+  }
+
+  .js [data-reveal='clip'] {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path var(--duration-reveal) var(--ease-zen-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .js [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 0 0);
+    will-change: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

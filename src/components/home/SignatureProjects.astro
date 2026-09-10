@@ -1,0 +1,91 @@
+---
+import { Image } from 'astro:assets';
+import Container from '@components/ui/Container.astro';
+import Eyebrow from '@components/ui/Eyebrow.astro';
+import Reveal from '@components/ui/Reveal.astro';
+import Button from '@components/ui/Button.astro';
+import ProjectCard from '@components/projects/ProjectCard.astro';
+import { counter } from '@lib/format';
+import type { Project } from '@lib/content';
+
+interface Props {
+  projects: Project[];
+  total: number;
+}
+
+const { projects, total } = Astro.props;
+const [lead, ...rest] = projects;
+---
+
+<section class="bg-ivory">
+  <Container class="section">
+    <div class="flex flex-wrap items-end justify-between gap-8">
+      <Reveal variant="fade">
+        <Eyebrow index="02">Signature Projects</Eyebrow>
+      </Reveal>
+      <Reveal variant="fade" delay={60}>
+        <Button href="/projects" variant="link">All Projects</Button>
+      </Reveal>
+    </div>
+  </Container>
+
+  {
+    lead && (
+      <>
+        {/*
+          The lead project breaks the container deliberately. An architecture
+          studio shows one project at full width before it shows six in a grid.
+        */}
+        <Reveal variant="clip" class="mt-14 block">
+          <a href={`/projects/${lead.id}`} class="group block">
+            <div class="bleed aspect-[4/5] overflow-hidden bg-stone sm:aspect-[16/9]">
+              <Image
+                src={lead.data.cover}
+                alt={lead.data.coverAlt}
+                widths={[768, 1280, 1600, 2000, 2400]}
+                sizes="100vw"
+                loading="lazy"
+                class="h-full w-full object-cover transition-transform duration-[1400ms] ease-[--ease-zen] group-hover:scale-[1.03]"
+              />
+            </div>
+
+            <Container class="mt-8">
+              <div class="flex flex-wrap items-end justify-between gap-8">
+                <div>
+                  <p class="label text-teal/55">
+                    {lead.data.location} &nbsp;/&nbsp; {lead.data.category}
+                  </p>
+                  <h3 class="mt-4 font-display text-display-md text-teal">
+                    {lead.data.title}
+                  </h3>
+                  <p class="mt-4 max-w-[54ch] text-small text-charcoal/70">
+                    {lead.data.summary}
+                  </p>
+                </div>
+                <p class="label text-teal/30" aria-hidden="true">
+                  {counter(1, total)}
+                </p>
+              </div>
+            </Container>
+          </a>
+        </Reveal>
+
+        {rest.length > 0 && (
+          <Container class="mt-24 lg:mt-32">
+            {/*
+              Offset composition rather than a uniform row, so the second and
+              third projects do not read as a catalogue.
+            */}
+            <div class="grid gap-16 sm:grid-cols-2 sm:gap-10 lg:gap-16">
+              {rest.map((project, index) => (
+                <div class:list={[index % 2 === 1 && 'sm:mt-24 lg:mt-32']}>
+                  <ProjectCard project={project} index={index + 2} delay={index * 90} />
+                </div>
+              ))}
+            </div>
+          </Container>
+        )}
+      </>
+    )
+  }
+</section>

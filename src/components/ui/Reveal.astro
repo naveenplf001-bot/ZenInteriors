@@ -1,0 +1,24 @@
+---
+/**
+ * Wraps children in the scroll reveal system.
+ *
+ * The hidden initial state is defined in global.css behind `.js` and behind a
+ * prefers-reduced-motion query, so this component is inert for visitors who
+ * have reduced motion enabled or JavaScript disabled.
+ */
+
+interface Props {
+  /** rise: fade and move up · fade: opacity only · clip: wipe, for imagery */
+  variant?: 'rise' | 'fade' | 'clip';
+  /** Stagger in milliseconds. Keep sequences under roughly 400ms in total. */
+  delay?: number;
+  as?: 'div' | 'section' | 'article' | 'li' | 'figure' | 'span';
+  class?: string;
+}
+
+const { variant = 'rise', delay, as: Tag = 'div', class: className = '' } = Astro.props;
+---
+
+<Tag data-reveal={variant} data-reveal-delay={delay} class={className}>
+  <slot />
+</Tag>

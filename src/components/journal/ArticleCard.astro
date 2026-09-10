@@ -1,0 +1,74 @@
+---
+import { Image } from 'astro:assets';
+import Reveal from '@components/ui/Reveal.astro';
+import type { Article } from '@lib/content';
+import { formatDate } from '@lib/format';
+
+interface Props {
+  article: Article;
+  delay?: number;
+  /** feature gives the lead article a wider frame on the journal index. */
+  variant?: 'default' | 'feature';
+}
+
+const { article, delay, variant = 'default' } = Astro.props;
+const { title, excerpt, category, cover, coverAlt, publishedAt } = article.data;
+
+const href = `/journal/${article.id}`;
+const aspect = variant === 'feature' ? 'aspect-[16/9]' : 'aspect-[3/2]';
+---
+
+<Reveal as="article" delay={delay} class="group">
+  <a href={href} class="block focus-visible:outline-offset-8">
+    <div class:list={['relative overflow-hidden rounded-zen bg-stone', aspect]}>
+      <Image
+        src={cover}
+        alt={coverAlt}
+        widths={[480, 800, 1200, 1600]}
+        sizes={variant === 'feature'
+          ? '(min-width: 1024px) 66vw, 92vw'
+          : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 92vw'}
+        loading="lazy"
+        class="h-full w-full object-cover transition-transform duration-[1200ms] ease-[--ease-zen] group-hover:scale-[1.03]"
+      />
+    </div>
+
+    <p class="label mt-6 text-teal/55">
+      Journal &nbsp;/&nbsp; {category}
+    </p>
+
+    <h3
+      class:list={[
+        'mt-3 font-display text-teal',
+        variant === 'feature' ? 'text-display-md' : 'text-display-sm',
+      ]}
+    >
+      {title}
+    </h3>
+
+    {/*
+      The excerpt runs to roughly six lines and is written to create curiosity.
+      It is deliberately not clamped shorter, because the whole point is that
+      the reader gets far enough in to want the rest.
+    */}
+    <p class="mt-4 max-w-[52ch] text-small leading-[1.75] text-charcoal/72">
+      {excerpt}
+    </p>
+
+    <div class="mt-6 flex items-center gap-5">
+      <span
+        class="label inline-flex items-center gap-2.5 text-teal transition-colors duration-300 group-hover:text-brass"
+      >
+        Read Article
+        <span
+          class="inline-block transition-transform duration-500 ease-[--ease-zen] group-hover:translate-x-1"
+          aria-hidden="true">&#8594;</span
+        >
+      </span>
+      <span class="h-px flex-1 bg-beige" aria-hidden="true"></span>
+      <time datetime={publishedAt.toISOString()} class="label text-teal/40">
+        {formatDate(publishedAt)}
+      </time>
+    </div>
+  </a>
+</Reveal>

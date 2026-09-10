@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+import Hero from '@components/home/Hero.astro';
+import BrandStatement from '@components/home/BrandStatement.astro';
+import SignatureProjects from '@components/home/SignatureProjects.astro';
+import Sourcing from '@components/home/Sourcing.astro';
+import Materials from '@components/home/Materials.astro';
+import Method from '@components/home/Method.astro';
+import FeaturedJournal from '@components/home/FeaturedJournal.astro';
+import Geography from '@components/home/Geography.astro';
+import CTASection from '@components/sections/CTASection.astro';
+
+import { getProjects, getFeaturedProjects, getFeaturedArticles } from '@lib/content';
+import { site } from '@config/site';
+
+/**
+ * The homepage is a story, not a corporate stack of Hero / Services / Why Us /
+ * Testimonials. Note what is deliberately absent: there is no services grid
+ * and no testimonial carousel.
+ */
+
+const allProjects = await getProjects();
+const featured = await getFeaturedProjects(3);
+const signature = featured.length > 0 ? featured : allProjects.slice(0, 3);
+const articles = await getFeaturedArticles(2);
+---
+
+<BaseLayout
+  title="Zen Interior — Interiors Crafted Beyond Expectations"
+  description={site.description}
+  header="overlay"
+  isHome
+>
+  <Hero />
+  <BrandStatement />
+  <SignatureProjects projects={signature} total={allProjects.length} />
+  <Sourcing />
+  <Materials />
+  <Method />
+  <FeaturedJournal articles={articles} />
+  <Geography />
+  <CTASection />
+</BaseLayout>

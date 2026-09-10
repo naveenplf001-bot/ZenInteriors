@@ -1,0 +1,31 @@
+---
+import Container from '@components/ui/Container.astro';
+import Eyebrow from '@components/ui/Eyebrow.astro';
+import Reveal from '@components/ui/Reveal.astro';
+import Button from '@components/ui/Button.astro';
+import ArticleCard from '@components/journal/ArticleCard.astro';
+import type { Article } from '@lib/content';
+
+interface Props {
+  articles: Article[];
+}
+
+const { articles } = Astro.props;
+---
+
+<section class="bg-ivory">
+  <Container class="section">
+    <div class="flex flex-wrap items-end justify-between gap-8">
+      <Reveal variant="fade">
+        <Eyebrow index="08">The Journal</Eyebrow>
+      </Reveal>
+      <Reveal variant="fade" delay={60}>
+        <Button href="/journal" variant="link">All Articles</Button>
+      </Reveal>
+    </div>
+
+    <div class="mt-14 grid gap-16 lg:grid-cols-2 lg:gap-14">
+      {articles.map((article, index) => <ArticleCard article={article} delay={index * 90} />)}
+    </div>
+  </Container>
+</section>

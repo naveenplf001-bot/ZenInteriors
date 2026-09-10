@@ -1,0 +1,84 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import Reveal from './Reveal.astro';
+
+interface Props {
+  eyebrow?: string;
+  index?: string;
+  title: string;
+  lede?: string;
+  as?: 'h2' | 'h3';
+  size?: 'lg' | 'md' | 'sm';
+  align?: 'start' | 'center';
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+
+const {
+  eyebrow,
+  index,
+  title,
+  lede,
+  as: Tag = 'h2',
+  size = 'lg',
+  align = 'start',
+  tone = 'light',
+  class: className = '',
+} = Astro.props;
+
+const sizes: Record<string, string> = {
+  lg: 'text-display-lg',
+  md: 'text-display-md',
+  sm: 'text-display-sm',
+};
+---
+
+<div
+  class:list={[
+    'flex flex-col',
+    align === 'center' ? 'items-center text-center' : 'items-start',
+    className,
+  ]}
+>
+  {
+    eyebrow && (
+      <Reveal variant="fade" class="mb-6">
+        <Eyebrow index={index} tone={tone === 'dark' ? 'inverse' : 'default'}>
+          {eyebrow}
+        </Eyebrow>
+      </Reveal>
+    )
+  }
+
+  <Reveal delay={eyebrow ? 80 : 0}>
+    <Tag
+      class:list={[
+        sizes[size],
+        'font-display',
+        tone === 'dark' ? 'text-ivory' : 'text-teal',
+        'max-w-[18ch]',
+        align === 'center' && 'mx-auto',
+      ]}
+    >
+      {title}
+    </Tag>
+  </Reveal>
+
+  {
+    lede && (
+      <Reveal delay={160} class="mt-7">
+        <p
+          class:list={[
+            'lede',
+            tone === 'dark' ? 'text-ivory/75' : 'text-charcoal/75',
+            align === 'center' && 'mx-auto',
+          ]}
+        >
+          {lede}
+        </p>
+      </Reveal>
+    )
+  }
+
+  <slot />
+</div>

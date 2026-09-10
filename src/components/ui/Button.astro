@@ -1,0 +1,85 @@
+---
+/**
+ * The button system.
+ *
+ * Sharp geometry, hairline borders, no gradients and no glow. The primary
+ * action is a solid teal field; everything else is a line or a rule.
+ *
+ * Renders an anchor when `href` is present and a button otherwise, so a link
+ * is never faked with a click handler.
+ */
+
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit';
+  variant?: 'primary' | 'outline' | 'ghost' | 'link';
+  tone?: 'light' | 'dark';
+  size?: 'md' | 'lg';
+  class?: string;
+  external?: boolean;
+  disabled?: boolean;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'primary',
+  tone = 'light',
+  size = 'md',
+  class: className = '',
+  external = false,
+  disabled = false,
+  ...rest
+} = Astro.props;
+
+const base =
+  'group inline-flex items-center justify-center gap-3 rounded-zen font-sans uppercase tracking-[0.18em] transition-all duration-[--duration-base] ease-[--ease-zen] disabled:opacity-40 disabled:pointer-events-none';
+
+const sizes = {
+  md: 'px-7 py-3.5 text-[0.6875rem]',
+  lg: 'px-9 py-4.5 text-[0.75rem]',
+} as const;
+
+const variants = {
+  primary: {
+    light: 'bg-teal text-ivory hover:bg-teal-deep',
+    dark: 'bg-ivory text-teal hover:bg-white',
+  },
+  outline: {
+    light: 'border border-teal/30 text-teal hover:border-teal hover:bg-teal hover:text-ivory',
+    dark: 'border border-ivory/35 text-ivory hover:border-ivory hover:bg-ivory hover:text-teal',
+  },
+  ghost: {
+    light: 'text-teal hover:text-brass px-0 py-2',
+    dark: 'text-ivory hover:text-brass-soft px-0 py-2',
+  },
+  link: {
+    light: 'text-teal hover:text-brass px-0 py-1 border-b border-beige hover:border-brass',
+    dark: 'text-ivory hover:text-brass-soft px-0 py-1 border-b border-ivory/30 hover:border-brass-soft',
+  },
+} as const;
+
+const classes = [
+  base,
+  variant === 'primary' || variant === 'outline' ? sizes[size] : 'text-[0.6875rem]',
+  variants[variant][tone],
+  className,
+];
+
+const externalAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  class:list={classes}
+  {...href ? { href } : { type, disabled }}
+  {...externalAttrs}
+  {...rest}
+>
+  <slot />
+  <span
+    class="inline-block translate-x-0 transition-transform duration-[--duration-base] ease-[--ease-zen] group-hover:translate-x-1"
+    aria-hidden="true">&#8594;</span
+  >
+</Tag>

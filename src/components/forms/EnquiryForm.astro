@@ -1,0 +1,285 @@
+---
+import { projectTypes, investmentBands } from '@data/enquiry';
+
+/**
+ * Private project enquiry.
+ *
+ * Two things happen on submit, in this order:
+ *
+ *   1. WhatsApp is opened with the message pre-filled. This MUST be the first
+ *      thing after validation, synchronously inside the submit handler. Any
+ *      awaited call before it moves window.open outside the user gesture and
+ *      Safari and Chrome block it silently.
+ *
+ *   2. The same enquiry is posted to Netlify Forms. This is the safety net.
+ *      A deep link only pre-fills a message — if the visitor closes the tab
+ *      without pressing Send, the lead is gone unless it was captured here.
+ */
+
+const fieldClass =
+  'w-full rounded-zen border-0 border-b border-beige bg-transparent px-0 py-3.5 text-charcoal placeholder:text-charcoal/35 focus:border-teal focus:outline-none focus:ring-0 transition-colors duration-300';
+
+const labelClass = 'label text-teal/60';
+const errorClass = 'mt-2 text-[0.8125rem] text-brass hidden';
+---
+
+<form
+  name="enquiry"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  data-enquiry-form
+  novalidate
+  class="w-full"
+>
+  {/* Required by Netlify Forms on a JavaScript-submitted form. */}
+  <input type="hidden" name="form-name" value="enquiry" />
+  <input type="hidden" name="source" value="website" />
+
+  {/* Honeypot. Hidden from people, irresistible to bots. */}
+  <p class="visually-hidden" aria-hidden="true">
+    <label>
+      Do not fill this in
+      <input name="bot-field" tabindex="-1" autocomplete="off" />
+    </label>
+  </p>
+
+  <fieldset class="border-0 p-0">
+    <legend class="label mb-8 text-teal">Your Details</legend>
+
+    <div class="grid gap-8 sm:grid-cols-2">
+      <div>
+        <label class={labelClass} for="name">Full Name</label>
+        <input
+          class={fieldClass}
+          id="name"
+          name="name"
+          type="text"
+          autocomplete="name"
+          placeholder="Your name"
+          required
+        />
+        <p class={errorClass} data-error-for="name" role="alert"></p>
+      </div>
+
+      <div>
+        <label class={labelClass} for="phone">Phone</label>
+        <input
+          class={fieldClass}
+          id="phone"
+          name="phone"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          placeholder="+91"
+          required
+        />
+        <p class={errorClass} data-error-for="phone" role="alert"></p>
+      </div>
+
+      <div>
+        <label class={labelClass} for="email">Email</label>
+        <input
+          class={fieldClass}
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          placeholder="you@example.com"
+          required
+        />
+        <p class={errorClass} data-error-for="email" role="alert"></p>
+      </div>
+
+      <div>
+        <label class={labelClass} for="location">Project Location</label>
+        <input
+          class={fieldClass}
+          id="location"
+          name="location"
+          type="text"
+          placeholder="City or area"
+          required
+        />
+        <p class={errorClass} data-error-for="location" role="alert"></p>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="mt-16 border-0 p-0">
+    <legend class="label mb-8 text-teal">Your Project</legend>
+
+    <div class="grid gap-8 sm:grid-cols-2">
+      <div>
+        <label class={labelClass} for="projectType">Project Type</label>
+        <select class={fieldClass} id="projectType" name="projectType" required>
+          <option value="">Please select</option>
+          {projectTypes.map((type) => <option value={type}>{type}</option>)}
+        </select>
+        <p class={errorClass} data-error-for="projectType" role="alert"></p>
+      </div>
+
+      <div>
+        {/*
+          "Estimated Project Investment", never "Budget". The bands themselves
+          communicate the level the studio operates at.
+        */}
+        <label class={labelClass} for="investment">Estimated Project Investment</label>
+        <select class={fieldClass} id="investment" name="investment" required>
+          <option value="">Please select</option>
+          {investmentBands.map((band) => <option value={band}>{band}</option>)}
+        </select>
+        <p class={errorClass} data-error-for="investment" role="alert"></p>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <label class={labelClass} for="requirements">Requirements</label>
+      <textarea
+        class={`${fieldClass} resize-y`}
+        id="requirements"
+        name="requirements"
+        rows="4"
+        placeholder="Tell us about the space, the timeline and what matters most to you."
+      ></textarea>
+      <p class={errorClass} data-error-for="requirements" role="alert"></p>
+    </div>
+  </fieldset>
+
+  <div class="mt-14 flex flex-wrap items-center gap-8">
+    <button
+      type="submit"
+      data-enquiry-submit
+      class="label inline-flex items-center gap-3 rounded-zen bg-teal px-9 py-4.5 text-ivory transition-colors duration-300 hover:bg-teal-deep disabled:pointer-events-none disabled:opacity-50"
+    >
+      <span data-submit-label>Send Enquiry</span>
+      <span aria-hidden="true">&#8594;</span>
+    </button>
+
+    <p class="max-w-[34ch] text-[0.8125rem] text-charcoal/55">
+      Submitting opens WhatsApp with your enquiry ready to send. You stay in control of
+      the message.
+    </p>
+  </div>
+
+  <p
+    class="mt-8 hidden text-[0.8125rem] text-brass"
+    data-form-error
+    role="alert"
+  >
+  </p>
+</form>
+
+{/* Success state. Replaces the form once the enquiry has been handed over. */}
+<div data-enquiry-success hidden class="border-t border-beige pt-12">
+  <p class="label text-teal/55">Enquiry Received</p>
+  <h3 class="mt-6 font-display text-display-md text-teal">Thank you. We have it.</h3>
+  <p class="lede mt-6 max-w-[46ch] text-charcoal/72">
+    WhatsApp should have opened with your enquiry ready to send. If it did not, use the
+    link below and we will pick it up from there.
+  </p>
+  <a
+    href="#"
+    data-enquiry-fallback
+    target="_blank"
+    rel="noopener noreferrer"
+    class="label mt-8 inline-flex items-center gap-3 border-b border-beige py-1 text-teal transition-colors duration-300 hover:border-brass hover:text-brass"
+  >
+    Open WhatsApp
+    <span aria-hidden="true">&#8594;</span>
+  </a>
+</div>
+
+<script>
+  import { createEnquiry, validateEnquiry, isValid } from '@lib/enquiry';
+  import type { EnquiryField } from '@lib/enquiry';
+  import { buildWhatsAppUrl, openWhatsApp } from '@lib/whatsapp';
+
+  const form = document.querySelector<HTMLFormElement>('[data-enquiry-form]');
+  const success = document.querySelector<HTMLElement>('[data-enquiry-success]');
+  const fallback = document.querySelector<HTMLAnchorElement>('[data-enquiry-fallback]');
+  const formError = document.querySelector<HTMLElement>('[data-form-error]');
+
+  if (form) {
+    const showErrors = (errors: Partial<Record<EnquiryField, string>>) => {
+      form.querySelectorAll<HTMLElement>('[data-error-for]').forEach((node) => {
+        const field = node.dataset.errorFor as EnquiryField;
+        const message = errors[field];
+        node.textContent = message ?? '';
+        node.classList.toggle('hidden', !message);
+
+        const input = form.elements.namedItem(field);
+        if (input instanceof HTMLElement) {
+          input.setAttribute('aria-invalid', message ? 'true' : 'false');
+        }
+      });
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const data = new FormData(form);
+
+      // Honeypot: a filled hidden field means a bot. Fail silently.
+      if ((data.get('bot-field') as string)?.length) return;
+
+      const enquiry = createEnquiry({
+        name: String(data.get('name') ?? ''),
+        phone: String(data.get('phone') ?? ''),
+        email: String(data.get('email') ?? ''),
+        location: String(data.get('location') ?? ''),
+        projectType: String(data.get('projectType') ?? '') as never,
+        investment: String(data.get('investment') ?? '') as never,
+        requirements: String(data.get('requirements') ?? ''),
+        source: 'website',
+      });
+
+      const errors = validateEnquiry(enquiry);
+      showErrors(errors);
+
+      if (!isValid(errors)) {
+        const firstField = Object.keys(errors)[0];
+        const input = firstField ? form.elements.namedItem(firstField) : null;
+        if (input instanceof HTMLElement) input.focus();
+        return;
+      }
+
+      const whatsappUrl = buildWhatsAppUrl(enquiry);
+
+      // Step 1 — still inside the user gesture. Nothing may be awaited above.
+      openWhatsApp(whatsappUrl);
+
+      // Step 2 — capture the lead regardless of whether the visitor sends it.
+      data.set('createdAt', enquiry.createdAt);
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data as unknown as Record<string, string>).toString(),
+      }).catch(() => {
+        // Netlify Forms is unavailable in local dev, and a failure here must
+        // never block the visitor. The WhatsApp handover already happened.
+      });
+
+      if (fallback) fallback.href = whatsappUrl;
+      if (formError) formError.classList.add('hidden');
+
+      form.hidden = true;
+      if (success) {
+        success.hidden = false;
+        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+
+    // Clear a field's error as soon as the visitor starts fixing it.
+    form.addEventListener('input', (event) => {
+      const target = event.target as HTMLElement;
+      const name = target.getAttribute('name');
+      if (!name) return;
+      const node = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+      if (node && !node.classList.contains('hidden')) {
+        node.classList.add('hidden');
+        target.setAttribute('aria-invalid', 'false');
+      }
+    });
+  }
+</script>

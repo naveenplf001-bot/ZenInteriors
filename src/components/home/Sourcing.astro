@@ -1,0 +1,86 @@
+---
+import { Image } from 'astro:assets';
+import Container from '@components/ui/Container.astro';
+import Eyebrow from '@components/ui/Eyebrow.astro';
+import Reveal from '@components/ui/Reveal.astro';
+import sourcingImage from '@/assets/images/home/sourcing.jpg';
+
+/**
+ * The global sourcing story.
+ *
+ * This section must never read as an import business. "We import products from
+ * China" describes a trading company. Access, judgement and accountability
+ * describe a design studio that happens to source globally.
+ */
+
+const pillars = [
+  {
+    title: 'Access',
+    body: 'Established relationships with manufacturing partners across Asia and Europe, giving projects surfaces and architectural products that are rarely available locally.',
+  },
+  {
+    title: 'Judgement',
+    body: 'Materials are selected against the drawing that will use them, in person, before anything is committed. A specification is not a selection.',
+  },
+  {
+    title: 'Accountability',
+    body: 'One studio holds the design, the sourcing and the site. Nothing is resolved by three parties who never meet.',
+  },
+];
+---
+
+<section class="bg-stone">
+  <Container class="section">
+    <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-5">
+        <Reveal variant="fade">
+          <Eyebrow index="04">Global Sourcing</Eyebrow>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <h2 class="mt-7 font-display text-display-lg text-teal">
+            Global materials.<br />Local mastery.
+          </h2>
+        </Reveal>
+
+        <Reveal delay={150}>
+          <p class="lede mt-9 text-charcoal/75">
+            We source distinctive materials, architectural elements and interior products
+            from global manufacturing partners, bringing international design possibilities
+            together with meticulous execution in India.
+          </p>
+        </Reveal>
+
+        <dl class="mt-12 flex flex-col">
+          {
+            pillars.map((pillar, index) => (
+              <Reveal delay={200 + index * 70}>
+                <div class="border-t border-beige py-7">
+                  <dt class="label text-teal">{pillar.title}</dt>
+                  <dd class="mt-3.5 max-w-[46ch] text-small text-charcoal/70">
+                    {pillar.body}
+                  </dd>
+                </div>
+              </Reveal>
+            ))
+          }
+        </dl>
+      </div>
+
+      <div class="lg:col-span-7">
+        <Reveal variant="clip">
+          <div class="aspect-[4/3] overflow-hidden rounded-zen bg-beige lg:aspect-[3/4]">
+            <Image
+              src={sourcingImage}
+              alt="Stone slabs under selection at a partner yard before shipping"
+              widths={[640, 1024, 1400, 1800]}
+              sizes="(min-width: 1024px) 55vw, 92vw"
+              loading="lazy"
+              class="h-full w-full object-cover"
+            />
+          </div>
+        </Reveal>
+      </div>
+    </div>
+  </Container>
+</section>

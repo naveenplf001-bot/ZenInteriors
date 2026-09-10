@@ -1,0 +1,125 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/ui/Container.astro';
+import Reveal from '@components/ui/Reveal.astro';
+import ProjectCard from '@components/projects/ProjectCard.astro';
+import CTASection from '@components/sections/CTASection.astro';
+
+import { getArticles, getProjects } from '@lib/content';
+import { articleSchema, breadcrumbSchema } from '@lib/seo';
+import { formatDate } from '@lib/format';
+
+export const getStaticPaths = (async () => {
+  const articles = await getArticles();
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}) satisfies GetStaticPaths;
+
+const { article } = Astro.props;
+const { title, excerpt, category, cover, coverAlt, publishedAt, author, relatedProjects } =
+  article.data;
+
+const { Content } = await render(article);
+
+// Resolve the related project references against the published project list.
+const projects = await getProjects();
+const related = relatedProjects
+  .map((ref) => projects.find((project) => project.id === ref.id))
+  .filter((project): project is (typeof projects)[number] => Boolean(project));
+
+const path = `/journal/${article.id}`;
+
+const schema = [
+  articleSchema({
+    title,
+    description: excerpt.trim(),
+    path,
+    publishedAt,
+    author,
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Journal', path: '/journal' },
+    { name: title, path },
+  ]),
+];
+---
+
+<BaseLayout
+  title={title}
+  description={excerpt.trim().slice(0, 200)}
+  type="article"
+  publishedTime={publishedAt.toISOString()}
+  schema={schema}
+>
+  <article>
+    <Container width="reading" class="pt-[clamp(3rem,6vw,6rem)]">
+      <Reveal variant="fade">
+        <p class="label text-teal/55">
+          Journal &nbsp;/&nbsp; {category}
+        </p>
+      </Reveal>
+
+      <Reveal delay={70}>
+        <h1 class="mt-7 font-display text-display-lg text-teal">{title}</h1>
+      </Reveal>
+
+      <Reveal variant="fade" delay={140}>
+        <div class="mt-9 flex flex-wrap items-center gap-5 border-t border-beige pt-6">
+          <time datetime={publishedAt.toISOString()} class="label text-teal/45">
+            {formatDate(publishedAt)}
+          </time>
+          <span class="h-px w-6 bg-beige" aria-hidden="true"></span>
+          <span class="label text-teal/45">{author}</span>
+        </div>
+      </Reveal>
+    </Container>
+
+    <Container class="mt-14">
+      <Reveal variant="clip">
+        <div class="aspect-[16/9] overflow-hidden rounded-zen bg-stone">
+          <Image
+            src={cover}
+            alt={coverAlt}
+            widths={[768, 1280, 1600, 2000]}
+            sizes="92vw"
+            loading="eager"
+            fetchpriority="high"
+            class="h-full w-full object-cover"
+          />
+        </div>
+      </Reveal>
+    </Container>
+
+    <Container width="reading" class="pt-[clamp(3.5rem,7vw,6rem)] pb-[--section-y]">
+      <div class="prose-zen">
+        <Content />
+      </div>
+    </Container>
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="bg-stone">
+        <Container class="section-tight">
+          <Reveal variant="fade">
+            <p class="label text-teal/55">Related Work</p>
+          </Reveal>
+          <div class="mt-12 grid gap-16 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3">
+            {related.map((project, index) => (
+              <ProjectCard project={project} delay={index * 90} />
+            ))}
+          </div>
+        </Container>
+      </section>
+    )
+  }
+
+  <CTASection />
+</BaseLayout>

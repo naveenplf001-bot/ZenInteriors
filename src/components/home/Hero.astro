@@ -1,0 +1,162 @@
+---
+import { getImage } from 'astro:assets';
+import Container from '@components/ui/Container.astro';
+import Button from '@components/ui/Button.astro';
+
+import heroDesktop from '@/assets/images/home/hero.jpg';
+import heroMobile from '@/assets/images/home/hero-mobile.jpg';
+
+/**
+ * The hero.
+ *
+ * Art directed with a real <picture> element rather than two images hidden by
+ * CSS, because a display:none image is still fetched by most browsers. The
+ * mobile crop is a separate portrait frame — a 16:9 cinematic composition
+ * squeezed into a 390px screen loses the composition entirely.
+ *
+ * This is the one asset on the site that is preloaded and decoded eagerly.
+ * Everything else on the page loads lazily.
+ */
+
+const widthsDesktop = [1280, 1600, 1920, 2400];
+const widthsMobile = [640, 828, 1080, 1200];
+
+const [desktopAvif, desktopWebp, desktopJpeg, mobileAvif, mobileWebp, mobileJpeg] =
+  await Promise.all([
+    getImage({ src: heroDesktop, widths: widthsDesktop, format: 'avif' }),
+    getImage({ src: heroDesktop, widths: widthsDesktop, format: 'webp' }),
+    getImage({ src: heroDesktop, widths: widthsDesktop, format: 'jpeg' }),
+    getImage({ src: heroMobile, widths: widthsMobile, format: 'avif' }),
+    getImage({ src: heroMobile, widths: widthsMobile, format: 'webp' }),
+    getImage({ src: heroMobile, widths: widthsMobile, format: 'jpeg' }),
+  ]);
+
+const headline = ['Interiors', 'Crafted Beyond', 'Expectations.'];
+---
+
+<section class="relative flex min-h-[100svh] flex-col justify-end overflow-hidden bg-ink">
+  <picture>
+    <source
+      media="(min-width: 768px)"
+      type="image/avif"
+      srcset={desktopAvif.srcSet.attribute}
+      sizes="100vw"
+    />
+    <source
+      media="(min-width: 768px)"
+      type="image/webp"
+      srcset={desktopWebp.srcSet.attribute}
+      sizes="100vw"
+    />
+    <source
+      media="(min-width: 768px)"
+      type="image/jpeg"
+      srcset={desktopJpeg.srcSet.attribute}
+      sizes="100vw"
+    />
+    <source type="image/avif" srcset={mobileAvif.srcSet.attribute} sizes="100vw" />
+    <source type="image/webp" srcset={mobileWebp.srcSet.attribute} sizes="100vw" />
+    <img
+      src={mobileJpeg.src}
+      srcset={mobileJpeg.srcSet.attribute}
+      sizes="100vw"
+      alt=""
+      width={heroDesktop.width}
+      height={heroDesktop.height}
+      fetchpriority="high"
+      loading="eager"
+      decoding="sync"
+      data-hero-image
+      class="absolute inset-0 h-full w-full object-cover"
+    />
+  </picture>
+
+  {/*
+    A single soft scrim, weighted to the bottom where the type sits. Not a
+    decorative gradient across the whole frame.
+  */}
+  <div
+    class="absolute inset-0 bg-gradient-to-t from-ink/78 via-ink/28 to-ink/38"
+    aria-hidden="true"
+  >
+  </div>
+
+  <Container class="relative z-[1] pb-[clamp(3.5rem,8vh,7rem)] pt-[--header-h]">
+    <p class="label text-brass-soft" data-hero-line style="--line: 0">
+      Tamil Nadu &nbsp;·&nbsp; Bangalore
+    </p>
+
+    <h1 class="mt-8 font-display text-display-xl text-ivory">
+      {
+        headline.map((line, index) => (
+          <span class="block overflow-hidden">
+            <span class="block" data-hero-line style={`--line: ${index + 1}`}>
+              {line}
+            </span>
+          </span>
+        ))
+      }
+    </h1>
+
+    <div class="mt-10 grid gap-10 lg:grid-cols-12 lg:items-end">
+      <p
+        class="lede max-w-[46ch] text-ivory/78 lg:col-span-6"
+        data-hero-line
+        style="--line: 4"
+      >
+        Imported materials. Refined craftsmanship. Seamless execution. We create
+        sophisticated spaces designed around the way you live, work and experience
+        luxury.
+      </p>
+
+      <div
+        class="flex flex-wrap items-center gap-6 lg:col-span-6 lg:justify-end"
+        data-hero-line
+        style="--line: 5"
+      >
+        <Button href="/projects" variant="primary" tone="dark" size="lg">
+          Explore Our Projects
+        </Button>
+        <Button href="/contact" variant="outline" tone="dark" size="lg">
+          Start Your Project
+        </Button>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  /*
+    The hero carries the strongest motion on the site. Everything else
+    breathes. Two effects only: a very slow scale on the image and a
+    staggered rise on the type.
+  */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-hero-image] {
+      animation: hero-scale 14s var(--ease-zen-out) forwards;
+    }
+
+    [data-hero-line] {
+      opacity: 0;
+      transform: translateY(1.4em);
+      animation: hero-line 1150ms var(--ease-zen-out) forwards;
+      animation-delay: calc(140ms + var(--line) * 110ms);
+    }
+
+    @keyframes hero-scale {
+      from {
+        transform: scale(1.08);
+      }
+      to {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes hero-line {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+</style>

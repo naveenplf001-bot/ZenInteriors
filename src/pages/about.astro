@@ -1,0 +1,270 @@
+---
+import { Image } from 'astro:assets';
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/ui/Container.astro';
+import Reveal from '@components/ui/Reveal.astro';
+import Eyebrow from '@components/ui/Eyebrow.astro';
+import CTASection from '@components/sections/CTASection.astro';
+
+import { capabilities } from '@data/services';
+import { site } from '@config/site';
+import { breadcrumbSchema } from '@lib/seo';
+
+import aboutHero from '@/assets/images/about/hero.jpg';
+import craftImage from '@/assets/images/about/craft.jpg';
+
+/**
+ * The About page opens with philosophy, not incorporation history.
+ * "Zen Interior was established in 20XX" is brochure language and it answers
+ * a question nobody asked first.
+ */
+
+const commitments = [
+  {
+    index: '01',
+    title: 'One accountable team',
+    body: 'Design, sourcing and execution are held by the same studio. Nothing is resolved on site by three parties who never met, and there is never a question about who is responsible.',
+  },
+  {
+    index: '02',
+    title: 'Selected, not specified',
+    body: 'Materials are chosen against the drawing that will use them, in person, before anything is committed. A written specification is not a selection, and the difference shows on the wall.',
+  },
+  {
+    index: '03',
+    title: 'Detailing that survives inspection',
+    body: 'Every junction between two materials is a decision, drawn and sequenced in advance. If a joint looks like a tolerance absorbed on site, it was not designed.',
+  },
+  {
+    index: '04',
+    title: 'Finishing as a discipline',
+    body: 'The last five percent of a project is where interiors are won or lost. Snagging, commissioning and handover are scheduled work, not an afterthought.',
+  },
+];
+
+const schema = [
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'About', path: '/about' },
+  ]),
+];
+---
+
+<BaseLayout
+  title="About the Studio"
+  description="Zen Interior combines international product sourcing with local design expertise and professional execution to create distinctive, premium spaces across Tamil Nadu and Bangalore."
+  schema={schema}
+>
+  {/* Philosophy first. */}
+  <section class="bg-ivory">
+    <Container class="pt-[clamp(3.5rem,7vw,7rem)] pb-[clamp(3rem,6vw,6rem)]">
+      <Reveal variant="fade">
+        <Eyebrow>The Studio</Eyebrow>
+      </Reveal>
+      <Reveal delay={70}>
+        <h1 class="mt-8 max-w-[20ch] font-display text-display-xl text-teal">
+          We believe exceptional interiors are not assembled. They are considered.
+        </h1>
+      </Reveal>
+    </Container>
+
+    <Reveal variant="clip">
+      <div class="bleed aspect-[4/5] overflow-hidden bg-stone sm:aspect-[21/9]">
+        <Image
+          src={aboutHero}
+          alt="Studio interior with material samples, drawings and a long oak worktable"
+          widths={[768, 1280, 1600, 2000, 2400]}
+          sizes="100vw"
+          loading="eager"
+          fetchpriority="high"
+          class="h-full w-full object-cover"
+        />
+      </div>
+    </Reveal>
+  </section>
+
+  {/* Who we are */}
+  <section class="bg-ivory">
+    <Container class="section">
+      <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-4">
+          <Reveal variant="fade">
+            <Eyebrow index="01">Who We Are</Eyebrow>
+          </Reveal>
+        </div>
+        <div class="lg:col-span-7">
+          <Reveal>
+            <p class="lede text-charcoal/85">
+              Zen Interior is an interior design and execution studio working across Tamil
+              Nadu and Bangalore, for clients who intend to live with the result for a very
+              long time.
+            </p>
+          </Reveal>
+          <Reveal delay={80}>
+            <p class="mt-7 max-w-[62ch] text-charcoal/75">
+              We combine international product sourcing with local design expertise and
+              professional execution. That combination is deliberate. Access to unusual
+              materials is worth very little without the judgement to place them and the
+              discipline to install them correctly, and most projects buy those three
+              capabilities from three separate parties.
+            </p>
+          </Reveal>
+          <Reveal delay={140}>
+            <p class="mt-7 max-w-[62ch] text-charcoal/75">
+              We hold all three. It is slower to build a studio that way and it is the only
+              way we know to be accountable for a finished space rather than a delivered
+              component.
+            </p>
+          </Reveal>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  {/* Commitments */}
+  <section class="bg-stone">
+    <Container class="section">
+      <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-4">
+          <Reveal variant="fade">
+            <Eyebrow index="02">How We Work</Eyebrow>
+          </Reveal>
+          <Reveal delay={70}>
+            <h2 class="mt-7 font-display text-display-md text-teal">
+              Four commitments we do not negotiate.
+            </h2>
+          </Reveal>
+        </div>
+
+        <div class="lg:col-span-7 lg:col-start-6">
+          {
+            commitments.map((item, index) => (
+              <Reveal delay={index * 70}>
+                <div class="grid grid-cols-[3rem_1fr] gap-6 border-t border-beige py-8 sm:grid-cols-[5rem_1fr] sm:gap-10">
+                  <span class="label pt-1.5 text-brass" aria-hidden="true">
+                    {item.index}
+                  </span>
+                  <div>
+                    <h3 class="font-display text-display-sm text-teal">{item.title}</h3>
+                    <p class="mt-3.5 max-w-[52ch] text-small text-charcoal/70">{item.body}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))
+          }
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  {/* Craft image and quality statement */}
+  <section class="bg-ivory">
+    <Container class="section">
+      <div class="grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-16">
+        <div class="lg:col-span-7">
+          <Reveal variant="clip">
+            <div class="aspect-[3/2] overflow-hidden rounded-zen bg-stone">
+              <Image
+                src={craftImage}
+                alt="Joinery being dry-fitted in the workshop before delivery to site"
+                widths={[640, 1024, 1400, 1800]}
+                sizes="(min-width: 1024px) 58vw, 92vw"
+                loading="lazy"
+                class="h-full w-full object-cover"
+              />
+            </div>
+          </Reveal>
+        </div>
+        <div class="lg:col-span-5">
+          <Reveal variant="fade">
+            <Eyebrow index="03">Quality</Eyebrow>
+          </Reveal>
+          <Reveal delay={70}>
+            <h2 class="mt-7 font-display text-display-md text-teal">
+              The detail you notice last.
+            </h2>
+          </Reveal>
+          <Reveal delay={140}>
+            <p class="mt-8 max-w-[48ch] text-charcoal/75">
+              Joinery is dry-fitted before it reaches a house. Stone is numbered at origin
+              so vein continuity survives shipping. Reveals are set before the surfaces they
+              frame, never cut in afterwards. None of this is visible in a photograph, and
+              all of it is the reason one interior still holds five years later.
+            </p>
+          </Reveal>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  {/* Capabilities */}
+  <section class="bg-teal text-ivory on-dark">
+    <Container class="section">
+      <Reveal variant="fade">
+        <Eyebrow index="04" tone="inverse">Capabilities</Eyebrow>
+      </Reveal>
+      <Reveal delay={70}>
+        <h2 class="mt-7 max-w-[18ch] font-display text-display-lg text-ivory">
+          Complete environments, not components.
+        </h2>
+      </Reveal>
+
+      <div class="mt-16 grid gap-x-14 gap-y-2 md:grid-cols-2 lg:grid-cols-3">
+        {
+          capabilities.map((capability, index) => (
+            <Reveal delay={(index % 3) * 70}>
+              <div class="border-t border-ivory/15 py-8">
+                <p class="label text-brass-soft" aria-hidden="true">
+                  {capability.index}
+                </p>
+                <h3 class="mt-4 font-display text-display-sm text-ivory">
+                  {capability.title}
+                </h3>
+                <p class="mt-3.5 text-small text-ivory/65">{capability.description}</p>
+              </div>
+            </Reveal>
+          ))
+        }
+      </div>
+    </Container>
+  </section>
+
+  {/* Geography */}
+  <section class="bg-stone">
+    <Container class="section-tight">
+      <div class="grid gap-12 lg:grid-cols-12 lg:items-end lg:gap-16">
+        <div class="lg:col-span-6">
+          <Reveal variant="fade">
+            <Eyebrow index="05">Where We Work</Eyebrow>
+          </Reveal>
+          <Reveal delay={70}>
+            <h2 class="mt-7 font-display text-display-md text-teal">
+              Across South India.
+            </h2>
+          </Reveal>
+          <Reveal delay={140}>
+            <p class="mt-8 max-w-[46ch] text-charcoal/72">
+              We undertake projects throughout Tamil Nadu and Bangalore, with our own team
+              supervising each site rather than a subcontracted local crew.
+            </p>
+          </Reveal>
+        </div>
+        <div class="lg:col-span-5 lg:col-start-8">
+          {
+            site.regions.map((region, index) => (
+              <Reveal delay={160 + index * 70}>
+                <div class="border-t border-beige py-6">
+                  <p class="label text-teal">{region.name}</p>
+                  <p class="mt-3 text-small text-charcoal/65">{region.cities.join(' · ')}</p>
+                </div>
+              </Reveal>
+            ))
+          }
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <CTASection />
+</BaseLayout>

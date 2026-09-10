@@ -1,0 +1,80 @@
+---
+/**
+ * Zen Interior wordmark.
+ *
+ * The real logo is a horizontal lockup: an ornate torana arch containing a
+ * yali figure, set beside a lowercase high-contrast serif "zen" over
+ * letter-spaced serif small caps "INTERIOR".
+ *
+ * ── TO ACTIVATE THE REAL LOGO ────────────────────────────────────────────
+ * Save the supplied artwork into public/brand/ using these exact names, then
+ * set HAS_BRAND_ASSET to true below.
+ *
+ *   public/brand/zen-interior.svg           full lockup, deep teal on light
+ *   public/brand/zen-interior-reversed.svg  ivory lockup, for teal grounds
+ *   public/brand/zen-mark.svg               arch and yali only, no wordmark
+ *
+ * SVG is strongly preferred. The arch is fine line work and it will break up
+ * badly at small sizes as a raster. If only a raster exists, supply PNG with
+ * a transparent background at 3x the largest display size.
+ *
+ * Until then the block below renders a typographic stand-in that matches the
+ * real lockup in case, weight and tracking, so layout decisions made now stay
+ * valid once the artwork lands.
+ *
+ * The heritage motif is the brand's strongest asset. Do not flatten it into
+ * generic minimalism, do not recolour it, and do not redraw it. The contrast
+ * between a traditional mark and a contemporary editorial interface is the
+ * whole idea.
+ */
+
+const HAS_BRAND_ASSET = false;
+
+interface Props {
+  /** stacked suits the header, inline suits the footer and the mobile menu. */
+  layout?: 'stacked' | 'inline';
+  /** dark renders the reversed lockup for teal and black grounds. */
+  tone?: 'auto' | 'dark';
+  class?: string;
+}
+
+const { layout = 'stacked', tone = 'auto', class: className = '' } = Astro.props;
+
+const asset = tone === 'dark' ? '/brand/zen-interior-reversed.svg' : '/brand/zen-interior.svg';
+---
+
+{
+  HAS_BRAND_ASSET ? (
+    <img
+      src={asset}
+      alt="Zen Interior"
+      width="220"
+      height="64"
+      class:list={['h-11 w-auto lg:h-14', className]}
+      loading="eager"
+      decoding="async"
+    />
+  ) : (
+    <span
+      class:list={[
+        'flex select-none font-display',
+        layout === 'stacked' ? 'flex-col leading-none' : 'items-baseline gap-3',
+        className,
+      ]}
+    >
+      <span class="text-[1.75rem] font-normal lowercase tracking-[0.01em] lg:text-[2.125rem]">
+        zen
+      </span>
+      <span
+        class:list={[
+          'font-display uppercase opacity-85',
+          layout === 'stacked'
+            ? 'mt-1.5 text-[0.625rem] tracking-[0.46em] lg:text-[0.6875rem]'
+            : 'text-[0.6875rem] tracking-[0.4em]',
+        ]}
+      >
+        Interior
+      </span>
+    </span>
+  )
+}

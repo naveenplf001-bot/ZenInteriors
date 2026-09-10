@@ -1,0 +1,28 @@
+---
+interface Props {
+  /** Optional leading counter, e.g. "01". Rendered before a hairline. */
+  index?: string;
+  class?: string;
+  tone?: 'default' | 'brass' | 'inverse';
+}
+
+const { index, class: className = '', tone = 'default' } = Astro.props;
+
+const tones = {
+  default: 'text-teal/70',
+  brass: 'text-brass',
+  inverse: 'text-brass-soft',
+} as const;
+---
+
+<p class:list={['label flex items-center gap-3', tones[tone], className]}>
+  {
+    index && (
+      <>
+        <span aria-hidden="true">{index}</span>
+        <span class="h-px w-8 bg-current opacity-40" aria-hidden="true" />
+      </>
+    )
+  }
+  <slot />
+</p>

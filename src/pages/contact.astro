@@ -1,0 +1,100 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/ui/Container.astro';
+import Reveal from '@components/ui/Reveal.astro';
+import Eyebrow from '@components/ui/Eyebrow.astro';
+import EnquiryForm from '@components/forms/EnquiryForm.astro';
+import { site } from '@config/site';
+import { breadcrumbSchema } from '@lib/seo';
+
+/**
+ * The contact page is a qualification mechanism, not a contact form.
+ * It reads as an invitation into a private consultation.
+ */
+
+const schema = [
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Contact', path: '/contact' },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Private Project Enquiry"
+  description="Begin a private consultation with Zen Interior. Premium interior design, global sourcing and turnkey execution across Tamil Nadu and Bangalore."
+  schema={schema}
+>
+  <section class="bg-ivory">
+    <Container class="pt-[clamp(3.5rem,7vw,7rem)] pb-[--section-y]">
+      <div class="grid gap-16 lg:grid-cols-12 lg:gap-20">
+        <div class="lg:col-span-5">
+          <Reveal variant="fade">
+            <Eyebrow>Private Project Enquiry</Eyebrow>
+          </Reveal>
+
+          <Reveal delay={70}>
+            <h1 class="mt-7 font-display text-display-lg text-teal">
+              Let&#8217;s create a space worth coming home to.
+            </h1>
+          </Reveal>
+
+          <Reveal delay={140}>
+            <p class="lede mt-9 text-charcoal/75">
+              Tell us what you are planning. We will come back to you personally, and we
+              will tell you honestly whether we are the right studio for the project.
+            </p>
+          </Reveal>
+
+          <div class="mt-14">
+            <Reveal variant="fade" delay={200}>
+              <p class="label text-teal/55">Direct</p>
+            </Reveal>
+            <dl class="mt-6">
+              <Reveal delay={220}>
+                <div class="flex items-baseline justify-between gap-6 border-t border-beige py-5">
+                  <dt class="label text-teal/45">Telephone</dt>
+                  <dd>
+                    <a
+                      href={site.contact.phoneHref}
+                      class="text-small text-teal transition-colors duration-300 hover:text-brass"
+                    >
+                      {site.contact.phone}
+                    </a>
+                  </dd>
+                </div>
+              </Reveal>
+              <Reveal delay={260}>
+                <div class="flex items-baseline justify-between gap-6 border-t border-beige py-5">
+                  <dt class="label text-teal/45">Email</dt>
+                  <dd>
+                    <a
+                      href={`mailto:${site.contact.email}`}
+                      class="text-small text-teal transition-colors duration-300 hover:text-brass"
+                    >
+                      {site.contact.email}
+                    </a>
+                  </dd>
+                </div>
+              </Reveal>
+              <Reveal delay={300}>
+                <div class="flex items-baseline justify-between gap-6 border-t border-beige py-5">
+                  <dt class="label text-teal/45">Regions</dt>
+                  <dd class="text-small text-charcoal/70">
+                    {site.regions.map((region) => region.name).join(' · ')}
+                  </dd>
+                </div>
+              </Reveal>
+            </dl>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 lg:col-start-7">
+          <Reveal delay={100}>
+            <EnquiryForm />
+          </Reveal>
+        </div>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>
