@@ -3,11 +3,23 @@
  *
  * IntersectionObserver plus a CSS class. No animation library, because the
  * vocabulary here is a fade, a short rise and an image wipe, which CSS does
- * at effectively zero cost. GSAP stays reserved for anything genuinely
- * beyond that.
+ * at effectively zero cost.
  *
- * The initial hidden state lives behind `.js` in global.css, so a visitor
- * with JavaScript disabled sees a fully rendered page rather than a blank one.
+ * ── Design rule ──────────────────────────────────────────────────────────
+ * Content is hidden by CSS and shown by script, and `clip-path` keeps an
+ * element's layout box while painting nothing. So a reveal that fails to fire
+ * does not degrade gracefully: it leaves a silent, correctly-sized hole in
+ * the page. Anything that hides content therefore needs a guaranteed way back.
+ *
+ * This module has three, in order of preference:
+ *
+ *   1. the observer, which handles the normal case
+ *   2. a scroll and resize sweep, which catches anything the observer missed
+ *      because it was mis-measured while fonts and images were still settling
+ *   3. a failsafe timer, which reveals everything regardless
+ *
+ * The failsafe is the important one. It means the worst case is an element
+ * that appears without its animation, never an element that never appears.
  */
 
 const REVEALED = 'is-revealed';
@@ -17,6 +29,15 @@ const SELECTOR = '[data-reveal]';
 const STAGGER_MS = 90;
 /** Beyond this the last item in a group feels detached from the first. */
 const MAX_STAGGER_MS = 450;
+/** Nothing stays hidden longer than this, whatever else has gone wrong. */
+const FAILSAFE_MS = 2500;
+
+function reveal(el: HTMLElement): void {
+  if (el.classList.contains(REVEALED)) return;
+  const delay = el.dataset.revealDelay;
+  if (delay) el.style.setProperty('--reveal-delay', `${delay}ms`);
+  el.classList.add(REVEALED);
+}
 
 function revealAll(): void {
   document.querySelectorAll<HTMLElement>(SELECTOR).forEach((el) => {
@@ -32,9 +53,7 @@ function revealAll(): void {
 function applyGroupDelays(): void {
   document.querySelectorAll<HTMLElement>('[data-reveal-group]').forEach((group) => {
     const step = Number(group.dataset.revealGroup) || STAGGER_MS;
-    const items = group.querySelectorAll<HTMLElement>(SELECTOR);
-
-    items.forEach((item, index) => {
+    group.querySelectorAll<HTMLElement>(SELECTOR).forEach((item, index) => {
       if (item.dataset.revealDelay) return;
       item.dataset.revealDelay = String(Math.min(index * step, MAX_STAGGER_MS));
     });
@@ -56,35 +75,76 @@ export function initReveal(): void {
     return;
   }
 
-  const reveal = (el: HTMLElement) => {
-    const delay = el.dataset.revealDelay;
-    if (delay) el.style.setProperty('--reveal-delay', `${delay}ms`);
-    el.classList.add(REVEALED);
+  const pending = new Set(elements);
+
+  const settle = (el: HTMLElement) => {
+    reveal(el);
+    pending.delete(el);
   };
 
   const observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
-        reveal(entry.target as HTMLElement);
+        settle(entry.target as HTMLElement);
         observer.unobserve(entry.target);
       }
     },
     {
-      // Fire slightly before the element reaches the fold so the motion is
-      // already settling by the time it is properly in view.
-      rootMargin: '0px 0px -10% 0px',
-      threshold: 0.05,
+      // Threshold 0 on purpose. A percentage threshold is measured against the
+      // target's own size, so a section taller than the viewport can need an
+      // awkward amount of itself on screen before it counts as intersecting.
+      // Any pixel of overlap is the honest trigger here.
+      threshold: 0,
+      rootMargin: '0px 0px -6% 0px',
     },
   );
+
+  /** Sweep: reveal anything whose top has already reached the fold. */
+  const sweep = () => {
+    if (pending.size === 0) return;
+    const fold = window.innerHeight * 0.94;
+    for (const el of Array.from(pending)) {
+      if (el.getBoundingClientRect().top < fold) {
+        settle(el);
+        observer.unobserve(el);
+      }
+    }
+  };
 
   for (const el of elements) {
     // Anything already on the first screen reveals immediately without a
     // transition, so the page does not animate itself in after load.
-    if (el.getBoundingClientRect().top < window.innerHeight * 0.92) {
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.94) {
       el.classList.add(REVEALED);
+      pending.delete(el);
       continue;
     }
     observer.observe(el);
   }
+
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(() => {
+      sweep();
+      ticking = false;
+    });
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+
+  // Fonts and images change layout after first paint, so measure again once
+  // everything has loaded rather than trusting the initial pass.
+  window.addEventListener('load', sweep, { once: true });
+
+  window.setTimeout(() => {
+    if (pending.size === 0) return;
+    // Something went wrong. Better an element without its animation than a
+    // correctly-sized hole where a project used to be.
+    for (const el of pending) reveal(el);
+    pending.clear();
+  }, FAILSAFE_MS);
 }

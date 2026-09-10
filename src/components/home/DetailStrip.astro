@@ -1,0 +1,108 @@
+---
+import { Image } from 'astro:assets';
+import Container from '@components/ui/Container.astro';
+import Eyebrow from '@components/ui/Eyebrow.astro';
+import Reveal from '@components/ui/Reveal.astro';
+import Carousel from '@components/ui/Carousel.astro';
+import SplitHeading from '@components/ui/SplitHeading.astro';
+import SectionNumber from '@components/ui/SectionNumber.astro';
+import { pad } from '@lib/format';
+import type { Project } from '@lib/content';
+
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+
+/**
+ * A horizontal run of rooms and details drawn from across the portfolio.
+ *
+ * Deliberately not grouped by project. Seen side by side and out of context,
+ * the frames read as a body of work with one hand behind it, which is a
+ * different claim from three separate case studies.
+ *
+ * Alternating aspect ratios stop the strip becoming a row of identical
+ * rectangles, which is the fastest way to make good photography look like
+ * stock.
+ */
+const RATIOS = ['aspect-[3/4]', 'aspect-square', 'aspect-[4/5]', 'aspect-[3/2]'];
+
+const frames = projects
+  .flatMap((project) =>
+    project.data.gallery.map((item) => ({
+      src: item.src,
+      alt: item.alt,
+      caption: item.caption,
+      project: project.data.title,
+      location: project.data.location,
+      href: `/projects/${project.id}`,
+    })),
+  )
+  .slice(0, 12);
+---
+
+{
+  frames.length > 2 && (
+    <section class="overflow-hidden bg-ink py-[--section-y] text-ivory on-dark">
+      <Container>
+        <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-6" data-reveal-group>
+          <div>
+            <Reveal variant="fade">
+              <SectionNumber value="05" tone="dark" />
+            </Reveal>
+            <Reveal variant="fade" class="mt-4">
+              <Eyebrow tone="inverse">In the Detail</Eyebrow>
+            </Reveal>
+            <SplitHeading
+              lines={['The part you notice', 'on the second visit.']}
+              tone="dark"
+              class="mt-6"
+            />
+          </div>
+
+          <Reveal variant="fade">
+            <p class="label text-ivory/35">
+              {pad(frames.length)} Frames &nbsp;·&nbsp; Drag to explore
+            </p>
+          </Reveal>
+        </div>
+      </Container>
+
+      <Reveal class="mt-[--stack-lg] block">
+        <Carousel label="Interior details from across the portfolio" tone="dark">
+          {frames.map((frame, index) => (
+            <a
+              href={frame.href}
+              data-carousel-item
+              class="group block w-[74vw] shrink-0 snap-start sm:w-[46vw] lg:w-[30vw] xl:w-[24vw]"
+            >
+              <div
+                class:list={[
+                  'overflow-hidden rounded-zen bg-teal-deep',
+                  RATIOS[index % RATIOS.length],
+                ]}
+              >
+                <Image
+                  src={frame.src}
+                  alt={frame.alt}
+                  widths={[400, 640, 900, 1200]}
+                  sizes="(min-width: 1280px) 24vw, (min-width: 1024px) 30vw, (min-width: 640px) 46vw, 74vw"
+                  loading="lazy"
+                  class="h-full w-full object-cover transition-transform duration-[1200ms] ease-[--ease-zen] group-hover:scale-[1.05]"
+                />
+              </div>
+
+              <p class="label mt-5 text-ivory/40">
+                {frame.location} &nbsp;/&nbsp; {frame.project}
+              </p>
+              <p class="mt-2 max-w-[32ch] text-micro text-ivory/65">
+                {frame.caption ?? frame.alt}
+              </p>
+            </a>
+          ))}
+        </Carousel>
+      </Reveal>
+    </section>
+  )
+}

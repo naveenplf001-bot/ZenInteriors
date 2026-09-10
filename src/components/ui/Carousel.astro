@@ -1,0 +1,223 @@
+---
+import Container from '@components/ui/Container.astro';
+
+/**
+ * Horizontal carousel.
+ *
+ * Native scrolling with CSS scroll-snap does the work. The script only adds
+ * pointer dragging, arrow state and a progress bar on top of it, so the
+ * component still behaves correctly with JavaScript disabled: it stays a
+ * scrollable strip that works with a trackpad, a touchscreen and the keyboard.
+ *
+ * No carousel library, no autoplay, and no dots. Autoplay moves content out
+ * from under someone who is reading it, and dots are an accessibility problem
+ * dressed as navigation.
+ *
+ * The track breaks the container on the right so cards run to the edge of the
+ * screen, which is what signals "this scrolls" without a caption saying so.
+ */
+
+interface Props {
+  label: string;
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+
+const { label, tone = 'light', class: className = '' } = Astro.props;
+
+const arrowSkin =
+  tone === 'dark'
+    ? 'border-ivory/30 text-ivory hover:border-ivory hover:bg-ivory hover:text-teal'
+    : 'border-teal/25 text-teal hover:border-teal hover:bg-teal hover:text-ivory';
+
+const railSkin = tone === 'dark' ? 'bg-ivory/15' : 'bg-beige';
+const barSkin = tone === 'dark' ? 'bg-brass-soft' : 'bg-brass';
+---
+
+<div class:list={['zen-carousel', className]} data-carousel role="group" aria-label={label}>
+  <div
+    class="zen-carousel-track flex snap-x snap-mandatory gap-6 overflow-x-auto pb-2 lg:gap-10"
+    data-carousel-track
+    tabindex="0"
+  >
+    <slot />
+    {/* Trailing spacer so the last card can settle clear of the screen edge. */}
+    <div class="w-[--gutter] shrink-0" aria-hidden="true"></div>
+  </div>
+
+  <Container class="mt-8">
+    <div class="flex items-center gap-6">
+      <div class:list={['h-px flex-1 overflow-hidden', railSkin]} aria-hidden="true">
+        <div
+          class:list={['h-full w-0 origin-left transition-[width] duration-300 ease-out', barSkin]}
+          data-carousel-progress
+        >
+        </div>
+      </div>
+
+      <div class="flex shrink-0 gap-2.5">
+        <button
+          type="button"
+          data-carousel-prev
+          aria-label="Previous"
+          class:list={[
+            'flex h-11 w-11 items-center justify-center rounded-zen border transition-colors duration-300 disabled:pointer-events-none disabled:opacity-25',
+            arrowSkin,
+          ]}
+        >
+          <span aria-hidden="true">&#8592;</span>
+        </button>
+        <button
+          type="button"
+          data-carousel-next
+          aria-label="Next"
+          class:list={[
+            'flex h-11 w-11 items-center justify-center rounded-zen border transition-colors duration-300 disabled:pointer-events-none disabled:opacity-25',
+            arrowSkin,
+          ]}
+        >
+          <span aria-hidden="true">&#8594;</span>
+        </button>
+      </div>
+    </div>
+  </Container>
+</div>
+
+<style>
+  /* Cards start flush with the container gutter and run off the right edge. */
+  .zen-carousel-track {
+    padding-inline-start: var(--gutter);
+    scroll-padding-inline-start: var(--gutter);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .zen-carousel-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .zen-carousel-track:focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 4px;
+  }
+
+  /* Grabbing cursor only while a pointer drag is actually possible. */
+  .zen-carousel-track[data-draggable='true'] {
+    cursor: grab;
+  }
+
+  .zen-carousel-track[data-dragging='true'] {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+    user-select: none;
+  }
+</style>
+
+<script>
+  /**
+   * Progressive enhancement over a native scroller. Everything here is
+   * additive: remove the script and the strip still scrolls and still works
+   * from the keyboard.
+   */
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-carousel-track]');
+    const prev = root.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-carousel-next]');
+    const progress = root.querySelector<HTMLElement>('[data-carousel-progress]');
+    if (!track) return;
+
+    const maxScroll = () => track.scrollWidth - track.clientWidth;
+
+    /** One card plus its gap, so an arrow press advances exactly one item. */
+    const step = () => {
+      const card = track.querySelector<HTMLElement>('[data-carousel-item]');
+      if (!card) return track.clientWidth * 0.8;
+      const gap = Number.parseFloat(getComputedStyle(track).columnGap || '0') || 0;
+      return card.offsetWidth + gap;
+    };
+
+    const update = () => {
+      const max = maxScroll();
+      const scrollable = max > 1;
+
+      track.dataset.draggable = scrollable ? 'true' : 'false';
+      root.hidden = false;
+
+      if (prev) prev.disabled = !scrollable || track.scrollLeft <= 1;
+      if (next) next.disabled = !scrollable || track.scrollLeft >= max - 1;
+
+      if (progress) {
+        // A minimum width so the bar reads as a position marker rather than
+        // vanishing entirely at the start of the strip.
+        const ratio = scrollable ? track.scrollLeft / max : 1;
+        progress.style.width = `${Math.max(8, ratio * 100)}%`;
+      }
+    };
+
+    prev?.addEventListener('click', () =>
+      track.scrollBy({ left: -step(), behavior: 'smooth' }),
+    );
+    next?.addEventListener('click', () =>
+      track.scrollBy({ left: step(), behavior: 'smooth' }),
+    );
+
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+
+    /* ---- pointer dragging ------------------------------------------------ */
+
+    let dragging = false;
+    let startX = 0;
+    let startScroll = 0;
+    let moved = 0;
+
+    track.addEventListener('pointerdown', (event) => {
+      // Mouse only. Touch already drags natively, and hijacking it there
+      // fights the platform's own momentum scrolling.
+      if (event.pointerType !== 'mouse' || maxScroll() <= 1) return;
+      dragging = true;
+      moved = 0;
+      startX = event.clientX;
+      startScroll = track.scrollLeft;
+      track.dataset.dragging = 'true';
+      track.setPointerCapture(event.pointerId);
+    });
+
+    track.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      const delta = event.clientX - startX;
+      moved = Math.max(moved, Math.abs(delta));
+      track.scrollLeft = startScroll - delta;
+    });
+
+    const endDrag = (event: PointerEvent) => {
+      if (!dragging) return;
+      dragging = false;
+      delete track.dataset.dragging;
+      if (track.hasPointerCapture(event.pointerId)) {
+        track.releasePointerCapture(event.pointerId);
+      }
+    };
+
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+
+    // A drag that ends on a card must not also follow that card's link.
+    track.addEventListener(
+      'click',
+      (event) => {
+        if (moved > 6) {
+          event.preventDefault();
+          event.stopPropagation();
+          moved = 0;
+        }
+      },
+      true,
+    );
+
+    update();
+    // Re-measure once images have settled and the track has its real width.
+    window.addEventListener('load', update, { once: true });
+  });
+</script>

@@ -6,6 +6,7 @@ import BrandStatement from '@components/home/BrandStatement.astro';
 import SignatureProjects from '@components/home/SignatureProjects.astro';
 import Sourcing from '@components/home/Sourcing.astro';
 import Materials from '@components/home/Materials.astro';
+import DetailStrip from '@components/home/DetailStrip.astro';
 import Method from '@components/home/Method.astro';
 import FeaturedJournal from '@components/home/FeaturedJournal.astro';
 import Geography from '@components/home/Geography.astro';
@@ -37,6 +38,7 @@ const articles = await getFeaturedArticles(2);
   <SignatureProjects projects={signature} total={allProjects.length} />
   <Sourcing />
   <Materials />
+  <DetailStrip projects={allProjects} />
   <Method />
   <FeaturedJournal articles={articles} />
   <Geography />
