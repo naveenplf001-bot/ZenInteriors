@@ -1,12 +1,16 @@
 ---
+import { Image } from 'astro:assets';
+
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/ui/Container.astro';
 import Reveal from '@components/ui/Reveal.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
-import Button from '@components/ui/Button.astro';
 import SplitHeading from '@components/ui/SplitHeading.astro';
 import SectionNumber from '@components/ui/SectionNumber.astro';
 import EnquiryForm from '@components/forms/EnquiryForm.astro';
+
+import heroImage from '@/assets/images/projects/the-quiet-villa/cover.jpg';
+import studioImage from '@/assets/images/home/sourcing.jpg';
 
 import { site } from '@config/site';
 import { breadcrumbSchema } from '@lib/seo';
@@ -14,23 +18,19 @@ import { buildDirectWhatsAppUrl } from '@lib/whatsapp';
 
 /**
  * The contact page is a qualification mechanism, not a contact form.
- * It reads as an invitation into a private consultation.
  *
- * Three movements: the invitation, the enquiry itself sitting on an ivory
- * panel with the process stated beside it, and a quieter way in for anyone
- * who would rather speak than write. The form is never the first thing on
- * the page, because at this value a form is the last step of a conversation
- * rather than the first.
+ * Three movements, numbered in the margin the way the rest of the site is:
+ *
+ *   01  the invitation and the enquiry itself, on one ivory panel that sits
+ *       over the photograph and breaks the bottom edge of it. The form is the
+ *       first thing on the page because someone on /contact has already
+ *       decided to make contact; making them scroll for it is friction, not
+ *       restraint.
+ *   02  what actually happens after they press send.
+ *   03  where the studio works, and every direct line, on one teal field.
  */
 
 const whatsappHref = buildDirectWhatsAppUrl();
-const regionNames = site.regions.map((region) => region.name).join(' · ');
-
-const directLines = [
-  { label: 'Telephone', value: site.contact.phone, href: site.contact.phoneHref },
-  { label: 'Email', value: site.contact.email, href: `mailto:${site.contact.email}` },
-  { label: 'WhatsApp', value: 'Message the studio', href: whatsappHref, external: true },
-];
 
 const schema = [
   breadcrumbSchema([
@@ -39,140 +39,124 @@ const schema = [
   ]),
 ];
 
+/* The four words carried up the right edge of the hero. Texture, not copy. */
+const rhythm = ['Discover', 'Discuss', 'Design', 'Together'];
+
 const steps = [
   {
-    index: '01',
     title: 'A personal reply',
     body: 'Your enquiry is read by the studio, not a call centre. You will hear back from the people who would actually run the project.',
+    icon: 'reply',
   },
   {
-    index: '02',
     title: 'A conversation',
     body: 'We talk about how you want to live in the space, the timeline you are working to and the level of finish you have in mind.',
+    icon: 'conversation',
   },
   {
-    index: '03',
     title: 'An honest answer',
     body: 'If we are the right studio for the project we say so and set out the next step. If we are not, we say that too.',
+    icon: 'answer',
   },
 ];
+
+/*
+  Where the studio works, straight from the single source of truth so this
+  page can never disagree with the footer. The map link is a search on the
+  region rather than a pin on an address the site does not publish.
+*/
+const regions = site.regions.map((region) => ({
+  name: region.name,
+  cities: region.cities,
+  mapHref: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    `${site.name} ${region.name}`,
+  )}`,
+}));
 ---
 
 <BaseLayout
   title="Private Project Enquiry"
   description="Begin a private consultation with Zen Interior. Premium interior design, global sourcing and turnkey execution across Tamil Nadu and Bangalore."
+  header="overlay"
   schema={schema}
 >
-  {/* ------------------------------------------------------- invitation */}
-  <section class="bg-ivory">
-    <Container class="pt-[clamp(3.5rem,7vw,7rem)] pb-[--section-y-tight]">
-      <div
-        class="grid gap-y-12 md:grid-cols-12 md:gap-x-10 lg:items-end lg:gap-x-16"
-        data-reveal-group
-      >
-        <div class="md:col-span-12 lg:col-span-7">
+  {/* ------------------------------------------ 01 · invitation and enquiry */}
+  {/*
+    Positioned, so the enquiry panel paints over the ivory section that
+    follows it. The section below is left static on purpose — a z-index there
+    would put its background back on top of the panel.
+  */}
+  <section class="relative z-10 bg-ink">
+    <div class="absolute inset-0 overflow-hidden" aria-hidden="true">
+      <Image
+        src={heroImage}
+        alt=""
+        widths={[768, 1280, 1600, 2000, 2400]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="h-full w-full object-cover"
+      />
+
+      {/*
+        Two scrims. The horizontal pass buys legibility for the headline on the
+        left while leaving the warm side of the room intact; the vertical pass
+        stops the panel from floating on a bright edge.
+      */}
+      <div class="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/60 to-ink/25"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-ink/75 via-transparent to-ink/45"></div>
+    </div>
+
+    <Container
+      class="relative pt-[calc(var(--header-h)+clamp(2.5rem,6vw,5rem))] pb-[clamp(3rem,6vw,5.5rem)] lg:pb-0"
+    >
+      <div class="grid gap-y-12 lg:grid-cols-12 lg:gap-x-12 xl:gap-x-16">
+        {/*
+          The bottom breathing room lives on this column rather than on the
+          section, so the panel beside it can hang past the photograph without
+          dragging the whole section down with it.
+        */}
+        <div
+          class="lg:col-span-5 lg:pt-[clamp(1rem,3vw,3rem)] lg:pb-[clamp(2.5rem,6vw,6rem)]"
+        >
           <Reveal variant="fade">
-            <Eyebrow>Private Project Enquiry</Eyebrow>
+            <Eyebrow tone="inverse">Private Project Enquiry</Eyebrow>
           </Reveal>
 
           <SplitHeading
             as="h1"
-            size="xl"
+            size="hero"
             lines={['A private', 'consultation begins', 'with a conversation.']}
+            tone="dark"
             accentFrom={2}
-            class="mt-7"
+            class="mt-8"
           />
 
           <Reveal>
-            <p class="lede mt-[--stack-md] max-w-[50ch] text-charcoal/75">
+            <p class="lede mt-[--stack-md] max-w-[42ch] text-ivory/75">
               Tell us what you are planning. We will come back to you personally, and we
               will tell you honestly whether we are the right studio for the project.
             </p>
           </Reveal>
         </div>
 
-        {/* Direct lines sit beside the invitation rather than under the form,
-            where they would only be found by someone who had already decided
-            not to fill it in. */}
-        <div class="md:col-span-12 lg:col-span-4 lg:col-start-9">
-          <Reveal variant="fade">
-            <p class="label text-teal/50">Direct</p>
-          </Reveal>
-
-          <dl class="mt-6 sm:grid sm:grid-cols-3 sm:gap-x-8 lg:block">
-            {
-              directLines.map((line) => (
-                <Reveal>
-                  <div class="border-t border-beige py-5 lg:flex lg:items-baseline lg:justify-between lg:gap-6">
-                    <dt class="label text-teal/45">{line.label}</dt>
-                    <dd class="mt-2 lg:mt-0">
-                      <a
-                        href={line.href}
-                        {...line.external
-                          ? { target: '_blank', rel: 'noopener noreferrer' }
-                          : {}}
-                        class="text-small text-teal transition-colors duration-300 hover:text-brass"
-                      >
-                        {line.value}
-                      </a>
-                    </dd>
-                  </div>
-                </Reveal>
-              ))
-            }
-          </dl>
-
-          <Reveal variant="fade">
-            <p class="label mt-6 text-teal/40">{regionNames}</p>
-          </Reveal>
-        </div>
-      </div>
-    </Container>
-  </section>
-
-  {/* -------------------------------------------- the enquiry and process */}
-  <section class="bg-stone">
-    <Container class="section">
-      <div class="grid gap-y-14 md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
-        <div class="md:col-span-12 lg:col-span-4" data-reveal-group>
-          <Reveal variant="fade">
-            <SectionNumber value="01" />
-          </Reveal>
-          <Reveal variant="fade" class="mt-4">
-            <Eyebrow>What Happens Next</Eyebrow>
-          </Reveal>
-          <SplitHeading lines={['Three steps,', 'no obligation.']} size="md" class="mt-6" />
-
-          <ol class="mt-[--stack-md] grid gap-x-10 sm:grid-cols-3 lg:block">
-            {
-              steps.map((step) => (
-                <Reveal as="li">
-                  <div class="border-t border-beige py-6">
-                    <span class="label text-brass" aria-hidden="true">
-                      {step.index}
-                    </span>
-                    <h3 class="mt-4 font-display text-display-sm text-teal">{step.title}</h3>
-                    <p class="mt-2.5 max-w-[40ch] text-micro text-charcoal/65">{step.body}</p>
-                  </div>
-                </Reveal>
-              ))
-            }
-          </ol>
-
-          <Reveal variant="fade">
-            <p class="mt-8 max-w-[40ch] text-micro text-charcoal/55">
-              Everything you send stays between you and the studio. We do not share enquiry
-              details, and we do not add you to a mailing list.
+        <div class="lg:col-span-7 lg:-mb-[clamp(2.5rem,7vw,8rem)]">
+          {/*
+            The rhythm of the consultation, set as a stacked mark above the
+            panel. Hidden on small screens, where it would only compete with
+            the headline for the same narrow column.
+          */}
+          <Reveal variant="fade" class="hidden justify-end pb-8 lg:flex">
+            <p class="label text-right leading-[2.4] text-ivory/55">
+              {rhythm.map((word) => <span class="block">{word}</span>)}
+              <span class="mt-4 ml-auto block h-px w-14 bg-brass-soft/60" aria-hidden="true"
+              ></span>
             </p>
           </Reveal>
-        </div>
 
-        {/* The form sits on its own ivory field so it reads as a document
-            handed across a table rather than as a web form on a page. */}
-        <div class="md:col-span-12 lg:col-span-7 lg:col-start-6">
           <Reveal>
             <div
-              class="rounded-zen-lg bg-ivory px-[clamp(1.25rem,3.5vw,3rem)] py-[clamp(2rem,4vw,3.5rem)]"
+              class="rounded-zen-lg bg-ivory-warm px-[clamp(1.25rem,3.5vw,3.25rem)] py-[clamp(2rem,4vw,3.5rem)] shadow-[0_40px_90px_-45px_rgba(11,13,12,0.7)]"
             >
               <EnquiryForm />
             </div>
@@ -182,40 +166,190 @@ const steps = [
     </Container>
   </section>
 
-  {/* ------------------------------------------------- speak, don't type */}
-  <section class="bg-teal text-ivory on-dark">
-    <Container class="section-tight">
-      <div
-        class="grid gap-y-10 md:grid-cols-12 md:items-end md:gap-x-10 lg:gap-x-16"
-        data-reveal-group
-      >
-        <div class="md:col-span-7">
+  {/* ------------------------------- 02 · what happens next · 03 · regions */}
+  <section class="bg-ivory">
+    <Container
+      class="pt-[clamp(3.5rem,8vw,9rem)] pb-[--section-y] lg:pt-[clamp(5rem,11vw,12rem)]"
+    >
+      <div class="grid gap-y-16 lg:grid-cols-12 lg:gap-x-12 xl:gap-x-16">
+        <div class="lg:col-span-5" data-reveal-group>
           <Reveal variant="fade">
-            <Eyebrow tone="inverse">Prefer to Speak</Eyebrow>
+            <SectionNumber value="02" />
           </Reveal>
-          <SplitHeading
-            lines={['Some projects start', 'with a phone call.']}
-            tone="dark"
-            accentFrom={1}
-            class="mt-6"
-          />
-        </div>
+          <Reveal variant="fade" class="mt-4">
+            <Eyebrow>What Happens Next</Eyebrow>
+          </Reveal>
 
-        <div class="md:col-span-5 md:col-start-8">
-          <Reveal>
-            <p class="lede text-ivory/65">
-              If it is easier to talk it through, call the studio directly or send a
-              message. No brief required.
+          <ol class="mt-[--stack-md] flex flex-col gap-9">
+            {
+              steps.map((step) => (
+                <Reveal as="li">
+                  <div class="flex gap-6">
+                    <span
+                      class="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-zen border border-beige text-teal"
+                      aria-hidden="true"
+                    >
+                      {step.icon === 'reply' && (
+                        <svg
+                          class="h-5 w-5"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1"
+                        >
+                          <path d="M4 5.5h16v11H9l-5 4v-15Z" stroke-linejoin="round" />
+                          <path d="M8 10h8M8 13h5" />
+                        </svg>
+                      )}
+                      {step.icon === 'conversation' && (
+                        <svg
+                          class="h-5 w-5"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1"
+                        >
+                          <circle cx="9" cy="8.5" r="3" />
+                          <circle cx="16.5" cy="10" r="2.4" />
+                          <path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5" stroke-linecap="round" />
+                          <path d="M16 14.4c2.4 0 4.5 1.6 4.5 4.1" stroke-linecap="round" />
+                        </svg>
+                      )}
+                      {step.icon === 'answer' && (
+                        <svg
+                          class="h-5 w-5"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1"
+                        >
+                          <path
+                            d="M4 6.5h6l1.5 2H20V18H4V6.5Z"
+                            stroke-linejoin="round"
+                          />
+                          <path d="M9 13.5l2 2 4-4" stroke-linecap="round" />
+                        </svg>
+                      )}
+                    </span>
+
+                    <div>
+                      <h3 class="font-display text-display-sm text-teal">{step.title}</h3>
+                      <p class="mt-2 max-w-[42ch] text-micro text-charcoal/65">{step.body}</p>
+                    </div>
+                  </div>
+                </Reveal>
+              ))
+            }
+          </ol>
+
+          <Reveal variant="fade">
+            <p
+              class="mt-12 border-t border-beige pt-8 font-display text-[1.0625rem] leading-relaxed text-charcoal/60 italic"
+            >
+              Everything you send stays between you and the studio. We do not share
+              enquiry details, and we do not add you to a mailing list.
             </p>
           </Reveal>
+        </div>
 
-          <Reveal class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
-            <Button href={site.contact.phoneHref} variant="primary" tone="dark">
-              {site.contact.phone}
-            </Button>
-            <Button href={whatsappHref} variant="link" tone="dark" external>
-              WhatsApp the Studio
-            </Button>
+        {/*
+          The regions block. It breaks the right gutter on large screens so the
+          teal field runs to the edge of the page, which is what stops it
+          reading as one more card in a column.
+        */}
+        <div
+          class="lg:col-span-7 lg:mt-[clamp(1rem,3vw,3.5rem)] lg:mr-[calc(var(--gutter)*-1)]"
+        >
+          <Reveal variant="fade">
+            <div class="grid overflow-hidden rounded-zen-lg sm:grid-cols-5">
+              <div class="relative min-h-[16rem] sm:col-span-2">
+                <Image
+                  src={studioImage}
+                  alt="Entrance joinery with a lit niche, a vase of foliage and a floating timber drawer unit"
+                  widths={[480, 800, 1200]}
+                  sizes="(min-width: 1024px) 24vw, (min-width: 640px) 40vw, 92vw"
+                  loading="lazy"
+                  class="absolute inset-0 h-full w-full object-cover"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent"
+                  aria-hidden="true"
+                >
+                </div>
+                <p class="label absolute bottom-6 left-6 max-w-[14ch] leading-[2] text-ivory/85">
+                  Good spaces begin with good conversations.
+                </p>
+              </div>
+
+              <div
+                class="on-dark bg-teal px-[clamp(1.5rem,3vw,3rem)] py-[clamp(2.25rem,4vw,3.5rem)] text-ivory sm:col-span-3"
+              >
+                <Eyebrow index="03" tone="inverse">Where We Work</Eyebrow>
+
+                <dl class="mt-9 grid gap-x-8 gap-y-9 sm:grid-cols-2">
+                  {
+                    regions.map((region) => (
+                      <div>
+                        <dt class="label text-brass-soft">{region.name}</dt>
+                        <dd class="mt-4">
+                          <ul class="flex flex-col gap-1.5">
+                            {region.cities.map((city) => (
+                              <li class="text-small text-ivory/70">{city}</li>
+                            ))}
+                          </ul>
+                          <a
+                            href={region.mapHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="group label mt-5 inline-flex items-center gap-3 border-b border-ivory/25 py-1 text-ivory/80 transition-colors duration-300 hover:border-brass-soft hover:text-ivory"
+                          >
+                            View on map
+                            <span
+                              class="inline-block transition-transform duration-[--duration-base] ease-[--ease-zen] group-hover:translate-x-1"
+                              aria-hidden="true"
+                            >
+                              &#8594;
+                            </span>
+                          </a>
+                        </dd>
+                      </div>
+                    ))
+                  }
+                </dl>
+
+                <div
+                  class="mt-10 grid gap-x-8 gap-y-7 border-t border-ivory/15 pt-8 sm:grid-cols-2"
+                >
+                  <div>
+                    <p class="label text-ivory/45">Speak to the studio</p>
+                    <a
+                      href={site.contact.phoneHref}
+                      class="mt-3 block font-display text-display-sm text-ivory transition-colors duration-300 hover:text-brass-soft"
+                    >
+                      {site.contact.phone}
+                    </a>
+                    <a
+                      href={whatsappHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="label mt-3 inline-block text-ivory/60 transition-colors duration-300 hover:text-brass-soft"
+                    >
+                      Or message on WhatsApp
+                    </a>
+                  </div>
+
+                  <div>
+                    <p class="label text-ivory/45">General enquiries</p>
+                    <a
+                      href={`mailto:${site.contact.email}`}
+                      class="mt-3 block text-small break-words text-ivory/80 transition-colors duration-300 hover:text-brass-soft"
+                    >
+                      {site.contact.email}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </Reveal>
         </div>
       </div>
