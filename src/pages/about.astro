@@ -122,7 +122,7 @@ const schema = [
     </div>
 
     <Container
-      class="pt-[clamp(3rem,5.5vw,5.5rem)] pb-[--section-y-tight] xl:pr-[clamp(9.5rem,13vw,15rem)]"
+      class="pt-[clamp(3rem,5.5vw,5.5rem)] pb-(--section-y-tight) xl:pr-[clamp(9.5rem,13vw,15rem)]"
     >
       <div class="grid gap-y-14 lg:grid-cols-12 lg:gap-x-12">
         {/* ------------------------------------------------- the statement */}
@@ -141,7 +141,7 @@ const schema = [
           />
 
           <Reveal>
-            <p class="lede mt-[--stack-md] max-w-[42ch] text-charcoal/75">
+            <p class="lede mt-(--stack-md) max-w-[42ch] text-charcoal/75">
               Zen Interior is an interior design and execution studio working across Tamil
               Nadu and Bangalore, for clients who intend to live with the result for a very
               long time.
@@ -150,15 +150,15 @@ const schema = [
 
           {/* The circle is the page's one drawn object. Everything else here
               is type, rule or photograph. */}
-          <Reveal class="mt-[--stack-md]">
+          <Reveal class="mt-(--stack-md)">
             <a href="#story" class="group flex items-center gap-6">
               <span
-                class="label flex size-[5.5rem] shrink-0 items-center justify-center rounded-full border border-teal/25 text-center leading-[1.6] text-teal transition-colors duration-500 ease-[--ease-zen] group-hover:border-brass group-hover:text-brass"
+                class="label flex size-[5.5rem] shrink-0 items-center justify-center rounded-full border border-teal/25 text-center leading-[1.6] text-teal transition-colors duration-500 ease-(--ease-zen) group-hover:border-brass group-hover:text-brass"
               >
                 Our<br />Story
               </span>
               <span
-                class="relative block h-px w-[clamp(3rem,6vw,6rem)] bg-teal/30 transition-all duration-500 ease-[--ease-zen] group-hover:w-[clamp(4rem,8vw,8rem)] group-hover:bg-brass"
+                class="relative block h-px w-[clamp(3rem,6vw,6rem)] bg-teal/30 transition-all duration-500 ease-(--ease-zen) group-hover:w-[clamp(4rem,8vw,8rem)] group-hover:bg-brass"
                 aria-hidden="true"
               >
                 <span
@@ -168,7 +168,7 @@ const schema = [
             </a>
           </Reveal>
 
-          <Reveal variant="fade" class="mt-auto pt-[--stack-lg]">
+          <Reveal variant="fade" class="mt-auto pt-(--stack-lg)">
             <p class="label text-teal/35">
               Spaces &nbsp;/&nbsp; People &nbsp;/&nbsp; Purpose
             </p>
@@ -258,81 +258,68 @@ const schema = [
 
   {/* ------------------------------------------- who we are, as a strip */}
   {/*
-    The four assurances read as a single ruled band rather than four cards,
-    because the point is that they belong to one studio. Values come from site
-    config and the capability list, so this cannot drift out of agreement with
-    the footer or the services page.
+    One ruled line, not a section. No eyebrow and no section number: the band
+    is a rule across the page carrying the four assurances, the studio note and
+    a way onward, which is the whole reason it reads as a spread rather than as
+    another block of content.
+
+    Values come from site config and the capability list, so this cannot drift
+    out of agreement with the footer or the services page.
   */}
   <section id="story" class="border-y border-beige bg-ivory">
-    <Container class="py-[clamp(2.5rem,4.5vw,4.5rem)]">
-      <Reveal variant="fade">
-        <Eyebrow index="01">Who We Are</Eyebrow>
-      </Reveal>
-
-      <div class="mt-9 grid gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group="70">
+    <Container class="py-[clamp(2rem,3.4vw,3rem)]">
+      <div
+        class="grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-[repeat(4,minmax(0,1fr))_1.5fr_auto] lg:items-stretch lg:gap-x-[clamp(1.25rem,2vw,2.5rem)]"
+        data-reveal-group="60"
+      >
         {
           assurances.map((item, index) => (
             <Reveal
-              class:list={[
-                'border-t border-beige pt-6 lg:border-t-0 lg:pt-0',
-                index > 0 && 'lg:border-l lg:border-beige lg:pl-8',
-              ]}
+              variant="fade"
+              class:list={[index > 0 && 'lg:border-l lg:border-beige lg:pl-[clamp(1.25rem,2vw,2.5rem)]']}
             >
-              <p class="font-display text-[clamp(1.875rem,1.3rem+1.6vw,2.75rem)] leading-none text-teal">
+              <p class="font-display text-[clamp(1.75rem,1.35rem+1.1vw,2.375rem)] leading-none text-teal">
                 {item.value}
               </p>
-              <p class="label mt-4 text-teal/55">{item.label}</p>
-              <p class="mt-3 max-w-[32ch] text-micro text-charcoal/60">{item.note}</p>
+              <p class="label mt-3.5 leading-[1.9] text-teal/60">{item.label}</p>
+              <p class="mt-2 max-w-[30ch] text-[0.75rem] leading-[1.6] text-charcoal/55">
+                {item.note}
+              </p>
             </Reveal>
           ))
         }
-      </div>
 
-      <div
-        class="mt-[clamp(2rem,3.5vw,3.25rem)] grid gap-y-9 border-t border-beige pt-[clamp(2rem,3.5vw,3.25rem)] lg:grid-cols-12 lg:items-start lg:gap-x-12"
-        data-reveal-group
-      >
-        <div class="lg:col-span-5">
-          <Reveal>
-            <p class="text-charcoal/72">
-              We combine international product sourcing with local design expertise and
-              professional execution. That combination is deliberate. Access to unusual
-              materials is worth very little without the judgement to place them and the
-              discipline to install them correctly, and most projects buy those three
-              capabilities from three separate parties.
-            </p>
-          </Reveal>
-        </div>
+        {/* The studio note, held on the same line rather than in a paragraph
+            block underneath, which is what keeps the band a single gesture. */}
+        <Reveal
+          variant="fade"
+          class="lg:border-l lg:border-beige lg:pl-[clamp(1.25rem,2vw,2.5rem)]"
+        >
+          <p class="max-w-[42ch] text-[0.8125rem] leading-[1.75] text-charcoal/70">
+            We combine international product sourcing with local design expertise and
+            professional execution. That combination is deliberate, and it is why one
+            studio can be accountable for a finished space rather than a delivered
+            component.
+          </p>
+        </Reveal>
 
-        <div class="lg:col-span-4">
-          <Reveal>
-            <p class="text-charcoal/72">
-              We hold all three. It is slower to build a studio that way and it is the only
-              way we know to be accountable for a finished space rather than a delivered
-              component.
-            </p>
-          </Reveal>
-        </div>
-
-        <div class="lg:col-span-3 lg:justify-self-end">
-          <Reveal>
-            <a href="#process" class="group flex items-center gap-6">
+        <Reveal variant="fade" class="sm:col-span-2 lg:col-span-1 lg:self-center">
+          <a href="#process" class="group flex items-center gap-5">
+            <span
+              class="label flex size-[5rem] shrink-0 items-center justify-center rounded-full border border-teal/25 text-center leading-[1.7] text-teal transition-colors duration-500 ease-(--ease-zen) group-hover:border-brass group-hover:text-brass"
+            >
+              Our<br />Approach
+            </span>
+            <span
+              class="relative block h-px w-[clamp(2.5rem,4vw,4.5rem)] bg-teal/35 transition-all duration-500 ease-(--ease-zen) group-hover:w-[clamp(3.5rem,5.5vw,5.5rem)] group-hover:bg-brass"
+              aria-hidden="true"
+            >
               <span
-                class="label flex size-[5.5rem] shrink-0 items-center justify-center rounded-full border border-teal/25 text-center leading-[1.6] text-teal transition-colors duration-500 ease-[--ease-zen] group-hover:border-brass group-hover:text-brass"
-              >
-                Our<br />Approach
-              </span>
-              <span
-                class="relative block h-px w-[clamp(2.5rem,4vw,4.5rem)] bg-teal/30 transition-all duration-500 ease-[--ease-zen] group-hover:w-[clamp(3.5rem,6vw,6rem)] group-hover:bg-brass"
-                aria-hidden="true"
-              >
-                <span
-                  class="absolute -top-[3px] right-0 block size-[7px] rotate-45 border-t border-r border-current"
-                ></span>
-              </span>
-            </a>
-          </Reveal>
-        </div>
+                class="absolute -top-[3px] right-0 block size-[7px] rotate-45 border-t border-r border-current"
+              ></span>
+            </span>
+          </a>
+        </Reveal>
       </div>
     </Container>
   </section>
@@ -340,18 +327,25 @@ const schema = [
   {/* ------------------------------------------------------ commitments */}
   {/* id is the footer's "Our Process" target. Renaming it breaks that link. */}
   <section id="process" class="bg-stone">
-    <Container class="pt-[--section-y] pb-[--section-y-tight]">
+    <Container class="pt-(--section-y) pb-(--section-y-tight)">
       <div class="grid gap-y-12 md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
         <div class="md:col-span-12 lg:col-span-4" data-reveal-group>
           <Reveal variant="fade">
-            <SectionNumber value="02" />
+            <SectionNumber value="01" />
           </Reveal>
           <Reveal variant="fade" class="mt-4">
             <Eyebrow>How We Work</Eyebrow>
           </Reveal>
           <SplitHeading lines={['Four commitments', 'we do not negotiate.']} class="mt-6" />
           <Reveal>
-            <p class="mt-[--stack-md] max-w-[42ch] text-small text-charcoal/70">
+            <p class="mt-(--stack-md) max-w-[42ch] text-small text-charcoal/70">
+              Access to unusual materials is worth very little without the judgement to
+              place them and the discipline to install them correctly, and most projects
+              buy those three capabilities from three separate parties. We hold all three.
+            </p>
+          </Reveal>
+          <Reveal>
+            <p class="mt-5 max-w-[42ch] text-small text-charcoal/70">
               None of these is a service line. They are the conditions under which we agree
               to take a project on at all.
             </p>
@@ -381,7 +375,7 @@ const schema = [
 
     {/* A wide frame closes the stone band, so the page never runs two text
         sections back to back. */}
-    <Reveal variant="clip" class="mt-[--section-y-tight] block">
+    <Reveal variant="clip" class="mt-(--section-y-tight) block">
       <div class="bleed aspect-[4/3] overflow-hidden bg-beige sm:aspect-[16/9] lg:aspect-[21/9]">
         <Image
           src={livingVolumeImage}
@@ -431,7 +425,7 @@ const schema = [
 
         <div class="md:col-span-6 lg:col-span-5 lg:col-start-8" data-reveal-group>
           <Reveal variant="fade">
-            <SectionNumber value="03" />
+            <SectionNumber value="02" />
           </Reveal>
           <Reveal variant="fade" class="mt-4">
             <Eyebrow>Quality</Eyebrow>
@@ -440,13 +434,13 @@ const schema = [
           <SplitHeading lines={['The detail', 'you notice last.']} class="mt-6" />
 
           <Reveal>
-            <p class="lede mt-[--stack-md] text-charcoal/75">
+            <p class="lede mt-(--stack-md) text-charcoal/75">
               None of this is visible in a photograph, and all of it is the reason one
               interior still holds five years later.
             </p>
           </Reveal>
 
-          <dl class="mt-[--stack-md]">
+          <dl class="mt-(--stack-md)">
             {
               checks.map((check) => (
                 <Reveal>
@@ -472,7 +466,7 @@ const schema = [
       >
         <div class="md:col-span-7">
           <Reveal variant="fade">
-            <SectionNumber value="04" tone="dark" />
+            <SectionNumber value="03" tone="dark" />
           </Reveal>
           <Reveal variant="fade" class="mt-4">
             <Eyebrow tone="inverse">Capabilities</Eyebrow>
@@ -496,7 +490,7 @@ const schema = [
       </div>
 
       <div
-        class="mt-[--stack-lg] grid gap-x-10 gap-y-2 sm:grid-cols-2 lg:grid-cols-3"
+        class="mt-(--stack-lg) grid gap-x-10 gap-y-2 sm:grid-cols-2 lg:grid-cols-3"
         data-reveal-group="70"
       >
         {
@@ -529,14 +523,14 @@ const schema = [
       >
         <div class="md:col-span-6">
           <Reveal variant="fade">
-            <SectionNumber value="05" />
+            <SectionNumber value="04" />
           </Reveal>
           <Reveal variant="fade" class="mt-4">
             <Eyebrow>Where We Work</Eyebrow>
           </Reveal>
           <SplitHeading lines={['Across', 'South India.']} class="mt-6" />
           <Reveal>
-            <p class="lede mt-[--stack-md] max-w-[44ch] text-charcoal/72">
+            <p class="lede mt-(--stack-md) max-w-[44ch] text-charcoal/72">
               Our own team supervises each site rather than a subcontracted local crew, which
               is what makes the standard portable.
             </p>
