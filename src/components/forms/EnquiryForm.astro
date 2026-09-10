@@ -1,5 +1,6 @@
 ---
 import { projectTypes, investmentBands } from '@data/enquiry';
+import { buildDirectWhatsAppUrl } from '@lib/whatsapp';
 
 /**
  * Private project enquiry.
@@ -9,17 +10,21 @@ import { projectTypes, investmentBands } from '@data/enquiry';
  *   1. WhatsApp is opened with the message pre-filled. This MUST be the first
  *      thing after validation, synchronously inside the submit handler. Any
  *      awaited call before it moves window.open outside the user gesture and
- *      Safari and Chrome block it silently.
+ *      Safari and Chrome then block it silently.
  *
  *   2. The same enquiry is posted to Netlify Forms. This is the safety net.
  *      A deep link only pre-fills a message — if the visitor closes the tab
  *      without pressing Send, the lead is gone unless it was captured here.
  *
- * Visually the form is a document, not a widget: hairline underlines rather
- * than boxes, numbered fieldsets, and one solid action at the end. Error and
+ * Visually the form is a single document handed across a table: one numbered
+ * header, one field grid, one solid action. Text fields are hairline
+ * underlines rather than boxes; only the note is a ruled box, because it is
+ * the one field that should look like somewhere to write at length. Error and
  * focus states are carried on the underline, which is the only part of a
  * field that has any weight to give.
  */
+
+const whatsappHref = buildDirectWhatsAppUrl();
 
 /*
   Shared field shape. `aria-invalid` is what the script sets, so the error
@@ -27,14 +32,14 @@ import { projectTypes, investmentBands } from '@data/enquiry';
   than by a second, parallel class.
 */
 const fieldBase = [
-  'w-full rounded-none border-0 border-b border-beige bg-transparent px-0 py-3.5',
-  'text-charcoal transition-colors duration-300',
+  'w-full rounded-none border-0 border-b border-beige bg-transparent px-0 py-3',
+  'text-small text-charcoal transition-colors duration-300',
   'hover:border-charcoal/40',
   'focus:border-teal focus:outline-none focus:ring-0',
   'aria-[invalid=true]:border-brass',
 ].join(' ');
 
-const inputClass = `${fieldBase} mt-1.5 placeholder:text-charcoal/30`;
+const inputClass = `${fieldBase} mt-1 placeholder:text-charcoal/30`;
 
 /*
   The select keeps its own chevron, so the wrapper carries the spacing and the
@@ -44,9 +49,8 @@ const inputClass = `${fieldBase} mt-1.5 placeholder:text-charcoal/30`;
 */
 const selectClass = `${fieldBase} appearance-none pr-8 invalid:text-charcoal/40`;
 
-const labelClass = 'label block text-teal/60';
-const errorClass = 'mt-2.5 text-micro text-brass hidden';
-const legendClass = 'label p-0 text-teal';
+const labelClass = 'label block text-teal/55';
+const errorClass = 'mt-2 text-micro text-brass hidden';
 ---
 
 <form
@@ -71,17 +75,29 @@ const legendClass = 'label p-0 text-teal';
   </p>
 
   <fieldset class="m-0 border-0 p-0">
-    <legend class={legendClass}>
-      <span class="inline-flex items-center gap-3">
-        <span class="text-brass" aria-hidden="true">01</span>
-        <span class="h-px w-8 bg-brass/40" aria-hidden="true"></span>
-        Your Details
+    {/*
+      The legend carries the counter and the required-field note on one line.
+      A legend is not a reliable flex container across engines, so the row is a
+      span inside it rather than the legend itself.
+    */}
+    <legend class="w-full p-0">
+      <span class="flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2">
+        <span class="label flex items-center gap-3 text-teal">
+          <span class="text-brass" aria-hidden="true">01</span>
+          <span class="h-px w-8 bg-brass/40" aria-hidden="true"></span>
+          Your Details
+        </span>
+        <span class="label text-charcoal/35">
+          Fields marked <span class="text-brass" aria-hidden="true">*</span> are required
+        </span>
       </span>
     </legend>
 
-    <div class="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2">
+    <div class="mt-9 grid gap-x-10 gap-y-7 sm:grid-cols-2">
       <div>
-        <label class={labelClass} for="name">Full Name</label>
+        <label class={labelClass} for="name">
+          Full Name <span class="text-brass" aria-hidden="true">*</span>
+        </label>
         <input
           class={inputClass}
           id="name"
@@ -95,7 +111,9 @@ const legendClass = 'label p-0 text-teal';
       </div>
 
       <div>
-        <label class={labelClass} for="phone">Phone</label>
+        <label class={labelClass} for="phone">
+          Phone <span class="text-brass" aria-hidden="true">*</span>
+        </label>
         <input
           class={inputClass}
           id="phone"
@@ -103,14 +121,16 @@ const legendClass = 'label p-0 text-teal';
           type="tel"
           inputmode="tel"
           autocomplete="tel"
-          placeholder="+91"
+          placeholder="+91 98765 43210"
           required
         />
         <p class={errorClass} data-error-for="phone" role="alert"></p>
       </div>
 
       <div>
-        <label class={labelClass} for="email">Email</label>
+        <label class={labelClass} for="email">
+          Email <span class="text-brass" aria-hidden="true">*</span>
+        </label>
         <input
           class={inputClass}
           id="email"
@@ -124,7 +144,9 @@ const legendClass = 'label p-0 text-teal';
       </div>
 
       <div>
-        <label class={labelClass} for="location">Project Location</label>
+        <label class={labelClass} for="location">
+          Project Location <span class="text-brass" aria-hidden="true">*</span>
+        </label>
         <input
           class={inputClass}
           id="location"
@@ -135,22 +157,12 @@ const legendClass = 'label p-0 text-teal';
         />
         <p class={errorClass} data-error-for="location" role="alert"></p>
       </div>
-    </div>
-  </fieldset>
 
-  <fieldset class="m-0 mt-[--stack-lg] border-0 p-0">
-    <legend class={legendClass}>
-      <span class="inline-flex items-center gap-3">
-        <span class="text-brass" aria-hidden="true">02</span>
-        <span class="h-px w-8 bg-brass/40" aria-hidden="true"></span>
-        Your Project
-      </span>
-    </legend>
-
-    <div class="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2">
       <div>
-        <label class={labelClass} for="projectType">Project Type</label>
-        <div class="relative mt-1.5">
+        <label class={labelClass} for="projectType">
+          Project Type <span class="text-brass" aria-hidden="true">*</span>
+        </label>
+        <div class="relative mt-1">
           <select class={selectClass} id="projectType" name="projectType" required>
             <option value="">Please select</option>
             {projectTypes.map((type) => <option value={type}>{type}</option>)}
@@ -176,8 +188,10 @@ const legendClass = 'label p-0 text-teal';
           "Estimated Project Investment", never "Budget". The bands themselves
           communicate the level the studio operates at.
         */}
-        <label class={labelClass} for="investment">Estimated Project Investment</label>
-        <div class="relative mt-1.5">
+        <label class={labelClass} for="investment">
+          Estimated Project Investment <span class="text-brass" aria-hidden="true">*</span>
+        </label>
+        <div class="relative mt-1">
           <select class={selectClass} id="investment" name="investment" required>
             <option value="">Please select</option>
             {investmentBands.map((band) => <option value={band}>{band}</option>)}
@@ -197,26 +211,36 @@ const legendClass = 'label p-0 text-teal';
         </div>
         <p class={errorClass} data-error-for="investment" role="alert"></p>
       </div>
-    </div>
 
-    <div class="mt-8">
-      <label class={labelClass} for="requirements">
-        Requirements
-        <span class="ml-3 text-teal/35">Optional</span>
-      </label>
-      <textarea
-        class={`${inputClass} resize-y`}
-        id="requirements"
-        name="requirements"
-        rows="4"
-        placeholder="Tell us about the space, the timeline and what matters most to you."
-      ></textarea>
-      <p class={errorClass} data-error-for="requirements" role="alert"></p>
+      <div class="sm:col-span-2">
+        <label class={labelClass} for="requirements">
+          Tell Us About Your Project
+          <span class="ml-3 text-teal/35">Optional</span>
+        </label>
+        <textarea
+          class="mt-2 w-full resize-y rounded-zen border border-beige bg-ivory/60 px-4 py-3.5 text-small text-charcoal transition-colors duration-300 placeholder:text-charcoal/30 hover:border-charcoal/30 focus:border-teal focus:outline-none focus:ring-0 aria-[invalid=true]:border-brass"
+          id="requirements"
+          name="requirements"
+          rows="4"
+          placeholder="Share your thoughts, requirements, timeline or any reference ideas."
+          data-char-input></textarea>
+
+        <div class="mt-2 flex items-baseline justify-between gap-4">
+          <p class={errorClass} data-error-for="requirements" role="alert"></p>
+          {/*
+            A live count, not a limit. The field is never truncated in the
+            browser; validation still owns what is acceptable.
+          */}
+          <p class="ml-auto text-micro text-charcoal/35" data-char-count aria-hidden="true">
+            0 / 2000
+          </p>
+        </div>
+      </div>
     </div>
   </fieldset>
 
-  <div class="mt-[--stack-lg] border-t border-beige pt-8">
-    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between sm:gap-10">
+  <div class="mt-[--stack-md] border-t border-beige pt-8">
+    <div class="flex flex-col gap-7 sm:flex-row sm:items-center sm:gap-9">
       <button
         type="submit"
         data-enquiry-submit
@@ -229,13 +253,73 @@ const legendClass = 'label p-0 text-teal';
         >
       </button>
 
-      <p class="max-w-[36ch] text-micro text-charcoal/55">
-        Submitting opens WhatsApp with your enquiry ready to send. You stay in control of
-        the message.
-      </p>
+      <span class="hidden w-px self-stretch bg-beige sm:block" aria-hidden="true"></span>
+
+      {/*
+        The quieter way in, kept beside the action rather than below it. Some
+        visitors will never fill in a form, and sending them off to hunt for a
+        number is how that enquiry is lost.
+      */}
+      <a
+        href={whatsappHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group flex items-center gap-4 text-left"
+      >
+        <span
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-beige text-teal transition-colors duration-300 group-hover:border-brass group-hover:text-brass"
+          aria-hidden="true"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.1"
+          >
+            <path d="M4 20l1.25-3.9A7.7 7.7 0 1 1 8 18.75L4 20Z" stroke-linejoin="round" />
+            <path
+              d="M9.3 8.6c.15-.35.31-.36.5-.37h.43c.14 0 .33 0 .5.36l.62 1.4c.08.16.06.34-.03.48l-.35.44c-.11.14-.22.28-.06.53a5.7 5.7 0 0 0 2.5 2.2c.24.11.38.09.53-.05l.5-.55c.14-.16.3-.18.48-.11l1.36.64c.19.09.3.22.3.42 0 .27-.1.78-.4 1.06-.3.29-.87.5-1.5.42a8.4 8.4 0 0 1-5.6-4.3c-.4-.7-.4-1.6-.18-2.17Z"
+              fill="currentColor"
+              stroke="none"
+            />
+          </svg>
+        </span>
+        <span>
+          <span class="block text-small text-charcoal/60">Prefer to chat?</span>
+          <span
+            class="mt-0.5 flex items-center gap-2 font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass"
+          >
+            Message us on WhatsApp
+            <span
+              class="inline-block text-small transition-transform duration-[--duration-base] ease-[--ease-zen] group-hover:translate-x-1"
+              aria-hidden="true">&#8594;</span
+            >
+          </span>
+        </span>
+      </a>
     </div>
 
-    <p class="mt-6 hidden border-l border-brass pl-4 text-micro text-brass" data-form-error role="alert">
+    <p class="mt-8 flex items-center gap-3 text-micro text-charcoal/50">
+      <svg
+        class="h-4 w-4 shrink-0 text-brass"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.1"
+        aria-hidden="true"
+      >
+        <rect x="3.25" y="7" width="9.5" height="6.25" rx="1" />
+        <path d="M5.6 7V5.1a2.4 2.4 0 0 1 4.8 0V7" />
+      </svg>
+      Your information is kept private and confidential.
+    </p>
+
+    <p
+      class="mt-6 hidden border-l border-brass pl-4 text-micro text-brass"
+      data-form-error
+      role="alert"
+    >
     </p>
   </div>
 </form>
@@ -360,5 +444,24 @@ const legendClass = 'label p-0 text-teal';
         target.setAttribute('aria-invalid', 'false');
       }
     });
+  }
+</script>
+
+<script>
+  /*
+    Character count for the note field. Presentation only, deliberately kept
+    out of the submit path: it never blocks, truncates or validates anything.
+  */
+  const note = document.querySelector<HTMLTextAreaElement>('[data-char-input]');
+  const counter = document.querySelector<HTMLElement>('[data-char-count]');
+
+  if (note && counter) {
+    const render = () => {
+      counter.textContent = `${note.value.length} / 2000`;
+      counter.classList.toggle('text-brass', note.value.length > 2000);
+    };
+
+    note.addEventListener('input', render);
+    render();
   }
 </script>

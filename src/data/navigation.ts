@@ -20,21 +20,34 @@ export const primaryAction: NavLink = {
   href: '/contact',
 };
 
+/**
+ * Footer columns.
+ *
+ * Typology links deep-link into the projects filter via `?category=`, which
+ * the projects index reads on load. Every value here must match a slugified
+ * entry in PROJECT_CATEGORIES, or the link lands on an empty filter.
+ */
 export const footerNav: Array<{ heading: string; links: NavLink[] }> = [
   {
-    heading: 'Studio',
+    heading: 'Explore',
     links: [
+      { label: 'Home', href: '/' },
+      { label: 'Projects', href: '/projects' },
       { label: 'About', href: '/about' },
+      { label: 'Our Process', href: '/about#process' },
       { label: 'Journal', href: '/journal' },
       { label: 'Contact', href: '/contact' },
     ],
   },
   {
-    heading: 'Work',
+    heading: 'Our Work',
     links: [
-      { label: 'All Projects', href: '/projects' },
       { label: 'Private Residences', href: '/projects?category=private-residence' },
+      { label: 'Luxury Villas', href: '/projects?category=luxury-villa' },
+      { label: 'Apartments', href: '/projects?category=apartment' },
       { label: 'Commercial Spaces', href: '/projects?category=commercial' },
+      { label: 'Hospitality', href: '/projects?category=hospitality' },
+      { label: 'Workspaces', href: '/projects?category=office' },
     ],
   },
 ];
