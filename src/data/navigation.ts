@@ -1,6 +1,6 @@
 /**
  * Navigation is deliberately short. Luxury brands reduce choices.
- * Four destinations plus one primary action.
+ * Six destinations plus one primary action.
  */
 
 export interface NavLink {
@@ -9,7 +9,9 @@ export interface NavLink {
 }
 
 export const primaryNav: NavLink[] = [
+  { label: 'Home', href: '/' },
   { label: 'Projects', href: '/projects' },
+  { label: 'Services', href: '/services' },
   { label: 'About', href: '/about' },
   { label: 'Journal', href: '/journal' },
   { label: 'Contact', href: '/contact' },
@@ -33,6 +35,7 @@ export const footerNav: Array<{ heading: string; links: NavLink[] }> = [
     links: [
       { label: 'Home', href: '/' },
       { label: 'Projects', href: '/projects' },
+      { label: 'Services', href: '/services' },
       { label: 'About', href: '/about' },
       { label: 'Our Process', href: '/about#process' },
       { label: 'Journal', href: '/journal' },

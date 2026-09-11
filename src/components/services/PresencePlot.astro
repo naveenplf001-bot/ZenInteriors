@@ -1,0 +1,199 @@
+---
+import { site } from '@config/site';
+
+/**
+ * The presence plot.
+ *
+ * A drawn survey rather than a map illustration: every city sits at its real
+ * coordinate, on a hairline graticule, in the same drawing-sheet language the
+ * rest of the site uses. Two reasons it is built this way instead of shipping
+ * a map image.
+ *
+ * The geography stays honest. Cities are read from site config, so the plot
+ * can never claim a city the footer and the About page do not, and adding one
+ * there places it here automatically.
+ *
+ * And it is type, not pixels: it stays sharp at any size, weighs nothing, and
+ * the pins can be animated individually as the section arrives.
+ *
+ * A city without a coordinate below is simply not plotted. The list beside the
+ * plot is the complete statement of reach; this is the picture of it.
+ */
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+/** Degrees. Longitude east, latitude north. */
+const COORDS: Record<string, { lon: number; lat: number; side?: 'left' }> = {
+  Chennai: { lon: 80.27, lat: 13.08, side: 'left' },
+  Bangalore: { lon: 77.59, lat: 12.97 },
+  Pondicherry: { lon: 79.83, lat: 11.93, side: 'left' },
+  Salem: { lon: 78.15, lat: 11.66 },
+  Coimbatore: { lon: 76.96, lat: 11.02 },
+  Trichy: { lon: 78.7, lat: 10.79 },
+  Madurai: { lon: 78.12, lat: 9.92 },
+  Tirunelveli: { lon: 77.76, lat: 8.71 },
+};
+
+/* The frame, in degrees, with a margin so no pin sits on the edge. */
+const WEST = 76.3;
+const EAST = 80.8;
+const NORTH = 13.6;
+const SOUTH = 8.3;
+
+const W = 100;
+const H = 120;
+
+const x = (lon: number) => ((lon - WEST) / (EAST - WEST)) * W;
+const y = (lat: number) => ((NORTH - lat) / (NORTH - SOUTH)) * H;
+
+const cities = site.regions
+  .flatMap((region) => region.cities.map((city) => ({ city, region: region.name })))
+  .filter((entry) => entry.city in COORDS)
+  .map((entry, index) => {
+    const point = COORDS[entry.city]!;
+    return {
+      ...entry,
+      index,
+      cx: x(point.lon),
+      cy: y(point.lat),
+      side: point.side ?? 'right',
+    };
+  })
+  /* North to south, so the plot draws itself the way the coast runs. */
+  .sort((a, b) => a.cy - b.cy);
+
+/* Graticule every degree, drawn from the frame rather than hand-listed. */
+const meridians = [77, 78, 79, 80].map((lon) => x(lon));
+const parallels = [9, 10, 11, 12, 13].map((lat) => y(lat));
+---
+
+<div class:list={['zen-plot relative', className]} data-plot>
+  <svg
+    viewBox={`0 0 ${W} ${H}`}
+    class="h-auto w-full overflow-visible"
+    role="img"
+    aria-label={`Cities served across ${site.regions.map((region) => region.name).join(' and ')}`}
+  >
+    <g stroke="currentColor" class="text-teal/10" stroke-width="0.25">
+      {meridians.map((mx) => <line x1={mx} y1="0" x2={mx} y2={H} />)}
+      {parallels.map((py) => <line x1="0" y1={py} x2={W} y2={py} />)}
+    </g>
+
+    {/* Frame corners, the way a survey sheet is registered. */}
+    <g stroke="currentColor" class="text-teal/25" stroke-width="0.4" fill="none">
+      <polyline points={`0,6 0,0 6,0`} />
+      <polyline points={`${W - 6},0 ${W},0 ${W},6`} />
+      <polyline points={`0,${H - 6} 0,${H} 6,${H}`} />
+      <polyline points={`${W - 6},${H} ${W},${H} ${W},${H - 6}`} />
+    </g>
+
+    {
+      cities.map((entry) => (
+        <g
+          class="zen-plot-pin"
+          style={`--d:${180 + entry.index * 130}ms`}
+          data-region={entry.region}
+        >
+          {/* Leader from the pin to its label. */}
+          <line
+            x1={entry.cx}
+            y1={entry.cy}
+            x2={entry.side === 'left' ? entry.cx - 5 : entry.cx + 5}
+            y2={entry.cy}
+            stroke="currentColor"
+            class="text-brass/50"
+            stroke-width="0.3"
+          />
+          <circle
+            cx={entry.cx}
+            cy={entry.cy}
+            r="2.6"
+            fill="none"
+            stroke="currentColor"
+            class="zen-plot-halo text-brass/35"
+            stroke-width="0.3"
+          />
+          <circle cx={entry.cx} cy={entry.cy} r="1.05" class="fill-brass" />
+          <text
+            x={entry.side === 'left' ? entry.cx - 6.5 : entry.cx + 6.5}
+            y={entry.cy + 1.15}
+            text-anchor={entry.side === 'left' ? 'end' : 'start'}
+            class="fill-teal font-sans text-[3.2px] tracking-[0.16em] uppercase"
+          >
+            {entry.city}
+          </text>
+        </g>
+      ))
+    }
+  </svg>
+
+  {/* State names, set as ground rather than as labels on the drawing. */}
+  <p
+    class="label pointer-events-none absolute top-[6%] left-[2%] text-teal/30"
+    aria-hidden="true"
+  >
+    Karnataka
+  </p>
+  <p
+    class="label pointer-events-none absolute bottom-[16%] left-[2%] text-teal/30"
+    aria-hidden="true"
+  >
+    Tamil Nadu
+  </p>
+</div>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    /*
+      Pins land one after another as the section arrives, north to south. The
+      halo keeps breathing afterwards at a very low amplitude, which is what
+      stops a static drawing from reading as a placeholder image.
+    */
+    /*
+      Hidden behind `.js`, exactly as the reveal system is. Without that guard
+      a visitor with JavaScript disabled would get an empty frame, because the
+      class that starts the animation is added by script.
+    */
+    :global(html.js) .zen-plot-pin {
+      opacity: 0;
+    }
+
+    :global(.is-revealed) .zen-plot-pin {
+      animation: plot-pin-in 900ms var(--ease-zen-out) var(--d, 0ms) both;
+    }
+
+    :global(.is-revealed) .zen-plot-halo {
+      animation: plot-halo 4200ms var(--ease-zen) calc(var(--d, 0ms) + 900ms) infinite;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+  }
+
+  @keyframes plot-pin-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 0.35rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes plot-halo {
+    0%,
+    70%,
+    100% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+    35% {
+      transform: scale(1.5);
+      opacity: 0.15;
+    }
+  }
+</style>

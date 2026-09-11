@@ -1,0 +1,482 @@
+---
+import { Image } from 'astro:assets';
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/ui/Container.astro';
+import Eyebrow from '@components/ui/Eyebrow.astro';
+import Reveal from '@components/ui/Reveal.astro';
+import SectionNumber from '@components/ui/SectionNumber.astro';
+import SplitHeading from '@components/ui/SplitHeading.astro';
+import PresencePlot from '@components/services/PresencePlot.astro';
+
+import { capabilities } from '@data/services';
+import { site } from '@config/site';
+import { breadcrumbSchema } from '@lib/seo';
+import { pad } from '@lib/format';
+
+import archImage from '@/assets/images/bg 3.png';
+import shadowImage from '@/assets/images/bg 4.png';
+import materialsImage from '@/assets/images/bg 2.png';
+import closingImage from '@/assets/images/home/sourcing.jpg';
+
+/**
+ * Services.
+ *
+ * The page answers two questions in one read: what Zen actually does, and
+ * where it will do it. Geography opens rather than closes, because for a
+ * turnkey studio the first objection is distance, not capability.
+ *
+ * Everything factual is derived. Cities come from site config, the capability
+ * list from the services data, so this page can never claim a service or a
+ * city the rest of the site does not.
+ */
+
+const regionNames = site.regions.map((region) => region.name);
+const cityCount = site.regions.reduce((total, region) => total + region.cities.length, 0);
+
+/*
+  The offering, in the client's own words. Eight capabilities stated as a
+  single breath rather than eight boxes, because a list of boxes reads as a
+  price sheet.
+*/
+const offering = [
+  'Global Sourcing',
+  'Premium Products',
+  'Interior Design',
+  'Expert Execution',
+  'Furniture',
+  'Lighting',
+  'Furnishing',
+  'Turnkey Solutions',
+];
+
+/* The four the closing band carries, named only. A sentence under each one
+   turns a confident row into a crowded one. */
+const pillars = [
+  { title: 'Global Sourcing', icon: 'globe' },
+  { title: 'Premium Products', icon: 'chair' },
+  { title: 'Expert Execution', icon: 'draft' },
+  { title: 'Turnkey Solutions', icon: 'key' },
+];
+
+const schema = [
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Services"
+  description="Interior design, global sourcing, furniture, lighting and turnkey execution by Zen Interior, across Tamil Nadu and Bangalore."
+  schema={schema}
+>
+  {/* --------------------------------------------------- 01 · our presence */}
+  <section class="zen-presence relative isolate bg-ivory">
+    {/* Plaster and leaf shadow as the ground, washed back so type sits on it. */}
+    <Image
+      src={shadowImage}
+      alt=""
+      aria-hidden="true"
+      widths={[900, 1400, 1920]}
+      sizes="100vw"
+      loading="eager"
+      class="absolute inset-0 -z-20 h-full w-full object-cover"
+    />
+    <div
+      class="absolute inset-0 -z-10 bg-gradient-to-r from-ivory via-ivory/94 to-ivory/78"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="lg:grid lg:grid-cols-[minmax(0,34fr)_minmax(0,42fr)_minmax(0,24fr)]">
+      {/* ---------------------------------------------------------- written */}
+      <div
+        class="flex flex-col justify-center px-(--gutter) pt-[clamp(2rem,4vh,3rem)] pb-[clamp(2rem,4vh,3rem)] lg:py-[clamp(3rem,7vh,5.5rem)] lg:pr-[clamp(1.5rem,2.6vw,3rem)]"
+      >
+        <Reveal variant="fade">
+          <Eyebrow index="01">Our Presence</Eyebrow>
+        </Reveal>
+
+        <SplitHeading
+          as="h1"
+          size="xl"
+          lines={['Serving', 'Tamil Nadu &', 'Bangalore']}
+          accentFrom={2}
+          class="mt-7"
+        />
+
+        <Reveal>
+          <p class="mt-8 max-w-[40ch] text-small leading-[1.8] text-charcoal/72">
+            Distinctive interiors, delivered closer to you. From coastal homes to
+            corporate floors, our own team works across {regionNames.join(' and ')} to
+            create environments that hold their standard wherever they are built.
+          </p>
+        </Reveal>
+
+        <Reveal variant="fade" class="mt-10">
+          <a
+            href="#locations"
+            class="group label inline-flex items-center gap-5 text-teal transition-colors duration-300 hover:text-brass"
+          >
+            <span
+              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-teal/25 transition-colors duration-500 ease-(--ease-zen) group-hover:border-brass"
+              aria-hidden="true"
+            >
+              <span class="text-[0.75rem] leading-none">&#8595;</span>
+            </span>
+            Explore our locations
+            <span
+              class="hidden h-px w-16 origin-left bg-beige transition-[transform,background-color] duration-500 ease-(--ease-zen) group-hover:scale-x-125 group-hover:bg-brass sm:block"
+              aria-hidden="true"></span>
+          </a>
+        </Reveal>
+
+        <dl class="mt-[clamp(2.5rem,5vh,3.5rem)] flex gap-10" data-reveal-group="70">
+          {
+            [
+              { value: pad(regionNames.length), label: 'States' },
+              { value: pad(cityCount), label: 'Cities' },
+            ].map((figure) => (
+              <Reveal variant="fade">
+                <div class="border-t border-beige pt-4">
+                  <dt class="label text-teal/45">{figure.label}</dt>
+                  <dd class="mt-2.5 font-display text-display-sm text-teal">
+                    {figure.value}
+                  </dd>
+                </div>
+              </Reveal>
+            ))
+          }
+        </dl>
+      </div>
+
+      {/* ------------------------------------------------------------- plot */}
+      <Reveal
+        variant="fade"
+        class="flex items-center px-(--gutter) pb-[clamp(2rem,5vh,4rem)] lg:px-[clamp(1rem,2vw,2.5rem)] lg:py-[clamp(3rem,7vh,5.5rem)]"
+      >
+        <PresencePlot class="mx-auto w-full max-w-[26rem]" />
+      </Reveal>
+
+      {/* -------------------------------------------------------- dark panel */}
+      <div class="relative isolate flex flex-col justify-between overflow-hidden bg-teal px-[clamp(1.75rem,2.6vw,2.75rem)] py-[clamp(2.5rem,6vh,4.5rem)] text-ivory on-dark">
+        <Image
+          src={shadowImage}
+          alt=""
+          aria-hidden="true"
+          widths={[400, 700, 1000]}
+          sizes="24vw"
+          loading="lazy"
+          class="absolute inset-0 -z-20 h-full w-full object-cover opacity-30 mix-blend-luminosity"
+        />
+        <div class="absolute inset-0 -z-10 bg-teal/80" aria-hidden="true"></div>
+
+        <Reveal variant="fade">
+          <p class="font-display text-[clamp(1.25rem,1rem+0.9vw,1.75rem)] leading-[1.45] text-ivory italic">
+            &ldquo;Homes, offices and spaces that belong to a better tomorrow.&rdquo;
+          </p>
+          <span class="mt-8 block h-px w-14 bg-brass-soft/60" aria-hidden="true"></span>
+        </Reveal>
+
+        <Reveal variant="fade" class="mt-16">
+          <p class="label text-brass-soft">Zen Interior</p>
+          <p class="label mt-3 text-ivory/45">{regionNames.join(' · ')}</p>
+        </Reveal>
+      </div>
+    </div>
+  </section>
+
+  {/* ------------------------------------------------------- 02 · the offer */}
+  <section class="border-y border-beige bg-stone">
+    <Container class="section-tight">
+      <div class="grid gap-y-(--stack-md) lg:grid-cols-12 lg:gap-x-16">
+        <div class="lg:col-span-5">
+          <Reveal variant="fade">
+            <SectionNumber value="02" />
+          </Reveal>
+          <Reveal variant="fade" class="mt-4">
+            <Eyebrow>What We Do</Eyebrow>
+          </Reveal>
+          <SplitHeading
+            lines={['We don’t simply', 'furnish spaces.']}
+            size="lg"
+            class="mt-6"
+          />
+          <Reveal>
+            <p class="lede mt-6 max-w-[34ch] text-brass">
+              We create complete environments.
+            </p>
+          </Reveal>
+
+        </div>
+
+        <div class="lg:col-span-6 lg:col-start-7">
+          <Reveal>
+            <p class="lede max-w-[46ch] text-charcoal/72">
+              From concept to completion, we transform spaces through thoughtful design
+              and precise execution. Everything below sits under one contract and one
+              accountable team.
+            </p>
+          </Reveal>
+
+          {/* The offering, read as one line rather than eight boxes. */}
+          <ul class="mt-9 flex flex-wrap gap-x-3 gap-y-3" data-reveal-group="60">
+            {
+              offering.map((item) => (
+                <Reveal variant="fade" as="li">
+                  <span class="label inline-block rounded-zen border border-beige px-4 py-2.5 text-teal/60 transition-colors duration-500 ease-(--ease-zen) hover:border-brass hover:text-teal">
+                    {item}
+                  </span>
+                </Reveal>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <Reveal variant="clip" class="mt-(--stack-lg) block">
+        <div class="aspect-[16/9] overflow-hidden rounded-zen bg-beige sm:aspect-[21/9] lg:aspect-[3/1]">
+          <Image
+            src={materialsImage}
+            alt="Timber, stone, bronze and undyed wool samples laid out in daylight"
+            widths={[800, 1200, 1600, 2000]}
+            sizes="(min-width: 1024px) 88vw, 100vw"
+            loading="lazy"
+            class="h-full w-full object-cover"
+          />
+        </div>
+      </Reveal>
+
+      {/* Capabilities, stated broadly. Never itemised into commodity words. */}
+      <div
+        class="mt-(--stack-lg) grid gap-x-10 gap-y-px sm:grid-cols-2 lg:grid-cols-3"
+        data-reveal-group="80"
+      >
+        {
+          capabilities.map((capability) => (
+            <Reveal variant="fade" as="article" class="group relative pt-7">
+              <span
+                class="absolute inset-x-0 top-0 h-px bg-beige"
+                aria-hidden="true"
+              />
+              <span
+                class="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-brass transition-transform duration-700 ease-(--ease-zen) group-hover:scale-x-100"
+                aria-hidden="true"
+              />
+              <p class="label text-teal/30">{capability.index}</p>
+              <h3 class="mt-4 font-display text-display-sm text-teal transition-colors duration-500 group-hover:text-brass">
+                {capability.title}
+              </h3>
+              <p class="mt-3 max-w-[36ch] pb-9 text-micro leading-[1.7] text-charcoal/65">
+                {capability.description}
+              </p>
+            </Reveal>
+          ))
+        }
+      </div>
+    </Container>
+  </section>
+
+  {/* ----------------------------------------------------- 03 · key locations */}
+  <section id="locations" class="scroll-mt-(--header-h) bg-ivory">
+    <div class="lg:grid lg:grid-cols-[minmax(0,26fr)_minmax(0,28fr)_minmax(0,30fr)_minmax(0,16fr)] lg:items-stretch">
+      {/* ---------------------------------------------------------- written */}
+      <div class="flex flex-col justify-center px-(--gutter) py-[clamp(2.5rem,6vh,4.5rem)] lg:pr-[clamp(1.5rem,2.4vw,2.5rem)]">
+        <Reveal variant="fade">
+          <Eyebrow index="03">Key Locations</Eyebrow>
+        </Reveal>
+        <SplitHeading lines={['Designing', 'Closer to You']} size="md" class="mt-6" />
+        <Reveal>
+          <p class="mt-7 max-w-[36ch] text-small leading-[1.8] text-charcoal/70">
+            Our team is present across key cities in {regionNames.join(' and ')},
+            bringing global materials, premium products and expert execution to your
+            doorstep.
+          </p>
+        </Reveal>
+      </div>
+
+      {/* ------------------------------------------------------------ frame */}
+      <div class="relative flex min-h-[18rem]">
+        <div class="relative flex-1 overflow-hidden bg-stone">
+          <Image
+            src={archImage}
+            alt="Arched threshold opening to an olive tree and the sea beyond"
+            widths={[480, 800, 1200]}
+            sizes="(min-width: 1024px) 28vw, 100vw"
+            loading="lazy"
+            class="absolute inset-0 h-full w-full object-cover transition-transform duration-[1600ms] ease-(--ease-zen) hover:scale-[1.03]"
+          />
+        </div>
+
+        {/* The studio's four words, set on a dark strip against the frame. */}
+        <div class="flex w-[clamp(5.5rem,7vw,7.5rem)] shrink-0 flex-col justify-center bg-teal px-5">
+          <p class="label leading-[2.4] text-ivory/85">
+            Spaces<br />People<br />Purpose<br />Places
+          </p>
+          <span class="mt-6 block h-px w-8 bg-brass-soft/60" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      {/* ----------------------------------------------------------- the list */}
+      <div class="flex flex-col justify-center px-(--gutter) py-[clamp(2.5rem,6vh,4.5rem)] lg:px-[clamp(1.75rem,2.8vw,3rem)]">
+        <dl data-reveal-group="90">
+          {
+            site.regions.map((region) => (
+              <Reveal variant="fade">
+                <div class="border-b border-beige/70 py-6 first:pt-0">
+                  <dt class="label flex items-center gap-3 text-teal">
+                    <span class="h-1.5 w-1.5 rounded-full bg-brass" aria-hidden="true" />
+                    {region.name}
+                  </dt>
+                  <dd class="mt-3.5 text-small leading-[1.9] text-charcoal/70">
+                    {region.cities.join('  ·  ')}
+                  </dd>
+                </div>
+              </Reveal>
+            ))
+          }
+
+          <Reveal variant="fade">
+            <div class="py-6">
+              <dt class="label flex items-center gap-3 text-teal">
+                <span
+                  class="h-1.5 w-1.5 rounded-full border border-brass"
+                  aria-hidden="true"
+                />
+                And Beyond
+              </dt>
+              <dd class="mt-3.5 max-w-[30ch] text-small leading-[1.9] text-charcoal/70">
+                Other locations across {regionNames.join(' and ')}, by arrangement.
+              </dd>
+            </div>
+          </Reveal>
+        </dl>
+      </div>
+
+      {/* ------------------------------------------------------------ aside */}
+      <div class="flex flex-col justify-between border-t border-beige bg-ivory-warm px-(--gutter) py-[clamp(2.5rem,6vh,4.5rem)] lg:border-t-0 lg:border-l lg:px-[clamp(1.5rem,2.2vw,2.25rem)]">
+        <Reveal variant="fade">
+          <p class="font-display text-[clamp(1.125rem,0.95rem+0.7vw,1.5rem)] leading-[1.45] text-teal italic">
+            Where extraordinary spaces find home.
+          </p>
+          <span class="mt-7 block h-px w-12 bg-brass/50" aria-hidden="true"></span>
+        </Reveal>
+
+        <Reveal variant="fade" class="mt-14">
+          <p class="label text-teal/70">Zen Interior</p>
+          <p class="label mt-3 text-teal/35">{regionNames.join(' · ')}</p>
+        </Reveal>
+      </div>
+    </div>
+  </section>
+
+  {/* ------------------------------------------------------- 04 · work with us */}
+  <section class="relative isolate overflow-hidden bg-teal text-ivory on-dark">
+    <div class="lg:grid lg:grid-cols-[minmax(0,38fr)_minmax(0,38fr)_minmax(0,24fr)] lg:items-stretch">
+      {/* ------------------------------------------------------------- ask */}
+      <div class="flex flex-col justify-center px-(--gutter) pt-[clamp(3rem,7vh,5rem)] pb-[clamp(2rem,4vh,3rem)] lg:py-[clamp(3.5rem,8vh,6rem)] lg:pr-[clamp(1.5rem,2.6vw,3rem)]">
+        <Reveal variant="fade">
+          <Eyebrow tone="inverse" index="04">Work With Us</Eyebrow>
+        </Reveal>
+
+        <SplitHeading
+          lines={['Let’s create something', 'exceptional, wherever', 'you are.']}
+          size="md"
+          tone="dark"
+          accentFrom={2}
+          class="mt-7"
+        />
+
+        <Reveal>
+          <p class="mt-7 max-w-[42ch] text-small leading-[1.8] text-ivory/70">
+            From concept to completion, we bring thoughtful design, global sourcing and
+            precise execution to your space.
+          </p>
+        </Reveal>
+
+        <Reveal variant="fade" class="mt-10">
+          <a
+            href="/contact"
+            class="label group inline-flex items-center gap-4 rounded-zen border border-ivory/35 px-8 py-4 text-ivory transition-colors duration-(--duration-base) ease-(--ease-zen) hover:border-ivory hover:bg-ivory hover:text-teal"
+          >
+            Schedule a consultation
+            <span
+              class="inline-block transition-transform duration-500 ease-(--ease-zen) group-hover:translate-x-1"
+              aria-hidden="true">&#8594;</span
+            >
+          </a>
+        </Reveal>
+      </div>
+
+      {/* --------------------------------------------------------- pillars */}
+      <div
+        class="grid grid-cols-2 gap-px px-(--gutter) pb-[clamp(2.5rem,6vh,4rem)] lg:grid-cols-4 lg:gap-0 lg:px-0 lg:py-[clamp(3.5rem,8vh,6rem)]"
+        data-reveal-group="90"
+      >
+        {
+          pillars.map((pillar, index) => (
+            <Reveal
+              variant="fade"
+              class:list={[
+                'group flex flex-col items-start px-[clamp(0.75rem,1.4vw,1.5rem)] py-4 lg:justify-center lg:py-0',
+                index > 0 && 'border-l border-ivory/12',
+              ]}
+            >
+              <span
+                class="text-brass-soft transition-transform duration-700 ease-(--ease-zen) group-hover:-translate-y-1"
+                aria-hidden="true"
+              >
+                {pillar.icon === 'globe' && (
+                  <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M3 12h18M12 3c2.6 2.6 2.6 15.4 0 18-2.6-2.6-2.6-15.4 0-18Z" />
+                  </svg>
+                )}
+                {pillar.icon === 'chair' && (
+                  <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1">
+                    <path d="M5 11V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4" />
+                    <path d="M4 11h16v5H4zM6 16v3M18 16v3" />
+                  </svg>
+                )}
+                {pillar.icon === 'draft' && (
+                  <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1">
+                    <path d="M4 4h11l5 5v11H4z" />
+                    <path d="M8 14.5 15 7.5M8 14.5V17h2.5" />
+                  </svg>
+                )}
+                {pillar.icon === 'key' && (
+                  <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1">
+                    <path d="M4 20V10l8-6 8 6v10z" />
+                    <path d="M10 20v-6h4v6" />
+                  </svg>
+                )}
+              </span>
+
+              <p class="mt-5 font-display text-[clamp(1rem,0.9rem+0.3vw,1.1875rem)] leading-[1.35] text-ivory">
+                {pillar.title}
+              </p>
+            </Reveal>
+          ))
+        }
+      </div>
+
+      {/* ----------------------------------------------------------- frame */}
+      <div class="relative min-h-[14rem] overflow-hidden lg:min-h-0">
+        <Image
+          src={closingImage}
+          alt="Timber screen and a potted olive against a stone plinth"
+          widths={[480, 800, 1200]}
+          sizes="(min-width: 1024px) 24vw, 100vw"
+          loading="lazy"
+          class="absolute inset-0 h-full w-full object-cover"
+        />
+        <div class="absolute inset-0 bg-ink/25" aria-hidden="true"></div>
+        <p class="label absolute top-[clamp(1.5rem,4vh,2.5rem)] right-[clamp(1.25rem,2vw,2rem)] text-right leading-[2.2] text-ivory/85">
+          Better<br />Spaces<br />Brighter<br />Lives
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
