@@ -8,6 +8,16 @@
 # Astro emits real HTML files for every route, including /projects/<slug>.
 # No SPA fallback rewrite: a missing route must genuinely 404.
 
+# Pretty URLs is on by default and 301s /services to /services/, which
+# contradicts `trailingSlash: 'never'` in astro.config.ts. Left on, every
+# internal link costs a redirect and the canonical URL the SEO component
+# emits is not the URL the visitor ends on.
+[build.processing]
+  skip_processing = false
+
+[build.processing.html]
+  pretty_urls = false
+
 [[headers]]
   for = "/*"
   [headers.values]
