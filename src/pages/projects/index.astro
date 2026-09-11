@@ -104,7 +104,7 @@ const schema = [
 
         <div class="md:col-span-5 md:col-start-8">
           <Reveal>
-            <p class="max-w-[40ch] text-small text-charcoal/65">
+            <p class="max-w-[40ch] text-small text-charcoal/75">
               Filter by typology to see how a single approach behaves across a private
               residence, a villa and a working commercial floor.
             </p>
@@ -135,7 +135,7 @@ const schema = [
             type="button"
             data-filter-value="all"
             aria-pressed="true"
-            class="label rounded-zen border border-beige px-4 py-2.5 text-teal/55 transition-colors duration-300 hover:border-teal/45 hover:text-teal aria-pressed:border-teal aria-pressed:bg-teal aria-pressed:text-ivory"
+            class="label rounded-zen border border-beige px-4 py-2.5 text-teal/68 transition-colors duration-300 hover:border-teal/45 hover:text-teal aria-pressed:border-teal aria-pressed:bg-teal aria-pressed:text-ivory"
           >
             All
             <span class="ml-2 opacity-50" aria-hidden="true">{pad(total)}</span>
@@ -147,7 +147,7 @@ const schema = [
                 type="button"
                 data-filter-value={slugify(category)}
                 aria-pressed="false"
-                class="label rounded-zen border border-beige px-4 py-2.5 text-teal/55 transition-colors duration-300 hover:border-teal/45 hover:text-teal aria-pressed:border-teal aria-pressed:bg-teal aria-pressed:text-ivory"
+                class="label rounded-zen border border-beige px-4 py-2.5 text-teal/68 transition-colors duration-300 hover:border-teal/45 hover:text-teal aria-pressed:border-teal aria-pressed:bg-teal aria-pressed:text-ivory"
               >
                 {category}
                 <span class="ml-2 opacity-50" aria-hidden="true">
@@ -158,7 +158,7 @@ const schema = [
           }
 
           <p
-            class="label w-full pt-1 text-teal/35 sm:ml-auto sm:w-auto sm:pt-0"
+            class="label w-full pt-1 text-teal/55 sm:ml-auto sm:w-auto sm:pt-0"
             data-filter-count
             aria-live="polite"
           >
@@ -192,7 +192,7 @@ const schema = [
         }
       </div>
 
-      <p class="label mt-20 hidden text-center text-teal/50" data-filter-empty>
+      <p class="label mt-20 hidden text-center text-teal/65" data-filter-empty>
         No projects in this category yet.
       </p>
     </Container>

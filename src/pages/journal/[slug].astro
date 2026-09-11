@@ -137,7 +137,7 @@ const schema = [
           </Reveal>
 
           <Reveal>
-            <p class="lede mt-8 max-w-[54ch] text-ivory/65">{excerpt}</p>
+            <p class="lede mt-8 max-w-[54ch] text-ivory/75">{excerpt}</p>
           </Reveal>
 
           <Reveal variant="fade" class="mt-(--stack-md)">
@@ -145,8 +145,8 @@ const schema = [
               {
                 meta.map((item) => (
                   <div>
-                    <dt class="label text-ivory/35">{item.label}</dt>
-                    <dd class="mt-2.5 text-small text-ivory/80">
+                    <dt class="label text-ivory/55">{item.label}</dt>
+                    <dd class="mt-2.5 text-small text-ivory/88">
                       {item.time ? (
                         <time datetime={item.time.toISOString()}>{item.value}</time>
                       ) : (
@@ -193,8 +193,8 @@ const schema = [
 
       <footer class="mt-(--stack-lg) border-t border-beige pt-7">
         <div class="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
-          <p class="label text-teal/45">{author}</p>
-          <p class="label text-teal/30">
+          <p class="label text-teal/62">{author}</p>
+          <p class="label text-teal/50">
             {category} &nbsp;·&nbsp; <time datetime={publishedAt.toISOString()}>
               {formatDate(publishedAt)}
             </time>
@@ -215,7 +215,7 @@ const schema = [
                     href={`/journal/${newer.id}`}
                     class="group block py-8 focus-visible:outline-offset-4 sm:py-10"
                   >
-                    <p class="label flex items-center gap-3 text-teal/40 transition-colors duration-300 group-hover:text-brass">
+                    <p class="label flex items-center gap-3 text-teal/60 transition-colors duration-300 group-hover:text-brass">
                       <span aria-hidden="true">&#8592;</span>
                       Newer Article
                     </p>
@@ -238,7 +238,7 @@ const schema = [
                     href={`/journal/${older.id}`}
                     class="group block py-8 focus-visible:outline-offset-4 sm:py-10 sm:text-right"
                   >
-                    <p class="label flex items-center gap-3 text-teal/40 transition-colors duration-300 group-hover:text-brass sm:justify-end">
+                    <p class="label flex items-center gap-3 text-teal/60 transition-colors duration-300 group-hover:text-brass sm:justify-end">
                       Older Article
                       <span aria-hidden="true">&#8594;</span>
                     </p>

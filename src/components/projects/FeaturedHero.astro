@@ -74,7 +74,7 @@ const slides = projects.map((project, index) => {
         the frame. Small on purpose: the project title is the largest thing on
         the screen, and two display headings would fight.
       */}
-      <h1 class="label leading-[2] text-teal/40">
+      <h1 class="label leading-[2] text-teal/60">
         Spaces that hold<br />their composure.
       </h1>
       <span class="mt-5 block h-px w-12 bg-beige" aria-hidden="true"></span>
@@ -88,7 +88,7 @@ const slides = projects.map((project, index) => {
               aria-hidden={slide.index === 0 ? 'false' : 'true'}
               class="col-start-1 row-start-1"
             >
-              <p class="hero-in label flex items-center gap-4 text-teal/50" style="--d:40ms">
+              <p class="hero-in label flex items-center gap-4 text-teal/65" style="--d:40ms">
                 <span>
                   {pad(slide.index + 1)}
                   <span class="px-1 opacity-40">/</span>
@@ -115,14 +115,14 @@ const slides = projects.map((project, index) => {
               </h2>
 
               <p
-                class="hero-in label mt-[clamp(0.875rem,2vh,1.375rem)] text-teal/55"
+                class="hero-in label mt-[clamp(0.875rem,2vh,1.375rem)] text-teal/68"
                 style="--d:300ms"
               >
                 {slide.data.location} &nbsp;/&nbsp; {slide.data.category}
               </p>
 
               <p
-                class="hero-in mt-[clamp(1rem,2.1vh,1.5rem)] max-w-[38ch] text-small leading-[1.75] text-charcoal/70"
+                class="hero-in mt-[clamp(1rem,2.1vh,1.5rem)] max-w-[38ch] text-small leading-[1.75] text-charcoal/80"
                 style="--d:360ms"
               >
                 {slide.data.summary}
@@ -149,8 +149,8 @@ const slides = projects.map((project, index) => {
               <dl class="hero-facts mt-[clamp(1.5rem,3.2vh,2.5rem)] grid grid-cols-2 gap-y-6 xl:grid-cols-4">
                 {slide.facts.map((fact, i) => (
                   <div class="hero-in" style={`--d:${480 + i * 60}ms`}>
-                    <dt class="label text-teal/40">{fact.label}</dt>
-                    <dd class="mt-2.5 max-w-[18ch] text-micro leading-[1.55] text-charcoal/75">
+                    <dt class="label text-teal/60">{fact.label}</dt>
+                    <dd class="mt-2.5 max-w-[18ch] text-micro leading-[1.55] text-charcoal/85">
                       {fact.value}
                     </dd>
                   </div>
@@ -231,10 +231,10 @@ const slides = projects.map((project, index) => {
                       &#8594;
                     </span>
                   </span>
-                  <span class="label leading-[1.9] text-ivory/85">
+                  <span class="label leading-[1.9] text-ivory/92">
                     Explore the project
                     <br />
-                    <span class="text-ivory/50">{pad(slide.frames)} frames</span>
+                    <span class="text-ivory/65">{pad(slide.frames)} frames</span>
                   </span>
                 </a>
               ))
@@ -278,7 +278,7 @@ const slides = projects.map((project, index) => {
                 data-hero-dot={slide.index}
                 aria-selected={slide.index === 0 ? 'true' : 'false'}
                 aria-label={`${slide.data.title}, project ${slide.index + 1} of ${total}`}
-                class="label relative px-2 py-1 text-ivory/35 transition-colors duration-500 ease-(--ease-zen) hover:text-ivory/80 aria-selected:text-ivory"
+                class="label relative px-2 py-1 text-ivory/55 transition-colors duration-500 ease-(--ease-zen) hover:text-ivory/88 aria-selected:text-ivory"
               >
                 {pad(slide.index + 1)}
                 <span
@@ -293,7 +293,7 @@ const slides = projects.map((project, index) => {
 
         <a
           href="#index"
-          class="group mt-auto flex flex-col items-center gap-5 pt-10 text-ivory/70 transition-colors duration-500 hover:text-ivory"
+          class="group mt-auto flex flex-col items-center gap-5 pt-10 text-ivory/80 transition-colors duration-500 hover:text-ivory"
         >
           <span
             class="relative block h-[clamp(2.5rem,9vh,5rem)] w-px overflow-hidden bg-ivory/25"
@@ -317,7 +317,7 @@ const slides = projects.map((project, index) => {
           data-hero-dot={slide.index}
           aria-label={`${slide.data.title}, project ${slide.index + 1} of ${total}`}
           aria-current={slide.index === 0 ? 'true' : 'false'}
-          class="label flex-1 border-t border-beige pt-3 text-left text-teal/30 transition-colors duration-500 aria-[current=true]:border-brass aria-[current=true]:text-teal"
+          class="label flex-1 border-t border-beige pt-3 text-left text-teal/50 transition-colors duration-500 aria-[current=true]:border-brass aria-[current=true]:text-teal"
         >
           {pad(slide.index + 1)}
         </button>

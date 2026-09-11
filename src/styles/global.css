@@ -139,7 +139,7 @@
      accents flip in one place rather than per element.
      ----------------------------------------------------------------------- */
   .on-dark {
-    color: color-mix(in srgb, var(--color-ivory) 82%, transparent);
+    color: color-mix(in srgb, var(--color-ivory) 90%, transparent);
   }
 
   .on-dark h1,

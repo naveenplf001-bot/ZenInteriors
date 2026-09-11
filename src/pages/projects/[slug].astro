@@ -114,13 +114,13 @@ const executionParagraphs = paragraphs(execution);
             tone="dark"
             class="mt-7 max-w-[16ch]"
           />
-          <p class="lede mt-8 max-w-[50ch] text-ivory/75">{summary}</p>
+          <p class="lede mt-8 max-w-[50ch] text-ivory/85">{summary}</p>
         </div>
 
         {/* Sheet number, bottom right, the way a drawing is marked up. */}
         <div class="lg:col-span-3 lg:col-start-10 lg:text-right">
-          <p class="label text-ivory/45">{counter(position, total)}</p>
-          <p class="mt-3 font-display text-display-sm text-ivory/80">{year}</p>
+          <p class="label text-ivory/62">{counter(position, total)}</p>
+          <p class="mt-3 font-display text-display-sm text-ivory/88">{year}</p>
         </div>
       </div>
     </Container>
@@ -144,8 +144,8 @@ const executionParagraphs = paragraphs(execution);
             meta.map((item) => (
               <Reveal variant="fade">
                 <div class="border-t border-beige pt-5">
-                  <dt class="label text-teal/50">{item.label}</dt>
-                  <dd class="mt-3 text-small text-charcoal/78 lg:text-body">{item.value}</dd>
+                  <dt class="label text-teal/65">{item.label}</dt>
+                  <dd class="mt-3 text-small text-charcoal/88 lg:text-body">{item.value}</dd>
                 </div>
               </Reveal>
             ))
@@ -188,7 +188,7 @@ const executionParagraphs = paragraphs(execution);
               >
                 {conceptRest.map((paragraph) => (
                   <Reveal>
-                    <p class="max-w-[46ch] text-body text-charcoal/78">{paragraph}</p>
+                    <p class="max-w-[46ch] text-body text-charcoal/88">{paragraph}</p>
                   </Reveal>
                 ))}
               </div>
@@ -214,7 +214,7 @@ const executionParagraphs = paragraphs(execution);
           </Reveal>
           <SplitHeading lines={['What the room', 'is made of.']} tone="dark" class="mt-6" />
           <Reveal variant="fade">
-            <p class="label mt-8 text-ivory/35">
+            <p class="label mt-8 text-ivory/55">
               {pad(materials.length)} Specified
             </p>
           </Reveal>
@@ -228,10 +228,10 @@ const executionParagraphs = paragraphs(execution);
             materials.map((material, index) => (
               <Reveal as="li" variant="fade">
                 <div class="flex gap-5 border-t border-ivory/15 py-6">
-                  <span class="label shrink-0 pt-1 text-brass-soft/70" aria-hidden="true">
+                  <span class="label shrink-0 pt-1 text-brass-soft/80" aria-hidden="true">
                     {pad(index + 1)}
                   </span>
-                  <p class="max-w-[38ch] text-small text-ivory/72">{material}</p>
+                  <p class="max-w-[38ch] text-small text-ivory/82">{material}</p>
                 </div>
               </Reveal>
             ))
@@ -261,8 +261,8 @@ const executionParagraphs = paragraphs(execution);
               <Reveal>
                 <p
                   class:list={[
-                    'max-w-[46ch] text-charcoal/78',
-                    index === 0 ? 'lede text-charcoal/85' : 'mt-6 text-body',
+                    'max-w-[46ch] text-charcoal/88',
+                    index === 0 ? 'lede text-charcoal/92' : 'mt-6 text-body',
                   ]}
                 >
                   {paragraph}
@@ -276,7 +276,7 @@ const executionParagraphs = paragraphs(execution);
           highlights.length > 0 && (
             <div class="md:col-span-8 md:col-start-5 lg:col-span-3 lg:col-start-10">
               <Reveal variant="fade">
-                <p class="label text-teal/45">What It Delivers</p>
+                <p class="label text-teal/62">What It Delivers</p>
               </Reveal>
               <ul class="mt-6" data-reveal-group="70">
                 {highlights.map((highlight, index) => (
@@ -285,7 +285,7 @@ const executionParagraphs = paragraphs(execution);
                       <span class="label shrink-0 pt-1 text-brass" aria-hidden="true">
                         {pad(index + 1)}
                       </span>
-                      <p class="text-micro text-charcoal/70">{highlight}</p>
+                      <p class="text-micro text-charcoal/80">{highlight}</p>
                     </div>
                   </Reveal>
                 ))}
@@ -325,7 +325,7 @@ const executionParagraphs = paragraphs(execution);
                     class="h-full w-full object-cover transition-transform duration-[1200ms] ease-(--ease-zen) group-hover:scale-[1.04]"
                   />
                 </div>
-                <p class="label mt-6 text-teal/45">Previous</p>
+                <p class="label mt-6 text-teal/62">Previous</p>
                 <p class="mt-3 font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass">
                   {previous.data.title}
                 </p>
@@ -351,7 +351,7 @@ const executionParagraphs = paragraphs(execution);
                     class="h-full w-full object-cover transition-transform duration-[1200ms] ease-(--ease-zen) group-hover:scale-[1.04]"
                   />
                 </div>
-                <p class="label mt-6 text-teal/45">Next</p>
+                <p class="label mt-6 text-teal/62">Next</p>
                 <p class="mt-3 font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass">
                   {next.data.title}
                 </p>

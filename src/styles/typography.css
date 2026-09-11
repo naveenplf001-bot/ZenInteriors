@@ -173,7 +173,7 @@
 
   .prose-zen figcaption {
     font-size: var(--text-small);
-    color: color-mix(in srgb, var(--color-charcoal) 60%, transparent);
+    color: color-mix(in srgb, var(--color-charcoal) 74%, transparent);
     margin-block-start: 0.9em;
   }
 

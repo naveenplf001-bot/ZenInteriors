@@ -74,7 +74,7 @@ const belonging = ['People', 'Places', 'Spaces', 'That', 'Belong'];
       <div class="lg:col-span-5">
         <Reveal variant="fade" class="flex items-center gap-5">
           <span
-            class="font-display text-[clamp(2.25rem,1.7rem+1.6vw,3.25rem)] leading-none text-teal/30"
+            class="font-display text-[clamp(2.25rem,1.7rem+1.6vw,3.25rem)] leading-none text-teal/50"
             aria-hidden="true">{index}</span
           >
           <span class="h-px w-14 bg-teal/25" aria-hidden="true"></span>
@@ -87,7 +87,7 @@ const belonging = ['People', 'Places', 'Spaces', 'That', 'Belong'];
         <SplitHeading lines={lines} accentFrom={1} class="mt-6" />
 
         <Reveal>
-          <p class="mt-(--stack-md) max-w-[38ch] text-small text-charcoal/70">{lede}</p>
+          <p class="mt-(--stack-md) max-w-[38ch] text-small text-charcoal/80">{lede}</p>
         </Reveal>
 
         <Reveal class="mt-(--stack-md)">
@@ -119,7 +119,7 @@ const belonging = ['People', 'Places', 'Spaces', 'That', 'Belong'];
                   <span class="font-display text-[clamp(1.875rem,1.4rem+1.4vw,2.75rem)] leading-none text-teal">
                     {figure.value}
                   </span>
-                  <span class="label text-teal/55">{figure.label}</span>
+                  <span class="label text-teal/68">{figure.label}</span>
                 </div>
                 <span class="mt-4 block h-px w-full bg-teal/15" aria-hidden="true" />
               </Reveal>
@@ -133,10 +133,10 @@ const belonging = ['People', 'Places', 'Spaces', 'That', 'Belong'];
               <Reveal
                 class:list={[position > 0 && 'border-l border-teal/12 pl-6 sm:pl-8']}
               >
-                <p class="label text-teal/55">{region.name}</p>
+                <p class="label text-teal/68">{region.name}</p>
                 <ul class="mt-4 flex flex-col gap-2">
                   {region.cities.map((city) => (
-                    <li class="text-small text-charcoal/75">{city}</li>
+                    <li class="text-small text-charcoal/85">{city}</li>
                   ))}
                 </ul>
               </Reveal>
@@ -145,7 +145,7 @@ const belonging = ['People', 'Places', 'Spaces', 'That', 'Belong'];
         </div>
 
         <Reveal variant="fade" class="mt-10 border-t border-teal/15 pt-6">
-          <p class="label leading-[1.9] text-teal/50">
+          <p class="label leading-[1.9] text-teal/65">
             Rooted locally.<br />Delivering exceptionally.
           </p>
         </Reveal>
@@ -156,13 +156,13 @@ const belonging = ['People', 'Places', 'Spaces', 'That', 'Belong'];
           way entirely on narrow screens where there is no plaster to sit on. */}
       <div class="hidden lg:col-span-3 lg:flex lg:flex-col lg:items-end lg:justify-between">
         <Reveal variant="fade" class="text-right">
-          {belonging.map((word) => <p class="label leading-[2] text-teal/45">{word}</p>)}
+          {belonging.map((word) => <p class="label leading-[2] text-teal/62">{word}</p>)}
           <span class="mt-5 ml-auto block h-px w-12 bg-teal/25" aria-hidden="true"></span>
         </Reveal>
 
         <Reveal variant="fade" class="mt-12 flex items-center gap-4 text-right">
           <span class="h-px w-8 shrink-0 bg-teal/25" aria-hidden="true"></span>
-          <p class="label leading-[1.9] text-teal/40">A more considered<br />tomorrow.</p>
+          <p class="label leading-[1.9] text-teal/60">A more considered<br />tomorrow.</p>
         </Reveal>
       </div>
     </div>

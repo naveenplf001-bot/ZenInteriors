@@ -33,7 +33,7 @@ const aspect = variant === 'feature' ? 'aspect-[16/9]' : 'aspect-[3/2]';
       />
     </div>
 
-    <p class="label mt-5 text-teal/50">
+    <p class="label mt-5 text-teal/65">
       Journal &nbsp;/&nbsp; {category}
     </p>
 
@@ -51,7 +51,7 @@ const aspect = variant === 'feature' ? 'aspect-[16/9]' : 'aspect-[3/2]';
       It is deliberately not clamped shorter, because the whole point is that
       the reader gets far enough in to want the rest.
     */}
-    <p class="mt-3.5 max-w-[54ch] text-micro leading-[1.8] text-charcoal/68">
+    <p class="mt-3.5 max-w-[54ch] text-micro leading-[1.8] text-charcoal/78">
       {excerpt}
     </p>
 
@@ -68,7 +68,7 @@ const aspect = variant === 'feature' ? 'aspect-[16/9]' : 'aspect-[3/2]';
       <span
         class="h-px flex-1 bg-beige transition-colors duration-500 group-hover:bg-brass"
         aria-hidden="true"></span>
-      <time datetime={publishedAt.toISOString()} class="label shrink-0 text-teal/35">
+      <time datetime={publishedAt.toISOString()} class="label shrink-0 text-teal/55">
         {formatDate(publishedAt)}
       </time>
     </div>

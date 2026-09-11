@@ -71,7 +71,7 @@ const slides = projects.map((project, index) => ({
           cliché of this genre and it is genuinely hard to read; stacking gets
           the same vertical rhythm without either problem.
         */}
-        <p class="label leading-[2.1] text-ivory/90">
+        <p class="label leading-[2.1] text-ivory/95">
           Spaces<br />That<br />Stay<br />With<br />You
         </p>
         <span class="mt-7 block h-14 w-px bg-ivory/35" aria-hidden="true"></span>
@@ -104,7 +104,7 @@ const slides = projects.map((project, index) => ({
               class="col-start-1 row-start-1 opacity-0 transition-opacity duration-[700ms] ease-(--ease-zen) data-[active]:opacity-100"
               aria-hidden="true"
             >
-              <p class="label flex flex-wrap items-center gap-x-4 gap-y-2 text-teal/55">
+              <p class="label flex flex-wrap items-center gap-x-4 gap-y-2 text-teal/68">
                 <span>
                   {pad(slide.index + 1)} / {pad(total)}
                 </span>
@@ -116,13 +116,13 @@ const slides = projects.map((project, index) => ({
                 {slide.data.title}
               </h3>
 
-              <p class="label mt-5 text-teal/60">
+              <p class="label mt-5 text-teal/72">
                 {slide.data.location} &nbsp;/&nbsp; {slide.data.category}
               </p>
 
               <span class="mt-8 block h-px w-full max-w-[22rem] bg-beige" aria-hidden="true" />
 
-              <p class="mt-7 max-w-[38ch] text-small leading-[1.75] text-charcoal/70">
+              <p class="mt-7 max-w-[38ch] text-small leading-[1.75] text-charcoal/80">
                 {slide.data.summary}
               </p>
 
@@ -159,7 +159,7 @@ const slides = projects.map((project, index) => ({
                   { label: 'Scope', value: slide.data.scope },
                 ].map((fact, i) => (
                   <div class:list={[i > 0 && 'border-l border-beige pl-8', 'max-w-[16ch]']}>
-                    <dt class="label text-teal/40">{fact.label}</dt>
+                    <dt class="label text-teal/60">{fact.label}</dt>
                     <dd class="mt-2.5 font-display text-[1.0625rem] leading-snug text-teal">
                       {fact.value}
                     </dd>
@@ -243,7 +243,7 @@ const slides = projects.map((project, index) => ({
 
       <span class="mt-8 block h-[clamp(2rem,6vh,4rem)] w-px bg-beige" aria-hidden="true"></span>
 
-      <p class="label mt-8 text-center leading-[2.1] text-teal/55">
+      <p class="label mt-8 text-center leading-[2.1] text-teal/68">
         Details<br />Define<br />Excellence
       </p>
 
@@ -259,7 +259,7 @@ const slides = projects.map((project, index) => ({
               data-featured-dot={slide.index}
               aria-selected={slide.index === 0 ? 'true' : 'false'}
               aria-label={`${slide.data.title}, project ${slide.index + 1} of ${total}`}
-              class="label px-2 py-1 text-teal/25 transition-colors duration-500 ease-(--ease-zen) hover:text-teal aria-selected:text-teal"
+              class="label px-2 py-1 text-teal/45 transition-colors duration-500 ease-(--ease-zen) hover:text-teal aria-selected:text-teal"
             >
               {pad(slide.index + 1)}
             </button>

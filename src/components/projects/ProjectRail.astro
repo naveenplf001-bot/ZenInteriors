@@ -58,7 +58,7 @@ const { projects, activeId, stats = [] } = Astro.props;
               {stats.map((stat) => (
                 <Reveal variant="fade">
                   <div class="flex items-baseline justify-between gap-4 border-t border-beige/70 py-3">
-                    <dt class="label text-teal/40">{stat.label}</dt>
+                    <dt class="label text-teal/60">{stat.label}</dt>
                     <dd class="font-display text-[1.0625rem] leading-none text-teal">
                       {stat.value}
                     </dd>
@@ -114,17 +114,17 @@ const { projects, activeId, stats = [] } = Astro.props;
                       {project.data.title}
                     </h3>
                     <span
-                      class="label flex shrink-0 items-center gap-3 pt-1.5 text-teal/30"
+                      class="label flex shrink-0 items-center gap-3 pt-1.5 text-teal/50"
                       aria-hidden="true"
                     >
                       {pad(index + 1)}
-                      <span class="inline-block text-teal/45 transition-transform duration-500 ease-(--ease-zen) group-hover:translate-x-1 group-hover:text-brass">
+                      <span class="inline-block text-teal/62 transition-transform duration-500 ease-(--ease-zen) group-hover:translate-x-1 group-hover:text-brass">
                         &#8594;
                       </span>
                     </span>
                   </div>
 
-                  <p class="label mt-2.5 text-teal/45">
+                  <p class="label mt-2.5 text-teal/62">
                     {project.data.location} &nbsp;/&nbsp; {project.data.category}
                   </p>
                 </a>

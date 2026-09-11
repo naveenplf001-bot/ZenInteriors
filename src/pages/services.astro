@@ -108,7 +108,7 @@ const schema = [
         />
 
         <Reveal>
-          <p class="mt-8 max-w-[40ch] text-small leading-[1.8] text-charcoal/72">
+          <p class="mt-8 max-w-[40ch] text-small leading-[1.8] text-charcoal/82">
             Distinctive interiors, delivered closer to you. From coastal homes to
             corporate floors, our own team works across {regionNames.join(' and ')} to
             create environments that hold their standard wherever they are built.
@@ -141,7 +141,7 @@ const schema = [
             ].map((figure) => (
               <Reveal variant="fade">
                 <div class="border-t border-beige pt-4">
-                  <dt class="label text-teal/45">{figure.label}</dt>
+                  <dt class="label text-teal/62">{figure.label}</dt>
                   <dd class="mt-2.5 font-display text-display-sm text-teal">
                     {figure.value}
                   </dd>
@@ -182,7 +182,7 @@ const schema = [
 
         <Reveal variant="fade" class="mt-16">
           <p class="label text-brass-soft">Zen Interior</p>
-          <p class="label mt-3 text-ivory/45">{regionNames.join(' · ')}</p>
+          <p class="label mt-3 text-ivory/62">{regionNames.join(' · ')}</p>
         </Reveal>
       </div>
     </div>
@@ -214,7 +214,7 @@ const schema = [
 
         <div class="lg:col-span-6 lg:col-start-7">
           <Reveal>
-            <p class="lede max-w-[46ch] text-charcoal/72">
+            <p class="lede max-w-[46ch] text-charcoal/82">
               From concept to completion, we transform spaces through thoughtful design
               and precise execution. Everything below sits under one contract and one
               accountable team.
@@ -226,7 +226,7 @@ const schema = [
             {
               offering.map((item) => (
                 <Reveal variant="fade" as="li">
-                  <span class="label inline-block rounded-zen border border-beige px-4 py-2.5 text-teal/60 transition-colors duration-500 ease-(--ease-zen) hover:border-brass hover:text-teal">
+                  <span class="label inline-block rounded-zen border border-beige px-4 py-2.5 text-teal/72 transition-colors duration-500 ease-(--ease-zen) hover:border-brass hover:text-teal">
                     {item}
                   </span>
                 </Reveal>
@@ -265,11 +265,11 @@ const schema = [
                 class="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-brass transition-transform duration-700 ease-(--ease-zen) group-hover:scale-x-100"
                 aria-hidden="true"
               />
-              <p class="label text-teal/30">{capability.index}</p>
+              <p class="label text-teal/50">{capability.index}</p>
               <h3 class="mt-4 font-display text-display-sm text-teal transition-colors duration-500 group-hover:text-brass">
                 {capability.title}
               </h3>
-              <p class="mt-3 max-w-[36ch] pb-9 text-micro leading-[1.7] text-charcoal/65">
+              <p class="mt-3 max-w-[36ch] pb-9 text-micro leading-[1.7] text-charcoal/75">
                 {capability.description}
               </p>
             </Reveal>
@@ -289,7 +289,7 @@ const schema = [
         </Reveal>
         <SplitHeading lines={['Designing', 'Closer to You']} size="md" class="mt-6" />
         <Reveal>
-          <p class="mt-7 max-w-[36ch] text-small leading-[1.8] text-charcoal/70">
+          <p class="mt-7 max-w-[36ch] text-small leading-[1.8] text-charcoal/80">
             Our team is present across key cities in {regionNames.join(' and ')},
             bringing global materials, premium products and expert execution to your
             doorstep.
@@ -312,7 +312,7 @@ const schema = [
 
         {/* The studio's four words, set on a dark strip against the frame. */}
         <div class="flex w-[clamp(5.5rem,7vw,7.5rem)] shrink-0 flex-col justify-center bg-teal px-5">
-          <p class="label leading-[2.4] text-ivory/85">
+          <p class="label leading-[2.4] text-ivory/92">
             Spaces<br />People<br />Purpose<br />Places
           </p>
           <span class="mt-6 block h-px w-8 bg-brass-soft/60" aria-hidden="true"></span>
@@ -330,7 +330,7 @@ const schema = [
                     <span class="h-1.5 w-1.5 rounded-full bg-brass" aria-hidden="true" />
                     {region.name}
                   </dt>
-                  <dd class="mt-3.5 text-small leading-[1.9] text-charcoal/70">
+                  <dd class="mt-3.5 text-small leading-[1.9] text-charcoal/80">
                     {region.cities.join('  ·  ')}
                   </dd>
                 </div>
@@ -347,7 +347,7 @@ const schema = [
                 />
                 And Beyond
               </dt>
-              <dd class="mt-3.5 max-w-[30ch] text-small leading-[1.9] text-charcoal/70">
+              <dd class="mt-3.5 max-w-[30ch] text-small leading-[1.9] text-charcoal/80">
                 Other locations across {regionNames.join(' and ')}, by arrangement.
               </dd>
             </div>
@@ -365,8 +365,8 @@ const schema = [
         </Reveal>
 
         <Reveal variant="fade" class="mt-14">
-          <p class="label text-teal/70">Zen Interior</p>
-          <p class="label mt-3 text-teal/35">{regionNames.join(' · ')}</p>
+          <p class="label text-teal/80">Zen Interior</p>
+          <p class="label mt-3 text-teal/55">{regionNames.join(' · ')}</p>
         </Reveal>
       </div>
     </div>
@@ -390,7 +390,7 @@ const schema = [
         />
 
         <Reveal>
-          <p class="mt-7 max-w-[42ch] text-small leading-[1.8] text-ivory/70">
+          <p class="mt-7 max-w-[42ch] text-small leading-[1.8] text-ivory/80">
             From concept to completion, we bring thoughtful design, global sourcing and
             precise execution to your space.
           </p>
@@ -473,7 +473,7 @@ const schema = [
           class="absolute inset-0 h-full w-full object-cover"
         />
         <div class="absolute inset-0 bg-ink/25" aria-hidden="true"></div>
-        <p class="label absolute top-[clamp(1.5rem,4vh,2.5rem)] right-[clamp(1.25rem,2vw,2rem)] text-right leading-[2.2] text-ivory/85">
+        <p class="label absolute top-[clamp(1.5rem,4vh,2.5rem)] right-[clamp(1.25rem,2vw,2rem)] text-right leading-[2.2] text-ivory/92">
           Better<br />Spaces<br />Brighter<br />Lives
         </p>
       </div>

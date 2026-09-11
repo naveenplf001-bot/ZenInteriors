@@ -69,7 +69,7 @@ import { methodStages } from '@data/methodology';
             methodStages.map((stage, index) => (
               <li data-method-name={index} class="group flex items-center gap-5 py-2">
                 <span class="h-px w-4 shrink-0 bg-ivory/25 transition-all duration-700 ease-(--ease-zen) group-data-[active]:w-12 group-data-[active]:bg-brass" />
-                <span class="font-display text-display-sm text-ivory/30 transition-colors duration-700 ease-(--ease-zen) group-data-[active]:text-ivory">
+                <span class="font-display text-display-sm text-ivory/50 transition-colors duration-700 ease-(--ease-zen) group-data-[active]:text-ivory">
                   {stage.title}
                 </span>
               </li>
@@ -89,7 +89,7 @@ import { methodStages } from '@data/methodology';
                 {/* Narrow screens have no sticky column, so the row carries
                     its own numeral. */}
                 <span
-                  class="block font-display text-[clamp(3rem,12vw,4.5rem)] leading-none tracking-[-0.035em] text-brass-soft/25 lg:hidden"
+                  class="block font-display text-[clamp(3rem,12vw,4.5rem)] leading-none tracking-[-0.035em] text-brass-soft/45 lg:hidden"
                   aria-hidden="true"
                 >
                   {stage.index}
@@ -97,7 +97,7 @@ import { methodStages } from '@data/methodology';
                 <h3 class="mt-4 font-display text-display-md text-ivory lg:mt-0">
                   {stage.title}
                 </h3>
-                <p class="mt-4 max-w-[46ch] text-small text-ivory/60">{stage.description}</p>
+                <p class="mt-4 max-w-[46ch] text-small text-ivory/72">{stage.description}</p>
               </Reveal>
             </li>
           ))
