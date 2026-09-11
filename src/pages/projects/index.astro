@@ -1,40 +1,30 @@
 ---
-import { Image } from 'astro:assets';
-
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/ui/Container.astro';
 import Eyebrow from '@components/ui/Eyebrow.astro';
 import Reveal from '@components/ui/Reveal.astro';
-import Button from '@components/ui/Button.astro';
 import SplitHeading from '@components/ui/SplitHeading.astro';
 import SectionNumber from '@components/ui/SectionNumber.astro';
 import ProjectCard from '@components/projects/ProjectCard.astro';
+import FeaturedHero from '@components/projects/FeaturedHero.astro';
+import ProjectRail from '@components/projects/ProjectRail.astro';
 import { getProjects, projectCategories } from '@lib/content';
-import { slugify, pad, counter } from '@lib/format';
+import { slugify, pad } from '@lib/format';
 import { breadcrumbSchema } from '@lib/seo';
 
+/*
+  Running order. The hero opens on the featured work and carries the rest of
+  the portfolio behind it, the rail runs the same projects horizontally as a
+  fast scan, and the index below is the complete, filterable archive. Nothing
+  is dropped from the index to avoid a repeat: an index that quietly omits a
+  project is the worse trade.
+*/
 const projects = await getProjects();
+const featuredFirst = [...projects].sort(
+  (a, b) => Number(b.data.featured) - Number(a.data.featured),
+);
 const categories = projectCategories(projects);
 const total = projects.length;
-
-/*
-  The lead is the first project flagged as featured, falling back to manual
-  order. It is shown at full size before the index and it still appears in the
-  index below, exactly as the homepage does: the index is the complete
-  portfolio, so quietly dropping one project out of it to avoid a repeat would
-  be the worse trade.
-*/
-const lead = projects.find((project) => project.data.featured) ?? projects[0];
-const leadPosition = lead ? projects.indexOf(lead) + 1 : 1;
-
-const leadFacts = lead
-  ? [
-      { label: 'Location', value: `${lead.data.location}, ${lead.data.region}` },
-      { label: 'Typology', value: lead.data.category },
-      { label: 'Year', value: String(lead.data.year) },
-      { label: 'Scope', value: lead.data.scope },
-    ]
-  : [];
 
 /* Per-category counts, so the filter row reads as a contents page. */
 const categoryCounts = new Map(
@@ -70,7 +60,7 @@ const layouts = [
     ratio: 'wide' as const,
   },
   {
-    span: 'md:col-span-3 lg:col-span-4 lg:mt-[--section-y-tight]',
+    span: 'md:col-span-3 lg:col-span-4 lg:mt-(--section-y-tight)',
     ratio: 'portrait' as const,
   },
   {
@@ -92,143 +82,16 @@ const schema = [
   description="Selected residences, villas, apartments and commercial interiors by Zen Interior across Tamil Nadu and Bangalore."
   schema={schema}
 >
-  {/* ------------------------------------------------------------- masthead */}
-  <section class="bg-ivory">
-    <Container class="pt-[clamp(3rem,6vw,6rem)] pb-[--section-y-tight]">
-      <div class="grid gap-y-[--stack-md] md:grid-cols-12 md:items-end md:gap-x-10 lg:gap-x-16">
-        <div class="md:col-span-7">
-          <Reveal variant="fade">
-            <SectionNumber value="01" />
-          </Reveal>
-          <Reveal variant="fade" class="mt-4">
-            <Eyebrow>Selected Work</Eyebrow>
-          </Reveal>
-          <SplitHeading
-            as="h1"
-            size="xl"
-            lines={['Spaces that hold', 'their composure.']}
-            accentFrom={1}
-            class="mt-6"
-          />
-        </div>
+  {/* ------------------------------------------------- 01 · featured project */}
+  <FeaturedHero projects={featuredFirst} />
 
-        <div class="md:col-span-5 md:col-start-8">
-          <Reveal>
-            <p class="lede max-w-[42ch] text-charcoal/72">
-              A selection of completed residences, villas and commercial interiors. Each
-              began with a conversation about how the space would actually be used.
-            </p>
-          </Reveal>
-        </div>
-      </div>
+  {/* ---------------------------------------------------- 02 · more projects */}
+  <ProjectRail projects={projects} activeId={featuredFirst[0]?.id} stats={stats} />
 
-      {/* A title block, read the way a drawing sheet is read. */}
-      <dl
-        class="mt-[--stack-lg] grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4 lg:gap-x-16"
-        data-reveal-group="70"
-      >
-        {
-          stats.map((stat) => (
-            <Reveal variant="fade">
-              <div class="border-t border-beige pt-4">
-                <dt class="label text-teal/45">{stat.label}</dt>
-                <dd class="mt-2.5 font-display text-display-sm text-teal">{stat.value}</dd>
-              </div>
-            </Reveal>
-          ))
-        }
-      </dl>
-    </Container>
-  </section>
-
-  {/* ----------------------------------------------------------- lead project */}
-  {
-    lead && (
-      <section class="bg-stone">
-        <Container class="section-tight">
-          <div
-            class="flex flex-wrap items-end justify-between gap-x-10 gap-y-4"
-            data-reveal-group
-          >
-            <div>
-              <Reveal variant="fade">
-                <SectionNumber value="02" />
-              </Reveal>
-              <Reveal variant="fade" class="mt-4">
-                <Eyebrow>Featured Project</Eyebrow>
-              </Reveal>
-            </div>
-            <Reveal variant="fade">
-              <p class="label text-teal/40">{counter(leadPosition, total)}</p>
-            </Reveal>
-          </div>
-
-          <div class="mt-[--stack-lg] grid gap-y-[--stack-md] lg:grid-cols-12 lg:items-center lg:gap-x-16">
-            <Reveal variant="clip" class="lg:col-span-7">
-              <a href={`/projects/${lead.id}`} class="group block focus-visible:outline-offset-8">
-                <div class="aspect-[4/5] overflow-hidden rounded-zen bg-beige sm:aspect-[16/10] lg:aspect-[5/4]">
-                  <Image
-                    src={lead.data.cover}
-                    alt={lead.data.coverAlt}
-                    widths={[640, 1000, 1400, 1800]}
-                    sizes="(min-width: 1024px) 56vw, 92vw"
-                    loading="eager"
-                    fetchpriority="high"
-                    class="h-full w-full object-cover transition-transform duration-[1600ms] ease-[--ease-zen] group-hover:scale-[1.03]"
-                  />
-                </div>
-              </a>
-            </Reveal>
-
-            <div class="lg:col-span-5 lg:col-start-8" data-reveal-group>
-              <Reveal variant="fade">
-                <p class="label text-teal/50">
-                  {lead.data.location} &nbsp;/&nbsp; {lead.data.category}
-                </p>
-              </Reveal>
-
-              <Reveal variant="fade" class="mt-5">
-                <a
-                  href={`/projects/${lead.id}`}
-                  class="group block focus-visible:outline-offset-6"
-                >
-                  <h2 class="font-display text-display-lg text-teal transition-colors duration-500 group-hover:text-brass">
-                    {lead.data.title}
-                  </h2>
-                </a>
-              </Reveal>
-
-              <Reveal>
-                <p class="lede mt-6 max-w-[44ch] text-charcoal/72">{lead.data.summary}</p>
-              </Reveal>
-
-              <dl class="mt-[--stack-md] grid grid-cols-2 gap-x-8 gap-y-6">
-                {leadFacts.map((fact) => (
-                  <Reveal variant="fade">
-                    <div class="border-t border-beige pt-4">
-                      <dt class="label text-teal/45">{fact.label}</dt>
-                      <dd class="mt-2.5 text-small text-charcoal/75">{fact.value}</dd>
-                    </div>
-                  </Reveal>
-                ))}
-              </dl>
-
-              <Reveal variant="fade" class="mt-9">
-                <Button href={`/projects/${lead.id}`} variant="outline">
-                  View Project
-                </Button>
-              </Reveal>
-            </div>
-          </div>
-        </Container>
-      </section>
-    )
-  }
-
-  {/* ---------------------------------------------------------------- index */}
-  <section class="bg-ivory">
-    <Container class="pt-[--section-y] pb-[--stack-md]">
-      <div class="grid gap-y-[--stack-md] md:grid-cols-12 md:items-end md:gap-x-10 lg:gap-x-16">
+  {/* ----------------------------------------------------------- 03 · index */}
+  <section id="index" class="scroll-mt-(--header-h) bg-ivory">
+    <Container class="pt-(--section-y) pb-(--stack-md)">
+      <div class="grid gap-y-(--stack-md) md:grid-cols-12 md:items-end md:gap-x-10 lg:gap-x-16">
         <div class="md:col-span-7">
           <Reveal variant="fade">
             <SectionNumber value="03" />
@@ -259,7 +122,7 @@ const schema = [
       only useful for as long as the first row of results.
     */}
     <div
-      class="sticky top-[--header-h] z-[40] border-y border-beige bg-ivory/92 backdrop-blur-md"
+      class="sticky top-(--header-h) z-[40] border-y border-beige bg-ivory/92 backdrop-blur-md"
     >
       <Container class="py-4">
         <div
@@ -305,7 +168,7 @@ const schema = [
       </Container>
     </div>
 
-    <Container class="pt-[--stack-lg] pb-[--section-y]">
+    <Container class="pt-(--stack-lg) pb-(--section-y)">
       <div
         class="grid grid-cols-1 items-start gap-x-8 gap-y-14 sm:grid-cols-2 md:grid-cols-6 md:gap-x-10 md:gap-y-16 lg:grid-cols-12 lg:gap-y-24"
       >
