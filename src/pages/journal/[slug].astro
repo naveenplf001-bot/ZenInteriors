@@ -140,7 +140,7 @@ const schema = [
             <p class="lede mt-8 max-w-[54ch] text-ivory/65">{excerpt}</p>
           </Reveal>
 
-          <Reveal variant="fade" class="mt-[--stack-md]">
+          <Reveal variant="fade" class="mt-(--stack-md)">
             <dl class="grid grid-cols-2 gap-x-8 gap-y-6 border-t border-ivory/15 pt-7 sm:grid-cols-4">
               {
                 meta.map((item) => (
@@ -186,12 +186,12 @@ const schema = [
     </Container>
 
     {/* ---------------------------------------------------------------- body */}
-    <Container width="reading" class="pt-[--section-y-tight] pb-[--section-y-tight]">
+    <Container width="reading" class="pt-(--section-y-tight) pb-(--section-y-tight)">
       <div class="prose-zen">
         <Content />
       </div>
 
-      <footer class="mt-[--stack-lg] border-t border-beige pt-7">
+      <footer class="mt-(--stack-lg) border-t border-beige pt-7">
         <div class="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
           <p class="label text-teal/45">{author}</p>
           <p class="label text-teal/30">
@@ -207,7 +207,7 @@ const schema = [
     {
       (newer || older) && (
         <nav aria-label="More from the journal" class="bg-ivory">
-          <Container class="pb-[--section-y]">
+          <Container class="pb-(--section-y)">
             <div class="grid border-t border-beige sm:grid-cols-2" data-reveal-group>
               {newer && (
                 <Reveal variant="fade" class="border-b border-beige sm:border-b-0 sm:border-r sm:pr-10">
@@ -279,7 +279,7 @@ const schema = [
           </div>
 
           <div
-            class:list={['mt-[--stack-lg] grid gap-x-10 gap-y-14', relatedGrid]}
+            class:list={['mt-(--stack-lg) grid gap-x-10 gap-y-14', relatedGrid]}
             data-reveal-group
           >
             {related.map((project) => (

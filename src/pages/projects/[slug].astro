@@ -101,7 +101,7 @@ const executionParagraphs = paragraphs(execution);
     >
     </div>
 
-    <Container class="relative z-[1] pt-[--header-h] pb-[clamp(2.5rem,6vh,5rem)]">
+    <Container class="relative z-[1] pt-(--header-h) pb-[clamp(2.5rem,6vh,5rem)]">
       <div class="grid gap-y-8 lg:grid-cols-12 lg:items-end lg:gap-x-16">
         <div class="lg:col-span-8">
           <p class="label text-brass-soft">
@@ -129,7 +129,7 @@ const executionParagraphs = paragraphs(execution);
   {/* Project facts, read as a specification rather than a paragraph. */}
   <section class="bg-stone">
     <Container class="section-tight">
-      <div class="grid gap-y-[--stack-md] md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
+      <div class="grid gap-y-(--stack-md) md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
         <div class="md:col-span-3">
           <Reveal variant="fade">
             <Eyebrow>Project Record</Eyebrow>
@@ -158,7 +158,7 @@ const executionParagraphs = paragraphs(execution);
   {/* ---------------------------------------------------------------- concept */}
   <section class="bg-ivory">
     <Container class="section">
-      <div class="grid gap-y-[--stack-md] md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
+      <div class="grid gap-y-(--stack-md) md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
         <div class="md:col-span-4" data-reveal-group>
           <Reveal variant="fade">
             <SectionNumber value="01" />
@@ -183,7 +183,7 @@ const executionParagraphs = paragraphs(execution);
           {
             conceptRest.length > 0 && (
               <div
-                class="mt-[--stack-md] grid gap-x-10 gap-y-7 border-t border-beige pt-[--stack-md] md:grid-cols-2"
+                class="mt-(--stack-md) grid gap-x-10 gap-y-7 border-t border-beige pt-(--stack-md) md:grid-cols-2"
                 data-reveal-group="70"
               >
                 {conceptRest.map((paragraph) => (
@@ -204,7 +204,7 @@ const executionParagraphs = paragraphs(execution);
   {/* ------------------------------------------------------- material palette */}
   <section class="bg-teal text-ivory on-dark">
     <Container class="section">
-      <div class="grid gap-y-[--stack-lg] md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
+      <div class="grid gap-y-(--stack-lg) md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
         <div class="md:col-span-5 lg:col-span-4" data-reveal-group>
           <Reveal variant="fade">
             <SectionNumber value="03" tone="dark" />
@@ -244,7 +244,7 @@ const executionParagraphs = paragraphs(execution);
   {/* -------------------------------------------------------------- execution */}
   <section class="bg-ivory">
     <Container class="section">
-      <div class="grid gap-y-[--stack-lg] md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
+      <div class="grid gap-y-(--stack-lg) md:grid-cols-12 md:gap-x-10 lg:gap-x-16">
         <div class="md:col-span-4" data-reveal-group>
           <Reveal variant="fade">
             <SectionNumber value="04" />
@@ -305,7 +305,7 @@ const executionParagraphs = paragraphs(execution);
       </Reveal>
 
       <div
-        class="mt-[--stack-md] grid gap-x-10 gap-y-10 sm:grid-cols-2"
+        class="mt-(--stack-md) grid gap-x-10 gap-y-10 sm:grid-cols-2"
         data-reveal-group="90"
       >
         {
@@ -322,7 +322,7 @@ const executionParagraphs = paragraphs(execution);
                     widths={[480, 800, 1200]}
                     sizes="(min-width: 640px) 46vw, 92vw"
                     loading="lazy"
-                    class="h-full w-full object-cover transition-transform duration-[1200ms] ease-[--ease-zen] group-hover:scale-[1.04]"
+                    class="h-full w-full object-cover transition-transform duration-[1200ms] ease-(--ease-zen) group-hover:scale-[1.04]"
                   />
                 </div>
                 <p class="label mt-6 text-teal/45">Previous</p>
@@ -348,7 +348,7 @@ const executionParagraphs = paragraphs(execution);
                     widths={[480, 800, 1200]}
                     sizes="(min-width: 640px) 46vw, 92vw"
                     loading="lazy"
-                    class="h-full w-full object-cover transition-transform duration-[1200ms] ease-[--ease-zen] group-hover:scale-[1.04]"
+                    class="h-full w-full object-cover transition-transform duration-[1200ms] ease-(--ease-zen) group-hover:scale-[1.04]"
                   />
                 </div>
                 <p class="label mt-6 text-teal/45">Next</p>

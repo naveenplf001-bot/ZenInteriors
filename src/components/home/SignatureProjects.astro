@@ -59,7 +59,7 @@ const slides = projects.map((project, index) => ({
             sizes="14vw"
             loading="lazy"
             data-featured-rail={slide.index}
-            class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-[900ms] ease-[--ease-zen] data-[active]:opacity-100"
+            class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-[900ms] ease-(--ease-zen) data-[active]:opacity-100"
           />
         ))
       }
@@ -80,7 +80,7 @@ const slides = projects.map((project, index) => ({
 
     {/* ------------------------------------------------------------ content */}
     <div
-      class="relative flex flex-col justify-center px-[--gutter] pt-[calc(var(--header-h)+2rem)] pb-12 lg:px-[clamp(2rem,3.4vw,3.5rem)] lg:py-16"
+      class="relative flex flex-col justify-center px-(--gutter) pt-[calc(var(--header-h)+2rem)] pb-12 lg:px-[clamp(2rem,3.4vw,3.5rem)] lg:py-16"
     >
       {/* Watermark numeral, sitting behind the title. */}
       <div class="pointer-events-none absolute inset-y-0 right-0 hidden items-start lg:flex" aria-hidden="true">
@@ -88,7 +88,7 @@ const slides = projects.map((project, index) => ({
           slides.map((slide) => (
             <span
               data-featured-watermark={slide.index}
-              class="absolute top-[6%] right-[4%] font-display text-[clamp(9rem,15vw,17rem)] leading-none tracking-[-0.05em] text-teal/[0.055] opacity-0 transition-opacity duration-[900ms] ease-[--ease-zen] data-[active]:opacity-100"
+              class="absolute top-[6%] right-[4%] font-display text-[clamp(9rem,15vw,17rem)] leading-none tracking-[-0.05em] text-teal/[0.055] opacity-0 transition-opacity duration-[900ms] ease-(--ease-zen) data-[active]:opacity-100"
             >
               {pad(slide.index + 1)}
             </span>
@@ -101,7 +101,7 @@ const slides = projects.map((project, index) => ({
           slides.map((slide) => (
             <div
               data-featured-panel={slide.index}
-              class="col-start-1 row-start-1 opacity-0 transition-opacity duration-[700ms] ease-[--ease-zen] data-[active]:opacity-100"
+              class="col-start-1 row-start-1 opacity-0 transition-opacity duration-[700ms] ease-(--ease-zen) data-[active]:opacity-100"
               aria-hidden="true"
             >
               <p class="label flex flex-wrap items-center gap-x-4 gap-y-2 text-teal/55">
@@ -135,7 +135,7 @@ const slides = projects.map((project, index) => ({
                 >
                   View Project
                   <span
-                    class="inline-block transition-transform duration-500 ease-[--ease-zen] group-hover:translate-x-1"
+                    class="inline-block transition-transform duration-500 ease-(--ease-zen) group-hover:translate-x-1"
                     aria-hidden="true"
                   >
                     &#8594;
@@ -184,7 +184,7 @@ const slides = projects.map((project, index) => ({
               sizes="(min-width: 1024px) 47vw, 100vw"
               loading={slide.index === 0 ? 'eager' : 'lazy'}
               data-featured-image={slide.index}
-              class="col-start-1 row-start-1 h-full w-full object-cover opacity-0 transition-opacity duration-[900ms] ease-[--ease-zen] data-[active]:opacity-100"
+              class="col-start-1 row-start-1 h-full w-full object-cover opacity-0 transition-opacity duration-[900ms] ease-(--ease-zen) data-[active]:opacity-100"
             />
           ))
         }
@@ -222,7 +222,7 @@ const slides = projects.map((project, index) => ({
           slides.map((slide) => (
             <div
               data-featured-thumbs={slide.index}
-              class="absolute inset-0 flex gap-3 opacity-0 transition-opacity duration-[900ms] ease-[--ease-zen] data-[active]:opacity-100"
+              class="absolute inset-0 flex gap-3 opacity-0 transition-opacity duration-[900ms] ease-(--ease-zen) data-[active]:opacity-100"
             >
               {slide.thumbs.map((thumb) => (
                 <div class="h-full flex-1 overflow-hidden bg-stone">
@@ -259,7 +259,7 @@ const slides = projects.map((project, index) => ({
               data-featured-dot={slide.index}
               aria-selected={slide.index === 0 ? 'true' : 'false'}
               aria-label={`${slide.data.title}, project ${slide.index + 1} of ${total}`}
-              class="label px-2 py-1 text-teal/25 transition-colors duration-500 ease-[--ease-zen] hover:text-teal aria-selected:text-teal"
+              class="label px-2 py-1 text-teal/25 transition-colors duration-500 ease-(--ease-zen) hover:text-teal aria-selected:text-teal"
             >
               {pad(slide.index + 1)}
             </button>
@@ -270,7 +270,7 @@ const slides = projects.map((project, index) => ({
   </div>
 
   {/* Index for narrow screens, where the right rail is not rendered. */}
-  <div class="flex items-center gap-3 px-[--gutter] pb-12 lg:hidden">
+  <div class="flex items-center gap-3 px-(--gutter) pb-12 lg:hidden">
     {
       slides.map((slide) => (
         <button

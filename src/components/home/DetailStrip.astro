@@ -44,7 +44,7 @@ const frames = projects
 
 {
   frames.length > 2 && (
-    <section class="overflow-hidden bg-ink py-[--section-y] text-ivory on-dark">
+    <section class="overflow-hidden bg-ink py-(--section-y) text-ivory on-dark">
       <Container>
         <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-6" data-reveal-group>
           <div>
@@ -69,7 +69,7 @@ const frames = projects
         </div>
       </Container>
 
-      <Reveal class="mt-[--stack-lg] block">
+      <Reveal class="mt-(--stack-lg) block">
         <Carousel label="Interior details from across the portfolio" tone="dark">
           {frames.map((frame, index) => (
             <a
@@ -89,7 +89,7 @@ const frames = projects
                   widths={[400, 640, 900, 1200]}
                   sizes="(min-width: 1280px) 24vw, (min-width: 1024px) 30vw, (min-width: 640px) 46vw, 74vw"
                   loading="lazy"
-                  class="h-full w-full object-cover transition-transform duration-[1200ms] ease-[--ease-zen] group-hover:scale-[1.05]"
+                  class="h-full w-full object-cover transition-transform duration-[1200ms] ease-(--ease-zen) group-hover:scale-[1.05]"
                 />
               </div>
 

@@ -133,7 +133,7 @@ const regions = site.regions.map((region) => ({
           />
 
           <Reveal>
-            <p class="lede mt-[--stack-md] max-w-[42ch] text-ivory/75">
+            <p class="lede mt-(--stack-md) max-w-[42ch] text-ivory/75">
               Tell us what you are planning. We will come back to you personally, and we
               will tell you honestly whether we are the right studio for the project.
             </p>
@@ -169,7 +169,7 @@ const regions = site.regions.map((region) => ({
   {/* ------------------------------- 02 · what happens next · 03 · regions */}
   <section class="bg-ivory">
     <Container
-      class="pt-[clamp(3.5rem,8vw,9rem)] pb-[--section-y] lg:pt-[clamp(5rem,11vw,12rem)]"
+      class="pt-[clamp(3.5rem,8vw,9rem)] pb-(--section-y) lg:pt-[clamp(5rem,11vw,12rem)]"
     >
       <div class="grid gap-y-16 lg:grid-cols-12 lg:gap-x-12 xl:gap-x-16">
         <div class="lg:col-span-5" data-reveal-group>
@@ -180,7 +180,7 @@ const regions = site.regions.map((region) => ({
             <Eyebrow>What Happens Next</Eyebrow>
           </Reveal>
 
-          <ol class="mt-[--stack-md] flex flex-col gap-9">
+          <ol class="mt-(--stack-md) flex flex-col gap-9">
             {
               steps.map((step) => (
                 <Reveal as="li">
@@ -305,7 +305,7 @@ const regions = site.regions.map((region) => ({
                           >
                             View on map
                             <span
-                              class="inline-block transition-transform duration-[--duration-base] ease-[--ease-zen] group-hover:translate-x-1"
+                              class="inline-block transition-transform duration-(--duration-base) ease-(--ease-zen) group-hover:translate-x-1"
                               aria-hidden="true"
                             >
                               &#8594;

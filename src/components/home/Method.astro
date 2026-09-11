@@ -44,14 +44,14 @@ import { methodStages } from '@data/methodology';
           number changes underneath the heading.
         */}
         <div
-          class="relative mt-[--stack-lg] hidden h-[clamp(5rem,10vw,8.5rem)] lg:block"
+          class="relative mt-(--stack-lg) hidden h-[clamp(5rem,10vw,8.5rem)] lg:block"
           aria-hidden="true"
         >
           {
             methodStages.map((stage, index) => (
               <span
                 data-method-numeral={index}
-                class="absolute inset-0 flex items-center font-display text-[clamp(5rem,10vw,8.5rem)] leading-none tracking-[-0.045em] text-brass-soft opacity-0 transition-all duration-700 ease-[--ease-zen] data-[active]:translate-y-0 data-[active]:opacity-100"
+                class="absolute inset-0 flex items-center font-display text-[clamp(5rem,10vw,8.5rem)] leading-none tracking-[-0.045em] text-brass-soft opacity-0 transition-all duration-700 ease-(--ease-zen) data-[active]:translate-y-0 data-[active]:opacity-100"
                 style="transform: translateY(0.18em)"
               >
                 {stage.index}
@@ -68,8 +68,8 @@ import { methodStages } from '@data/methodology';
           {
             methodStages.map((stage, index) => (
               <li data-method-name={index} class="group flex items-center gap-5 py-2">
-                <span class="h-px w-4 shrink-0 bg-ivory/25 transition-all duration-700 ease-[--ease-zen] group-data-[active]:w-12 group-data-[active]:bg-brass" />
-                <span class="font-display text-display-sm text-ivory/30 transition-colors duration-700 ease-[--ease-zen] group-data-[active]:text-ivory">
+                <span class="h-px w-4 shrink-0 bg-ivory/25 transition-all duration-700 ease-(--ease-zen) group-data-[active]:w-12 group-data-[active]:bg-brass" />
+                <span class="font-display text-display-sm text-ivory/30 transition-colors duration-700 ease-(--ease-zen) group-data-[active]:text-ivory">
                   {stage.title}
                 </span>
               </li>

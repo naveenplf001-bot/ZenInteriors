@@ -35,13 +35,13 @@ const sizes =
         sizes={sizes}
         loading={priority ? 'eager' : 'lazy'}
         fetchpriority={priority ? 'high' : 'auto'}
-        class="h-full w-full object-cover transition-transform duration-[1200ms] ease-[--ease-zen] group-hover:scale-[1.04]"
+        class="h-full w-full object-cover transition-transform duration-[1200ms] ease-(--ease-zen) group-hover:scale-[1.04]"
       />
     </div>
 
     {/* Hairline that draws across on hover, so the card responds without moving. */}
     <span
-      class="mt-5 block h-px w-full origin-left scale-x-100 bg-beige transition-colors duration-500 ease-[--ease-zen] group-hover:bg-brass"
+      class="mt-5 block h-px w-full origin-left scale-x-100 bg-beige transition-colors duration-500 ease-(--ease-zen) group-hover:bg-brass"
       aria-hidden="true"></span>
 
     <div class="mt-4 flex items-start justify-between gap-5">
@@ -62,7 +62,7 @@ const sizes =
         >
           View Project
           <span
-            class="inline-block transition-transform duration-500 ease-[--ease-zen] group-hover:translate-x-1"
+            class="inline-block transition-transform duration-500 ease-(--ease-zen) group-hover:translate-x-1"
             aria-hidden="true">&#8594;</span
           >
         </span>
