@@ -36,9 +36,16 @@ const connectLinks = [
 ];
 
 /* Shared column chrome. The hairline is the rule between columns in the
-   reference, so it only exists once the columns actually sit side by side. */
+   reference, so it only exists once all five columns sit side by side.
+
+   Five columns need a 1440-class screen. Between 1024 and 1359 they crushed
+   the studio line to one word a row and broke the phone number and link names,
+   so that range takes three columns (studio, Explore, Our Work; then Connect
+   and Stay Inspired) with no rules. The five-column spread starts at 85rem
+   (1360px), not 90rem: a 1440px browser window loses ~17px to its scrollbar,
+   and must keep the full spread, while a 1366px laptop must not. */
 const columnClass =
-  'lg:border-l lg:border-ivory/12 lg:pl-[clamp(1.5rem,2.4vw,2.75rem)]';
+  'min-[85rem]:border-l min-[85rem]:border-ivory/12 min-[85rem]:pl-[clamp(1.5rem,2.4vw,2.75rem)]';
 const linkClass =
   'text-small text-ivory/80 transition-colors duration-300 hover:text-ivory focus-visible:text-ivory';
 ---
@@ -56,16 +63,20 @@ const linkClass =
     </div>
   </div>
 
-  <div class="container-zen pt-[clamp(3.5rem,6vw,6rem)] pb-9">
+  {/*
+    Phone spacing is tightened with max-sm: variants only, so the tablet and
+    desktop footer are untouched.
+  */}
+  <div class="container-zen pt-[clamp(3.5rem,6vw,6rem)] pb-9 max-sm:pt-12 max-sm:pb-8">
     <div
-      class="grid gap-x-[clamp(1.5rem,2.4vw,2.75rem)] gap-y-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.85fr_1fr_0.8fr_1.3fr] lg:gap-y-0"
+      class="grid gap-x-[clamp(1.5rem,2.4vw,2.75rem)] gap-y-12 max-sm:gap-y-9 grid-cols-2 lg:grid-cols-3 lg:gap-y-14 min-[85rem]:grid-cols-[1.4fr_0.85fr_1fr_0.8fr_1.3fr] min-[85rem]:gap-y-0"
     >
       {/* ------------------------------------------------------- the studio */}
-      <div class="sm:col-span-2 lg:col-span-1 lg:pr-[clamp(1rem,2vw,2.5rem)]">
+      <div class="col-span-2 lg:col-span-1 lg:pr-[clamp(1rem,2vw,2.5rem)]">
         <Logo tone="dark" />
 
         <p
-          class="mt-8 font-display text-[clamp(1.5rem,1.1rem+1.4vw,2.125rem)] leading-[1.28] tracking-[-0.015em] text-ivory"
+          class="mt-8 max-sm:mt-5 max-sm:text-[1.375rem] font-display text-[clamp(1.5rem,1.1rem+1.4vw,2.125rem)] leading-[1.28] tracking-[-0.015em] text-ivory"
         >
           {
             taglineLines.map((line, index) => (
@@ -77,9 +88,9 @@ const linkClass =
           }
         </p>
 
-        <span class="mt-9 block h-px w-14 bg-brass" aria-hidden="true"></span>
+        <span class="mt-9 block h-px w-14 bg-brass max-sm:mt-5" aria-hidden="true"></span>
 
-        <p class="label mt-7 text-ivory/68">{regionLine}</p>
+        <p class="label mt-7 text-ivory/68 max-sm:mt-4">{regionLine}</p>
         <p class="label mt-2.5 text-ivory/60">Serving spaces across South India</p>
       </div>
 
@@ -88,7 +99,7 @@ const linkClass =
         footerNav.map((group) => (
           <nav class={columnClass} aria-label={group.heading}>
             <p class="label text-brass-soft">{group.heading}</p>
-            <ul class="mt-7 flex flex-col gap-3.5">
+            <ul class="mt-7 flex flex-col gap-3.5 max-sm:mt-4 max-sm:gap-2">
               {group.links.map((link) => (
                 <li>
                   <a href={link.href} class={linkClass}>
@@ -102,9 +113,16 @@ const linkClass =
       }
 
       {/* ----------------------------------------------------------- direct */}
-      <div class={columnClass}>
+      {/*
+        On a phone Connect spans the row and its links sit on the same two
+        columns as Explore and Our Work above, rather than hanging in the left
+        column with nothing beside it.
+      */}
+      <div class:list={[columnClass, 'max-sm:col-span-2']}>
         <p class="label text-brass-soft">Connect</p>
-        <ul class="mt-7 flex flex-col gap-3.5">
+        <ul
+          class="mt-7 flex flex-col gap-3.5 max-sm:mt-4 max-sm:grid max-sm:grid-cols-2 max-sm:gap-x-[clamp(1.5rem,2.4vw,2.75rem)] max-sm:gap-y-2"
+        >
           {
             connectLinks.map((link) => (
               <li>
@@ -122,10 +140,10 @@ const linkClass =
       </div>
 
       {/* -------------------------------------------------------- the list */}
-      <div class:list={[columnClass, 'sm:col-span-2 lg:col-span-1']}>
+      <div class:list={[columnClass, 'col-span-2 min-[85rem]:col-span-1']}>
         <p class="label text-brass-soft">Stay Inspired</p>
 
-        <p class="mt-7 max-w-[32ch] text-small text-ivory/80">
+        <p class="mt-7 max-w-[32ch] text-small text-ivory/80 max-sm:mt-4 max-sm:max-w-none">
           Ideas, materials and stories from the studio. No campaigns, only work
           worth showing.
         </p>
@@ -141,7 +159,7 @@ const linkClass =
           data-netlify="true"
           netlify-honeypot="newsletter-bot"
           data-newsletter
-          class="mt-6 max-w-[30rem]"
+          class="mt-6 max-w-[30rem] max-sm:mt-5"
         >
           <input type="hidden" name="form-name" value="newsletter" />
           <p class="visually-hidden" aria-hidden="true">
@@ -162,7 +180,7 @@ const linkClass =
               required
               autocomplete="email"
               placeholder="Your email address"
-              class="min-w-0 flex-1 bg-transparent px-5 py-3.5 text-small text-charcoal placeholder:text-charcoal/62 focus:outline-none"
+              class="min-w-0 flex-1 bg-transparent px-5 py-3.5 text-base text-charcoal sm:text-small placeholder:text-charcoal/62 focus:outline-none"
             />
             <button
               type="submit"
@@ -209,17 +227,17 @@ const linkClass =
     </div>
 
     {/* ------------------------------------------------------------- legal */}
-    <hr class="rule-inverse mt-[clamp(3rem,5vw,4.5rem)]" />
+    <hr class="rule-inverse mt-[clamp(3rem,5vw,4.5rem)] max-sm:mt-9" />
 
     <div
-      class="flex flex-col gap-4 pt-7 sm:flex-row sm:items-center sm:justify-between"
+      class="flex flex-col gap-4 pt-7 max-sm:gap-3 max-sm:pt-6 sm:flex-row sm:items-center sm:justify-between"
     >
       <p class="text-micro text-ivory/62">
         &#169; {year} {site.name}. All rights reserved.
       </p>
       <div class="flex items-center gap-6">
         <span class="hidden h-px w-20 bg-ivory/20 sm:block" aria-hidden="true"></span>
-        <p class="label text-ivory/62">Interiors for a more considered tomorrow</p>
+        <p class="label text-ivory/62 max-sm:leading-[1.8]">Interiors for a more considered tomorrow</p>
       </div>
     </div>
   </div>

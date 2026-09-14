@@ -171,7 +171,7 @@ const regions = site.regions.map((region) => ({
     <Container
       class="pt-[clamp(3.5rem,8vw,9rem)] pb-(--section-y) lg:pt-[clamp(5rem,11vw,12rem)]"
     >
-      <div class="grid gap-y-16 lg:grid-cols-12 lg:gap-x-12 xl:gap-x-16">
+      <div class="grid gap-y-12 sm:gap-y-16 lg:grid-cols-12 lg:gap-x-12 xl:gap-x-16">
         <div class="lg:col-span-5" data-reveal-group>
           <Reveal variant="fade">
             <SectionNumber value="02" />
@@ -184,7 +184,7 @@ const regions = site.regions.map((region) => ({
             {
               steps.map((step) => (
                 <Reveal as="li">
-                  <div class="flex gap-6">
+                  <div class="flex gap-4 sm:gap-6">
                     <span
                       class="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-zen border border-beige text-teal"
                       aria-hidden="true"
@@ -276,7 +276,7 @@ const regions = site.regions.map((region) => ({
                   aria-hidden="true"
                 >
                 </div>
-                <p class="label absolute bottom-6 left-6 max-w-[14ch] leading-[2] text-ivory/92">
+                <p class="label absolute bottom-6 left-6 max-w-[24ch] leading-[2] sm:max-w-[14ch] text-ivory/92">
                   Good spaces begin with good conversations.
                 </p>
               </div>
@@ -286,7 +286,13 @@ const regions = site.regions.map((region) => ({
               >
                 <Eyebrow index="03" tone="inverse">Where We Work</Eyebrow>
 
-                <dl class="mt-9 grid gap-x-8 gap-y-9 sm:grid-cols-2">
+                {/*
+                  Two columns on phones too, down to the width where a "View on
+                  map" link no longer fits its column; below that they stack.
+                */}
+                <dl
+                  class="mt-9 grid grid-cols-2 gap-x-5 gap-y-9 max-[22.375rem]:grid-cols-1 sm:gap-x-8"
+                >
                   {
                     regions.map((region) => (
                       <div>
@@ -301,7 +307,7 @@ const regions = site.regions.map((region) => ({
                             href={region.mapHref}
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="group label mt-5 inline-flex items-center gap-3 border-b border-ivory/25 py-1 text-ivory/88 transition-colors duration-300 hover:border-brass-soft hover:text-ivory"
+                            class="group label mt-5 inline-flex items-center gap-3 border-b whitespace-nowrap border-ivory/25 py-1 text-ivory/88 transition-colors duration-300 hover:border-brass-soft hover:text-ivory"
                           >
                             View on map
                             <span

@@ -9,18 +9,29 @@ interface Props {
   delay?: number;
   /** feature gives the lead article a wider frame on the journal index. */
   variant?: 'default' | 'feature';
+  /** Journal index only: image settle, cursor label and a shorter phone excerpt. */
+  enhance?: boolean;
 }
 
-const { article, delay, variant = 'default' } = Astro.props;
+const { article, delay, variant = 'default', enhance = false } = Astro.props;
 const { title, excerpt, category, cover, coverAlt, publishedAt } = article.data;
 
 const href = `/journal/${article.id}`;
 const aspect = variant === 'feature' ? 'aspect-[16/9]' : 'aspect-[3/2]';
 ---
 
-<Reveal as="article" delay={delay} class="group">
-  <a href={href} class="block focus-visible:outline-offset-8">
-    <div class:list={['relative overflow-hidden rounded-zen bg-stone', aspect]}>
+{/*
+  A column that fills its grid row, so cards side by side end on the same
+  line: the Read Article rule sits at the foot of every card, however long
+  its title or excerpt runs.
+*/}
+<Reveal as="article" delay={delay} class="group flex flex-col">
+  <a href={href} class="flex flex-1 flex-col focus-visible:outline-offset-8">
+    <div
+      class:list={['relative overflow-hidden rounded-zen bg-stone', aspect]}
+      data-card-frame={enhance ? '' : undefined}
+    >
+      <div class="zen-card-media h-full w-full">
       <Image
         src={cover}
         alt={coverAlt}
@@ -31,6 +42,14 @@ const aspect = variant === 'feature' ? 'aspect-[16/9]' : 'aspect-[3/2]';
         loading="lazy"
         class="h-full w-full object-cover transition-transform duration-[1200ms] ease-(--ease-zen) group-hover:scale-[1.03]"
       />
+      </div>
+      {
+        enhance && (
+          <span class="zen-card-cursor label" aria-hidden="true">
+            Read
+          </span>
+        )
+      }
     </div>
 
     <p class="label mt-5 text-teal/65">
@@ -51,11 +70,16 @@ const aspect = variant === 'feature' ? 'aspect-[16/9]' : 'aspect-[3/2]';
       It is deliberately not clamped shorter, because the whole point is that
       the reader gets far enough in to want the rest.
     */}
-    <p class="mt-3.5 max-w-[54ch] text-micro leading-[1.8] text-charcoal/78">
+    <p
+      class:list={[
+        'mt-3.5 max-w-[54ch] text-micro leading-[1.8] text-charcoal/78',
+        enhance && 'max-sm:line-clamp-4 max-sm:text-small max-sm:leading-[1.75]',
+      ]}
+    >
       {excerpt}
     </p>
 
-    <div class="mt-5 flex items-center gap-5">
+    <div class="mt-auto flex items-center gap-5 pt-5">
       <span
         class="label inline-flex shrink-0 items-center gap-2.5 text-teal transition-colors duration-300 group-hover:text-brass"
       >
@@ -74,3 +98,66 @@ const aspect = variant === 'feature' ? 'aspect-[16/9]' : 'aspect-[3/2]';
     </div>
   </a>
 </Reveal>
+
+<style>
+  /* The photograph settles back from a slight over-scale as the card arrives. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) [data-card-frame] .zen-card-media {
+      scale: 1.08;
+      transition: scale 1600ms var(--ease-zen-out);
+    }
+
+    :global(html.js .is-revealed) [data-card-frame] .zen-card-media {
+      scale: 1;
+    }
+  }
+
+  /* A reading label that follows the pointer over the photograph. */
+  .zen-card-cursor {
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .zen-card-cursor {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      display: flex;
+      width: 5.5rem;
+      height: 5.5rem;
+      margin: -2.75rem 0 0 -2.75rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      background: color-mix(in srgb, var(--color-ivory) 88%, transparent);
+      color: var(--color-teal);
+      backdrop-filter: blur(6px);
+      pointer-events: none;
+      opacity: 0;
+      scale: 0.5;
+      translate: var(--mx, 50%) var(--my, 50%);
+      transition:
+        opacity 400ms var(--ease-zen),
+        scale 500ms var(--ease-zen),
+        translate 220ms var(--ease-zen-out);
+    }
+
+    [data-card-frame]:hover .zen-card-cursor {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+</style>
+
+<script>
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll<HTMLElement>('[data-card-frame]').forEach((frame) => {
+      frame.addEventListener('pointermove', (event) => {
+        const rect = frame.getBoundingClientRect();
+        frame.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+        frame.style.setProperty('--my', `${event.clientY - rect.top}px`);
+      });
+    });
+  }
+</script>

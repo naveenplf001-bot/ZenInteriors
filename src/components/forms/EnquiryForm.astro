@@ -30,10 +30,13 @@ const whatsappHref = buildDirectWhatsAppUrl();
   Shared field shape. `aria-invalid` is what the script sets, so the error
   colour is driven by the same attribute assistive technology reads rather
   than by a second, parallel class.
+
+  Fields are 16px on phones: iOS Safari zooms the whole page into any field
+  set smaller than that, and does not zoom back out.
 */
 const fieldBase = [
   'w-full rounded-none border-0 border-b border-beige bg-transparent px-0 py-3',
-  'text-small text-charcoal transition-colors duration-300',
+  'text-base sm:text-small text-charcoal transition-colors duration-300',
   'hover:border-charcoal/40',
   'focus:border-teal focus:outline-none focus:ring-0',
   'aria-[invalid=true]:border-brass',
@@ -215,10 +218,10 @@ const errorClass = 'mt-2 text-micro text-brass hidden';
       <div class="sm:col-span-2">
         <label class={labelClass} for="requirements">
           Tell Us About Your Project
-          <span class="ml-3 text-teal/55">Optional</span>
+          <span class="mt-1.5 block text-teal/55 sm:mt-0 sm:ml-3 sm:inline">Optional</span>
         </label>
         <textarea
-          class="mt-2 w-full resize-y rounded-zen border border-beige bg-ivory/60 px-4 py-3.5 text-small text-charcoal transition-colors duration-300 placeholder:text-charcoal/50 hover:border-charcoal/30 focus:border-teal focus:outline-none focus:ring-0 aria-[invalid=true]:border-brass"
+          class="mt-2 w-full resize-y rounded-zen border border-beige bg-ivory/60 px-4 py-3.5 text-base text-charcoal transition-colors sm:text-small duration-300 placeholder:text-charcoal/50 hover:border-charcoal/30 focus:border-teal focus:outline-none focus:ring-0 aria-[invalid=true]:border-brass"
           id="requirements"
           name="requirements"
           rows="4"
@@ -288,12 +291,19 @@ const errorClass = 'mt-2 text-micro text-brass hidden';
         <span>
           <span class="block text-small text-charcoal/72">Prefer to chat?</span>
           <span
-            class="mt-0.5 flex items-center gap-2 font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass"
+            class="mt-0.5 flex items-center gap-2 font-display text-display-sm text-teal transition-colors duration-300 group-hover:text-brass max-sm:block"
           >
-            Message us on WhatsApp
-            <span
-              class="inline-block text-small transition-transform duration-(--duration-base) ease-(--ease-zen) group-hover:translate-x-1"
-              aria-hidden="true">&#8594;</span
+            {/*
+              On a phone the line wraps, so it flows inline and the arrow is
+              tied to the last word instead of stranding at the far edge.
+              From sm up the wrapper dissolves and the row is a flex line.
+            */}
+            Message us on <span class="whitespace-nowrap sm:contents"
+              >WhatsApp
+              <span
+                class="inline-block text-small max-sm:ml-1 max-sm:align-middle transition-transform duration-(--duration-base) ease-(--ease-zen) group-hover:translate-x-1"
+                aria-hidden="true">&#8594;</span
+              ></span
             >
           </span>
         </span>

@@ -109,13 +109,24 @@ const schema = [
   publishedTime={publishedAt.toISOString()}
   schema={schema}
 >
-  <article>
+  {/* Reading progress, a brass hairline under the header. */}
+  <div
+    class="pointer-events-none fixed inset-x-0 top-(--header-h) z-[49] h-[2px]"
+    aria-hidden="true"
+  >
+    <span
+      class="block h-full origin-left bg-brass"
+      style="transform: scaleX(0)"
+      data-progress></span>
+  </div>
+
+  <article data-article>
     {/*
       Dark header band. The padding at the bottom is deliberately deep: the
       cover photograph is pulled back up into it below, so this measurement
       and the negative margin on the figure are a pair.
     */}
-    <header class="bg-teal text-ivory on-dark">
+    <header class="zen-article-head bg-teal text-ivory on-dark" data-article-head>
       <Container width="narrow" class="pt-[clamp(2.5rem,5vw,4.5rem)] pb-[clamp(6.5rem,13vw,12rem)]">
         <div data-reveal-group>
           <Reveal variant="fade">
@@ -167,19 +178,21 @@ const schema = [
       is what stops the article opening as two stacked blocks. Portrait on a
       phone, landscape once there is width for it.
     */}
-    <Container class="relative z-[1] mt-[calc(clamp(4.5rem,9.5vw,9rem)*-1)]">
+    <Container class="zen-article-cover relative z-[1] mt-[calc(clamp(4.5rem,9.5vw,9rem)*-1)]">
       <Reveal variant="clip">
         <figure class="overflow-hidden rounded-zen bg-stone">
-          <div class="aspect-[4/5] sm:aspect-[3/2] lg:aspect-[16/9]">
-            <Image
-              src={cover}
-              alt={coverAlt}
-              widths={[768, 1280, 1600, 2000]}
-              sizes="92vw"
-              loading="eager"
-              fetchpriority="high"
-              class="h-full w-full object-cover"
-            />
+          <div class="aspect-square sm:aspect-[3/2] lg:aspect-[16/9]">
+            <div class="zen-parallax h-full w-full">
+              <Image
+                src={cover}
+                alt={coverAlt}
+                widths={[768, 1280, 1600, 2000]}
+                sizes="92vw"
+                loading="eager"
+                fetchpriority="high"
+                class="h-full w-full object-cover"
+              />
+            </div>
           </div>
         </figure>
       </Reveal>
@@ -187,7 +200,7 @@ const schema = [
 
     {/* ---------------------------------------------------------------- body */}
     <Container width="reading" class="pt-(--section-y-tight) pb-(--section-y-tight)">
-      <div class="prose-zen">
+      <div class="prose-zen zen-prose">
         <Content />
       </div>
 
@@ -213,7 +226,7 @@ const schema = [
                 <Reveal variant="fade" class="border-b border-beige sm:border-b-0 sm:border-r sm:pr-10">
                   <a
                     href={`/journal/${newer.id}`}
-                    class="group block py-8 focus-visible:outline-offset-4 sm:py-10"
+                    class="group block py-8 focus-visible:outline-offset-4 sm:py-10 max-sm:py-6"
                   >
                     <p class="label flex items-center gap-3 text-teal/60 transition-colors duration-300 group-hover:text-brass">
                       <span aria-hidden="true">&#8592;</span>
@@ -236,7 +249,7 @@ const schema = [
                 >
                   <a
                     href={`/journal/${older.id}`}
-                    class="group block py-8 focus-visible:outline-offset-4 sm:py-10 sm:text-right"
+                    class="group block py-8 focus-visible:outline-offset-4 sm:py-10 sm:text-right max-sm:py-6"
                   >
                     <p class="label flex items-center gap-3 text-teal/60 transition-colors duration-300 group-hover:text-brass sm:justify-end">
                       Older Article
@@ -291,3 +304,151 @@ const schema = [
     )
   }
 </BaseLayout>
+
+<script>
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Reading progress across the article, header to last paragraph. */
+  const article = document.querySelector<HTMLElement>('[data-article]');
+  const bar = document.querySelector<HTMLElement>('[data-progress]');
+  if (article && bar) {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const rect = article.getBoundingClientRect();
+      const distance = rect.height - window.innerHeight;
+      const progress = distance > 0 ? Math.min(Math.max(-rect.top / distance, 0), 1) : 1;
+      bar.style.transform = `scaleX(${progress})`;
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule, { passive: true });
+    update();
+  }
+
+  /* The header and cover are on the first screen, so they play an entrance of their own. */
+  if (article && !calm) {
+    article
+      .querySelectorAll<HTMLElement>('[data-article-head] [data-reveal]')
+      .forEach((el, index) => el.style.setProperty('--intro', `${100 + index * 90}ms`));
+    article.setAttribute('data-intro', '');
+  }
+</script>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    [data-article][data-intro] .zen-article-head :global([data-reveal]) {
+      animation: zen-a-rise 1100ms var(--ease-zen-out) var(--intro, 0ms) both;
+    }
+
+    [data-article][data-intro] :global(.zen-article-cover [data-reveal='clip']) {
+      animation: zen-a-clip 1300ms var(--ease-zen-out) 450ms both;
+    }
+
+    [data-article][data-intro] :global(.zen-article-cover [data-reveal='clip'] img) {
+      animation: zen-a-settle 1900ms var(--ease-zen-out) 450ms both;
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .zen-parallax {
+        scale: 1.06;
+        animation: zen-a-parallax linear both;
+        animation-timeline: view();
+        animation-range: cover;
+      }
+
+      /* Headings, quotes and images ease in as they reach the reader. Body
+         paragraphs never move: reading comes first. */
+      .zen-prose > :global(h2),
+      .zen-prose > :global(blockquote),
+      .zen-prose > :global(figure),
+      .zen-prose :global(img) {
+        animation: zen-a-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 70%;
+      }
+    }
+  }
+
+  /* ------------------------------------------------------------ phone only */
+  @media (width < 40rem) {
+    .zen-prose {
+      font-size: 1.0625rem;
+      line-height: 1.8;
+    }
+
+    .zen-prose > :global(h2) {
+      font-size: 1.625rem;
+      line-height: 1.18;
+      margin-block-start: 2em;
+      margin-block-end: -0.25em;
+    }
+
+    .zen-prose > :global(blockquote) {
+      font-size: 1.375rem;
+      line-height: 1.35;
+      padding-inline-start: 1.1rem;
+      margin-block: 2em;
+    }
+
+    .zen-article-head :global(.lede) {
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+  }
+
+  @keyframes zen-a-rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 1.5rem, 0);
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+  }
+
+  @keyframes zen-a-clip {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes zen-a-settle {
+    from {
+      transform: scale(1.12);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes zen-a-parallax {
+    from {
+      translate: 0 -3%;
+    }
+    to {
+      translate: 0 3%;
+    }
+  }
+
+  @keyframes zen-a-in {
+    from {
+      opacity: 0;
+      translate: 0 1.25rem;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+</style>

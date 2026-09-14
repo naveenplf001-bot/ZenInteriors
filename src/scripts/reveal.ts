@@ -16,10 +16,13 @@
  *   1. the observer, which handles the normal case
  *   2. a scroll and resize sweep, which catches anything the observer missed
  *      because it was mis-measured while fonts and images were still settling
- *   3. a failsafe timer, which reveals everything regardless
+ *   3. a failsafe timer, which settles everything already on or above the
+ *      fold once layout has had time to settle
  *
- * The failsafe is the important one. It means the worst case is an element
- * that appears without its animation, never an element that never appears.
+ * Between them, the worst case is an element that appears without its
+ * animation, never an element that never appears. The failsafe deliberately
+ * leaves anything below the fold to the sweep, so it still animates when the
+ * visitor scrolls to it.
  */
 
 const REVEALED = 'is-revealed';
@@ -140,11 +143,10 @@ export function initReveal(): void {
   // everything has loaded rather than trusting the initial pass.
   window.addEventListener('load', sweep, { once: true });
 
-  window.setTimeout(() => {
-    if (pending.size === 0) return;
-    // Something went wrong. Better an element without its animation than a
-    // correctly-sized hole where a project used to be.
-    for (const el of pending) reveal(el);
-    pending.clear();
-  }, FAILSAFE_MS);
+  // The failsafe only settles what the visitor could already be looking at,
+  // never the whole page. Revealing everything here used to empty the queue
+  // before anyone scrolled, so on a long phone layout every section below the
+  // first screen arrived already visible and none of them animated. Anything
+  // further down is still guaranteed: the scroll sweep reveals it on arrival.
+  window.setTimeout(sweep, FAILSAFE_MS);
 }

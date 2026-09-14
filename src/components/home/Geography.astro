@@ -116,7 +116,10 @@ const belonging = ['People', 'Places', 'Spaces', 'That', 'Belong'];
             figures.map((figure) => (
               <Reveal variant="fade">
                 <div class="flex items-baseline gap-3">
-                  <span class="font-display text-[clamp(1.875rem,1.4rem+1.4vw,2.75rem)] leading-none text-teal">
+                  <span
+                    class="font-display text-[clamp(1.875rem,1.4rem+1.4vw,2.75rem)] leading-none text-teal"
+                    data-count={figure.value}
+                  >
                     {figure.value}
                   </span>
                   <span class="label text-teal/68">{figure.label}</span>
@@ -152,15 +155,20 @@ const belonging = ['People', 'Places', 'Spaces', 'That', 'Belong'];
       </div>
 
       {/* ------------------------------------------------------ the closing */}
-      {/* Sits over the plaster, clear of the relief map, and steps out of the
-          way entirely on narrow screens where there is no plaster to sit on. */}
-      <div class="hidden lg:col-span-3 lg:flex lg:flex-col lg:items-end lg:justify-between">
+      {/* Sits over the plaster, clear of the relief map. The photograph is
+          anchored right, so below roughly 1680px this column lands on the dark
+          timber instead and the type cannot be read; it only appears once the
+          viewport is wide enough to put it on plaster. The grid track is still
+          reserved at lg, so nothing else in the band moves. */}
+      <div class="hidden lg:col-span-3 lg:flex-col lg:items-end lg:justify-between min-[105rem]:flex">
         <Reveal variant="fade" class="text-right">
           {belonging.map((word) => <p class="label leading-[2] text-teal/62">{word}</p>)}
           <span class="mt-5 ml-auto block h-px w-12 bg-teal/25" aria-hidden="true"></span>
         </Reveal>
 
-        <Reveal variant="fade" class="mt-12 flex items-center gap-4 text-right">
+        {/* Hidden at every width: it falls on the stone plinth in the photograph
+            even at 1920px, where it cannot be read. */}
+        <Reveal variant="fade" class="mt-12 hidden items-center gap-4 text-right">
           <span class="h-px w-8 shrink-0 bg-teal/25" aria-hidden="true"></span>
           <p class="label leading-[1.9] text-teal/60">A more considered<br />tomorrow.</p>
         </Reveal>

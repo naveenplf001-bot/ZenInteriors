@@ -9,6 +9,28 @@
   and component layers below.
 */
 
+/*
+  Hover, extended to touch.
+
+  Tailwind wraps every hover: utility in @media (hover: hover), so on a phone
+  none of the site's hover effects run. Every hover: and group-hover: effect
+  also applies while an element is pressed on a touchscreen, which
+  src/scripts/press.ts marks with [data-pressed]. That attribute is only ever
+  set by touch, so mouse hover on desktop behaves exactly as before, and
+  redefining the variant keeps its place in the variant order, so focus,
+  active and aria states still win over it.
+*/
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+  &[data-pressed] {
+    @slot;
+  }
+}
+
 @layer base {
   *,
   *::before,
@@ -17,6 +39,8 @@
   }
 
   html {
+    /* The site's own press states replace the browser's grey tap flash. */
+    -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
     scroll-padding-block-start: var(--header-h);
     background-color: var(--color-ivory);
@@ -266,6 +290,47 @@
 
   .js [data-reveal='line'].is-revealed {
     transform: scaleX(1);
+  }
+}
+
+/* =========================================================================
+   Scroll parallax
+
+   `.zen-parallax` on an image inside an overflow-hidden frame drifts it
+   gently against the scroll. CSS scroll-driven animation only: no script,
+   no scroll listener, and browsers without support simply show a still
+   frame. It animates the individual `translate` and `scale` properties,
+   which compose with the `transform` the clip reveal owns on the same image.
+
+   The over-scale is just enough that the drift never exposes the frame edge.
+
+   The timeline is named on the frame, not taken from the image with view().
+   The frame is overflow-hidden, which makes it a scroll container, so a plain
+   view() on the image measures it against a box that never scrolls and the
+   animation sits at its midpoint forever. The frame's own view timeline is
+   measured against the page.
+   ========================================================================= */
+@keyframes zen-parallax {
+  from {
+    translate: 0 -3%;
+  }
+  to {
+    translate: 0 3%;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :has(> .zen-parallax) {
+      view-timeline: --zen-parallax block;
+    }
+
+    .zen-parallax {
+      scale: 1.07;
+      animation: zen-parallax linear both;
+      animation-timeline: --zen-parallax;
+      animation-range: cover;
+    }
   }
 }
 

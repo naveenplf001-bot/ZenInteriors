@@ -8,15 +8,14 @@ import Reveal from '@components/ui/Reveal.astro';
 import SectionNumber from '@components/ui/SectionNumber.astro';
 import SplitHeading from '@components/ui/SplitHeading.astro';
 import PresencePlot from '@components/services/PresencePlot.astro';
+import ServiceCards from '@components/services/ServiceCards.astro';
 
-import { capabilities } from '@data/services';
 import { site } from '@config/site';
 import { breadcrumbSchema } from '@lib/seo';
 import { pad } from '@lib/format';
 
 import archImage from '@/assets/images/bg 3.png';
 import shadowImage from '@/assets/images/bg 4.png';
-import materialsImage from '@/assets/images/bg 2.png';
 import closingImage from '@/assets/images/home/sourcing.jpg';
 
 /**
@@ -73,7 +72,7 @@ const schema = [
   schema={schema}
 >
   {/* --------------------------------------------------- 01 · our presence */}
-  <section class="zen-presence relative isolate bg-ivory">
+  <section class="zen-presence relative isolate overflow-hidden bg-ivory" data-presence>
     {/* Plaster and leaf shadow as the ground, washed back so type sits on it. */}
     <Image
       src={shadowImage}
@@ -82,7 +81,7 @@ const schema = [
       widths={[900, 1400, 1920]}
       sizes="100vw"
       loading="eager"
-      class="absolute inset-0 -z-20 h-full w-full object-cover"
+      class="zen-presence__bg absolute inset-0 -z-20 h-full w-full object-cover"
     />
     <div
       class="absolute inset-0 -z-10 bg-gradient-to-r from-ivory via-ivory/94 to-ivory/78"
@@ -124,7 +123,7 @@ const schema = [
               class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-teal/25 transition-colors duration-500 ease-(--ease-zen) group-hover:border-brass"
               aria-hidden="true"
             >
-              <span class="text-[0.75rem] leading-none">&#8595;</span>
+              <span class="zen-presence__nudge text-[0.75rem] leading-none">&#8595;</span>
             </span>
             Explore our locations
             <span
@@ -133,16 +132,17 @@ const schema = [
           </a>
         </Reveal>
 
-        <dl class="mt-[clamp(2.5rem,5vh,3.5rem)] flex gap-10" data-reveal-group="70">
+        <dl class="mt-[clamp(2.5rem,5vh,3.5rem)] flex gap-10 max-lg:grid max-lg:grid-cols-2 max-lg:gap-3" data-reveal-group="70">
           {
             [
               { value: pad(regionNames.length), label: 'States' },
               { value: pad(cityCount), label: 'Cities' },
             ].map((figure) => (
               <Reveal variant="fade">
-                <div class="border-t border-beige pt-4">
+                <div class="relative pt-4 max-lg:rounded-zen max-lg:border max-lg:border-beige max-lg:bg-ivory-warm/70 max-lg:px-4 max-lg:pb-4">
+                  <span class="zen-presence__rule absolute inset-x-0 top-0 h-px bg-beige max-lg:hidden" aria-hidden="true" />
                   <dt class="label text-teal/62">{figure.label}</dt>
-                  <dd class="mt-2.5 font-display text-display-sm text-teal">
+                  <dd class="mt-2.5 font-display text-display-sm text-teal tabular-nums max-lg:text-display-md" data-count={figure.value}>
                     {figure.value}
                   </dd>
                 </div>
@@ -157,11 +157,13 @@ const schema = [
         variant="fade"
         class="flex items-center px-(--gutter) pb-[clamp(2rem,5vh,4rem)] lg:px-[clamp(1rem,2vw,2.5rem)] lg:py-[clamp(3rem,7vh,5.5rem)]"
       >
-        <PresencePlot class="mx-auto w-full max-w-[26rem]" />
+        <div class="zen-presence__depth mx-auto w-full max-w-[26rem] max-lg:max-w-[24rem] max-lg:rounded-zen max-lg:border max-lg:border-beige/80 max-lg:bg-ivory-warm/60 max-lg:px-5 max-lg:pt-6 max-lg:pb-4" data-depth="-10">
+          <PresencePlot class="w-full" />
+        </div>
       </Reveal>
 
       {/* -------------------------------------------------------- dark panel */}
-      <div class="relative isolate flex flex-col justify-between overflow-hidden bg-teal px-[clamp(1.75rem,2.6vw,2.75rem)] py-[clamp(2.5rem,6vh,4.5rem)] text-ivory on-dark">
+      <div class="relative isolate flex flex-col justify-between overflow-hidden bg-teal px-[clamp(1.75rem,2.6vw,2.75rem)] py-[clamp(2.5rem,6vh,4.5rem)] text-ivory on-dark max-lg:px-(--gutter)">
         <Image
           src={shadowImage}
           alt=""
@@ -169,18 +171,19 @@ const schema = [
           widths={[400, 700, 1000]}
           sizes="24vw"
           loading="lazy"
-          class="absolute inset-0 -z-20 h-full w-full object-cover opacity-30 mix-blend-luminosity"
+          class="zen-presence__bg absolute inset-0 -z-20 h-full w-full object-cover opacity-30 mix-blend-luminosity"
         />
         <div class="absolute inset-0 -z-10 bg-teal/80" aria-hidden="true"></div>
+        <div class="zen-presence__sheen pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
 
         <Reveal variant="fade">
           <p class="font-display text-[clamp(1.25rem,1rem+0.9vw,1.75rem)] leading-[1.45] text-ivory italic">
             &ldquo;Homes, offices and spaces that belong to a better tomorrow.&rdquo;
           </p>
-          <span class="mt-8 block h-px w-14 bg-brass-soft/60" aria-hidden="true"></span>
+          <span class="zen-presence__rule mt-8 block h-px w-14 bg-brass-soft/60" aria-hidden="true"></span>
         </Reveal>
 
-        <Reveal variant="fade" class="mt-16">
+        <Reveal variant="fade" class="mt-16 max-lg:mt-10">
           <p class="label text-brass-soft">Zen Interior</p>
           <p class="label mt-3 text-ivory/62">{regionNames.join(' · ')}</p>
         </Reveal>
@@ -212,7 +215,7 @@ const schema = [
 
         </div>
 
-        <div class="lg:col-span-6 lg:col-start-7">
+        <div class="lg:col-span-6 lg:col-start-7 max-lg:min-w-0">
           <Reveal>
             <p class="lede max-w-[46ch] text-charcoal/82">
               From concept to completion, we transform spaces through thoughtful design
@@ -222,7 +225,7 @@ const schema = [
           </Reveal>
 
           {/* The offering, read as one line rather than eight boxes. */}
-          <ul class="mt-9 flex flex-wrap gap-x-3 gap-y-3" data-reveal-group="60">
+          <ul class="zen-chips mt-9 flex flex-wrap gap-x-3 gap-y-3" data-reveal-group="60">
             {
               offering.map((item) => (
                 <Reveal variant="fade" as="li">
@@ -236,46 +239,9 @@ const schema = [
         </div>
       </div>
 
-      <Reveal variant="clip" class="mt-(--stack-lg) block">
-        <div class="aspect-[16/9] overflow-hidden rounded-zen bg-beige sm:aspect-[21/9] lg:aspect-[3/1]">
-          <Image
-            src={materialsImage}
-            alt="Timber, stone, bronze and undyed wool samples laid out in daylight"
-            widths={[800, 1200, 1600, 2000]}
-            sizes="(min-width: 1024px) 88vw, 100vw"
-            loading="lazy"
-            class="h-full w-full object-cover"
-          />
-        </div>
-      </Reveal>
 
-      {/* Capabilities, stated broadly. Never itemised into commodity words. */}
-      <div
-        class="mt-(--stack-lg) grid gap-x-10 gap-y-px sm:grid-cols-2 lg:grid-cols-3"
-        data-reveal-group="80"
-      >
-        {
-          capabilities.map((capability) => (
-            <Reveal variant="fade" as="article" class="group relative pt-7">
-              <span
-                class="absolute inset-x-0 top-0 h-px bg-beige"
-                aria-hidden="true"
-              />
-              <span
-                class="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-brass transition-transform duration-700 ease-(--ease-zen) group-hover:scale-x-100"
-                aria-hidden="true"
-              />
-              <p class="label text-teal/50">{capability.index}</p>
-              <h3 class="mt-4 font-display text-display-sm text-teal transition-colors duration-500 group-hover:text-brass">
-                {capability.title}
-              </h3>
-              <p class="mt-3 max-w-[36ch] pb-9 text-micro leading-[1.7] text-charcoal/75">
-                {capability.description}
-              </p>
-            </Reveal>
-          ))
-        }
-      </div>
+      {/* The offer, one photograph per service, in the order a home is walked. */}
+      <ServiceCards class="mt-(--stack-lg)" />
     </Container>
   </section>
 
@@ -306,7 +272,7 @@ const schema = [
             widths={[480, 800, 1200]}
             sizes="(min-width: 1024px) 28vw, 100vw"
             loading="lazy"
-            class="absolute inset-0 h-full w-full object-cover transition-transform duration-[1600ms] ease-(--ease-zen) hover:scale-[1.03]"
+            class="absolute inset-0 h-full w-full object-cover transition-transform duration-[1600ms] ease-(--ease-zen) hover:scale-[1.04]"
           />
         </div>
 
@@ -364,7 +330,7 @@ const schema = [
           <span class="mt-7 block h-px w-12 bg-brass/50" aria-hidden="true"></span>
         </Reveal>
 
-        <Reveal variant="fade" class="mt-14">
+        <Reveal variant="fade" class="mt-14 max-lg:mt-8">
           <p class="label text-teal/80">Zen Interior</p>
           <p class="label mt-3 text-teal/55">{regionNames.join(' · ')}</p>
         </Reveal>
@@ -373,88 +339,118 @@ const schema = [
   </section>
 
   {/* ------------------------------------------------------- 04 · work with us */}
-  <section class="relative isolate overflow-hidden bg-teal text-ivory on-dark">
-    <div class="lg:grid lg:grid-cols-[minmax(0,38fr)_minmax(0,38fr)_minmax(0,24fr)] lg:items-stretch">
+  {/* A warm stone ground, so the ask reads as its own moment and the teal
+      footer below it stays the only dark band at the foot of the page. */}
+  <section class="zen-ask relative isolate overflow-hidden border-t border-beige bg-stone">
+    <Image
+      src={shadowImage}
+      alt=""
+      aria-hidden="true"
+      widths={[900, 1400, 1920]}
+      sizes="100vw"
+      loading="lazy"
+      class="zen-ask__shadow absolute inset-0 -z-20 h-full w-full object-cover opacity-45 mix-blend-multiply"
+    />
+    <div
+      class="absolute inset-0 -z-10 bg-gradient-to-r from-stone via-stone/92 to-stone/70"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="grid lg:grid-cols-[minmax(0,40fr)_minmax(0,36fr)_minmax(0,24fr)] lg:items-stretch">
       {/* ------------------------------------------------------------- ask */}
-      <div class="flex flex-col justify-center px-(--gutter) pt-[clamp(3rem,7vh,5rem)] pb-[clamp(2rem,4vh,3rem)] lg:py-[clamp(3.5rem,8vh,6rem)] lg:pr-[clamp(1.5rem,2.6vw,3rem)]">
+      <div class="flex flex-col justify-center px-(--gutter) pt-[clamp(3rem,8vw,5rem)] pb-[clamp(2rem,5vw,3rem)] lg:py-[clamp(3.5rem,8vh,6rem)] lg:pr-[clamp(1.5rem,2.6vw,3rem)]">
         <Reveal variant="fade">
-          <Eyebrow tone="inverse" index="04">Work With Us</Eyebrow>
+          <Eyebrow index="04">Work With Us</Eyebrow>
         </Reveal>
 
         <SplitHeading
           lines={['Let’s create something', 'exceptional, wherever', 'you are.']}
           size="md"
-          tone="dark"
           accentFrom={2}
+          accentItalic
           class="mt-7"
         />
 
         <Reveal>
-          <p class="mt-7 max-w-[42ch] text-small leading-[1.8] text-ivory/80">
+          <p class="mt-7 max-w-[42ch] text-small leading-[1.8] text-charcoal/80">
             From concept to completion, we bring thoughtful design, global sourcing and
             precise execution to your space.
           </p>
         </Reveal>
 
-        <Reveal variant="fade" class="mt-10">
+        <Reveal variant="fade" class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-5 max-sm:justify-center">
           <a
             href="/contact"
-            class="label group inline-flex items-center gap-4 rounded-zen border border-ivory/35 px-8 py-4 text-ivory transition-colors duration-(--duration-base) ease-(--ease-zen) hover:border-ivory hover:bg-ivory hover:text-teal"
+            class="zen-ask__cta label group relative inline-flex items-center gap-4 max-sm:w-full max-sm:justify-center overflow-hidden rounded-zen bg-teal px-8 py-4 text-ivory transition-shadow duration-500 ease-(--ease-zen) hover:shadow-[0_18px_40px_-18px_rgba(1,52,47,0.55)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brass"
           >
-            Schedule a consultation
             <span
-              class="inline-block transition-transform duration-500 ease-(--ease-zen) group-hover:translate-x-1"
+              class="absolute inset-0 -z-0 origin-left scale-x-0 bg-teal-soft transition-transform duration-700 ease-(--ease-zen) group-hover:scale-x-100"
+              aria-hidden="true"></span>
+            <span class="relative">Schedule a consultation</span>
+            <span
+              class="relative inline-block transition-transform duration-500 ease-(--ease-zen) group-hover:translate-x-1.5"
               aria-hidden="true">&#8594;</span
             >
+          </a>
+          <a
+            href="#locations"
+            class="label group inline-flex items-center gap-3 text-teal/80 transition-colors duration-300 hover:text-brass"
+          >
+            <span
+              class="block h-px w-8 origin-left bg-current transition-transform duration-500 ease-(--ease-zen) group-hover:scale-x-150"
+              aria-hidden="true"></span>
+            Where we work
           </a>
         </Reveal>
       </div>
 
       {/* --------------------------------------------------------- pillars */}
       <div
-        class="grid grid-cols-2 gap-px px-(--gutter) pb-[clamp(2.5rem,6vh,4rem)] lg:grid-cols-4 lg:gap-0 lg:px-0 lg:py-[clamp(3.5rem,8vh,6rem)]"
+        class="grid grid-cols-2 gap-3 px-(--gutter) pb-[clamp(2.5rem,6vw,4rem)] sm:grid-cols-4 lg:grid-cols-2 lg:content-center lg:px-[clamp(1rem,2vw,2rem)] lg:py-[clamp(3.5rem,8vh,6rem)]"
         data-reveal-group="90"
       >
         {
-          pillars.map((pillar, index) => (
+          pillars.map((pillar) => (
             <Reveal
-              variant="fade"
-              class:list={[
-                'group flex flex-col items-start px-[clamp(0.75rem,1.4vw,1.5rem)] py-4 lg:justify-center lg:py-0',
-                index > 0 && 'border-l border-ivory/12',
-              ]}
+              variant="rise"
+              class="group relative flex flex-col items-start overflow-hidden rounded-zen border border-beige bg-ivory-warm/70 p-[clamp(1rem,1.6vw,1.5rem)] backdrop-blur-[2px] transition-[border-color,background-color,transform] duration-700 ease-(--ease-zen) hover:-translate-y-1 hover:border-brass/60 hover:bg-ivory-warm"
             >
               <span
-                class="text-brass-soft transition-transform duration-700 ease-(--ease-zen) group-hover:-translate-y-1"
+                class="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-brass transition-transform duration-700 ease-(--ease-zen) group-hover:scale-x-100"
+                aria-hidden="true"
+              />
+              <span
+                class="text-brass transition-transform duration-700 ease-(--ease-zen) group-hover:-translate-y-0.5 group-hover:scale-110"
                 aria-hidden="true"
               >
                 {pillar.icon === 'globe' && (
                   <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1">
-                    <circle cx="12" cy="12" r="9" />
-                    <path d="M3 12h18M12 3c2.6 2.6 2.6 15.4 0 18-2.6-2.6-2.6-15.4 0-18Z" />
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M3 12h18M12 3c2.6 2.6 2.6 15.4 0 18-2.6-2.6-2.6-15.4 0-18Z" />
                   </svg>
                 )}
                 {pillar.icon === 'chair' && (
                   <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1">
-                    <path d="M5 11V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4" />
-                    <path d="M4 11h16v5H4zM6 16v3M18 16v3" />
+                  <path d="M5 11V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4" />
+                  <path d="M4 11h16v5H4zM6 16v3M18 16v3" />
                   </svg>
                 )}
                 {pillar.icon === 'draft' && (
                   <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1">
-                    <path d="M4 4h11l5 5v11H4z" />
-                    <path d="M8 14.5 15 7.5M8 14.5V17h2.5" />
+                  <path d="M4 4h11l5 5v11H4z" />
+                  <path d="M8 14.5 15 7.5M8 14.5V17h2.5" />
                   </svg>
                 )}
                 {pillar.icon === 'key' && (
                   <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1">
-                    <path d="M4 20V10l8-6 8 6v10z" />
-                    <path d="M10 20v-6h4v6" />
+                  <path d="M4 20V10l8-6 8 6v10z" />
+                  <path d="M10 20v-6h4v6" />
                   </svg>
                 )}
               </span>
 
-              <p class="mt-5 font-display text-[clamp(1rem,0.9rem+0.3vw,1.1875rem)] leading-[1.35] text-ivory">
+              <p class="mt-5 font-display text-[clamp(1.0625rem,0.95rem+0.35vw,1.25rem)] leading-[1.3] text-teal">
                 {pillar.title}
               </p>
             </Reveal>
@@ -463,7 +459,10 @@ const schema = [
       </div>
 
       {/* ----------------------------------------------------------- frame */}
-      <div class="relative min-h-[14rem] overflow-hidden lg:min-h-0">
+      <Reveal
+        variant="clip"
+        class="group relative min-h-[16rem] overflow-hidden sm:min-h-[20rem] lg:min-h-0"
+      >
         <Image
           src={closingImage}
           alt="Timber screen and a potted olive against a stone plinth"
@@ -472,11 +471,281 @@ const schema = [
           loading="lazy"
           class="absolute inset-0 h-full w-full object-cover"
         />
-        <div class="absolute inset-0 bg-ink/25" aria-hidden="true"></div>
-        <p class="label absolute top-[clamp(1.5rem,4vh,2.5rem)] right-[clamp(1.25rem,2vw,2rem)] text-right leading-[2.2] text-ivory/92">
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-ink/35 via-ink/5 to-ink/30 transition-opacity duration-700 group-hover:opacity-60"
+          aria-hidden="true"
+        >
+        </div>
+        <p class="label absolute top-[clamp(1.5rem,4vh,2.5rem)] right-[clamp(1.25rem,2vw,2rem)] text-right leading-[2.2] text-ivory/95">
           Better<br />Spaces<br />Brighter<br />Lives
         </p>
-      </div>
+      </Reveal>
     </div>
   </section>
+
+  {/* Phones and tablets: a quiet way to enquire from anywhere in the middle of
+      the page. Hidden over the opening section, the closing ask and the footer. */}
+  <div
+    class="zen-dock pointer-events-none fixed inset-x-0 bottom-0 z-[40] px-4 pb-[max(1rem,env(safe-area-inset-bottom))] lg:hidden"
+    data-dock
+    data-visible="false"
+    inert
+  >
+    <a
+      href="/contact"
+      class="label pointer-events-auto mx-auto flex max-w-[28rem] items-center justify-between gap-4 rounded-zen bg-teal px-5 py-4 text-ivory shadow-[0_18px_40px_-16px_rgba(1,52,47,0.6)]"
+    >
+      <span class="flex items-center gap-3">
+        <span class="h-1.5 w-1.5 rounded-full bg-brass-soft" aria-hidden="true"></span>
+        Discuss your project
+      </span>
+      <span aria-hidden="true">&#8594;</span>
+    </a>
+  </div>
 </BaseLayout>
+
+<style>
+  /* ------------------------------------------------------------ mobile only */
+  @media (width < 40rem) {
+    .zen-chips {
+      flex-wrap: nowrap;
+      margin-inline: calc(var(--gutter) * -1);
+      padding-inline: var(--gutter);
+      overflow-x: auto;
+      scrollbar-width: none;
+      mask-image: linear-gradient(
+        90deg,
+        transparent,
+        #000 var(--gutter),
+        #000 calc(100% - 3rem),
+        transparent
+      );
+    }
+
+    .zen-chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .zen-chips :global(li) {
+      flex-shrink: 0;
+    }
+
+    .zen-chips span {
+      white-space: nowrap;
+    }
+  }
+
+  .zen-dock {
+    transform: translate3d(0, 130%, 0);
+    opacity: 0;
+    transition:
+      transform 600ms var(--ease-zen-out),
+      opacity 400ms var(--ease-zen);
+  }
+
+  .zen-dock[data-visible='true'] {
+    transform: none;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zen-dock {
+      transition: none;
+    }
+  }
+
+  /* ------------------------------------------------------ 01 · presence
+     This section is on the first screen, where the reveal system shows
+     content instantly. It gets its own entrance instead, played once on
+     load, with a stagger assigned by the script below. */
+  @media (prefers-reduced-motion: no-preference) {
+    .zen-presence[data-intro] :global([data-reveal]:not([data-reveal='mask'])) {
+      animation: zen-intro-rise 1100ms var(--ease-zen-out) var(--intro, 0ms) both;
+    }
+
+    .zen-presence[data-intro] :global([data-reveal='mask']) {
+      animation: zen-intro-mask 1200ms var(--ease-zen-out) var(--intro, 0ms) both;
+    }
+
+    .zen-presence[data-intro] .zen-presence__rule {
+      transform-origin: left center;
+      animation: zen-intro-rule 1200ms var(--ease-zen-out) 900ms both;
+    }
+
+    .zen-presence__bg {
+      animation: zen-ask-drift 26s ease-in-out infinite alternate;
+    }
+
+    .zen-presence__nudge {
+      display: inline-block;
+      animation: zen-nudge 2.4s var(--ease-zen) 1.6s infinite;
+    }
+
+    .zen-presence__sheen {
+      background: linear-gradient(
+        105deg,
+        transparent 35%,
+        color-mix(in srgb, var(--color-brass-soft) 14%, transparent) 50%,
+        transparent 65%
+      );
+      background-size: 250% 100%;
+      animation: zen-sheen 9s ease-in-out 1.2s infinite;
+    }
+
+    .zen-presence__depth {
+      transform: translate3d(
+        calc(var(--px, 0) * var(--depth, 0) * 1px),
+        calc(var(--py, 0) * var(--depth, 0) * 1px),
+        0
+      );
+      transition: transform 900ms var(--ease-zen-out);
+    }
+  }
+
+  @keyframes zen-intro-rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 1.5rem, 0);
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+  }
+
+  @keyframes zen-intro-mask {
+    from {
+      transform: translate3d(0, 110%, 0);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  @keyframes zen-intro-rule {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes zen-nudge {
+    0%,
+    60%,
+    100% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(0.3rem);
+    }
+  }
+
+  @keyframes zen-sheen {
+    0% {
+      background-position: 120% 0;
+    }
+    60%,
+    100% {
+      background-position: -120% 0;
+    }
+  }
+
+  /* The leaf shadow drifts, slowly enough to read as daylight moving. */
+  @media (prefers-reduced-motion: no-preference) {
+    .zen-ask__shadow {
+      animation: zen-ask-drift 22s ease-in-out infinite alternate;
+    }
+  }
+
+  @keyframes zen-ask-drift {
+    from {
+      transform: scale(1.04) translate3d(-1%, 0, 0);
+    }
+    to {
+      transform: scale(1.08) translate3d(1.5%, -1%, 0);
+    }
+  }
+</style>
+
+<script>
+  /*
+    Presence entrance, counters and pointer depth. Everything here is an
+    enhancement: with reduced motion the section is simply shown as built.
+  */
+  const section = document.querySelector<HTMLElement>('[data-presence]');
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (section && !calm) {
+    section
+      .querySelectorAll<HTMLElement>('[data-reveal]')
+      .forEach((el, index) => el.style.setProperty('--intro', `${120 + index * 110}ms`));
+    section.setAttribute('data-intro', '');
+
+    /* Figures count up from zero, padded the way the site writes numbers. */
+    section.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
+      const target = Number(el.dataset.count);
+      const width = el.dataset.count?.length ?? 2;
+      const start = performance.now() + 900;
+      const duration = 1400;
+      const tick = (now: number) => {
+        const t = Math.min(Math.max((now - start) / duration, 0), 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = String(Math.round(target * eased)).padStart(width, '0');
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+
+    /* A few pixels of depth under the pointer, on devices that hover. */
+    if (window.matchMedia('(hover: hover) and (min-width: 1024px)').matches) {
+      const layers = section.querySelectorAll<HTMLElement>('[data-depth]');
+      layers.forEach((layer) => layer.style.setProperty('--depth', layer.dataset.depth ?? '0'));
+      let frame = 0;
+      section.addEventListener('pointermove', (event) => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          const rect = section.getBoundingClientRect();
+          const px = (event.clientX - rect.left) / rect.width - 0.5;
+          const py = (event.clientY - rect.top) / rect.height - 0.5;
+          layers.forEach((layer) => {
+            layer.style.setProperty('--px', px.toFixed(3));
+            layer.style.setProperty('--py', py.toFixed(3));
+          });
+        });
+      });
+      section.addEventListener('pointerleave', () => {
+        layers.forEach((layer) => {
+          layer.style.setProperty('--px', '0');
+          layer.style.setProperty('--py', '0');
+        });
+      });
+    }
+  }
+</script>
+
+<script>
+  /* The enquiry dock shows only while none of the opening, closing or footer is on screen. */
+  const dock = document.querySelector<HTMLElement>('[data-dock]');
+  if (dock && 'IntersectionObserver' in window) {
+    const watched = [
+      document.querySelector('[data-presence]'),
+      document.querySelector('.zen-ask'),
+      document.querySelector('footer'),
+    ].filter((el): el is Element => el !== null);
+    const onScreen = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) onScreen.add(entry.target);
+        else onScreen.delete(entry.target);
+      }
+      const show = onScreen.size === 0;
+      dock.dataset.visible = String(show);
+      dock.toggleAttribute('inert', !show);
+    });
+    watched.forEach((el) => observer.observe(el));
+  }
+</script>

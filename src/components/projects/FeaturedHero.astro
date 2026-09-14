@@ -15,6 +15,11 @@ import { pad } from '@lib/format';
  * photograph is decoded before it is needed. Movement is CSS only: entering
  * text is animated rather than transitioned, which is what lets the same
  * keyframes replay each time a slide becomes active.
+ *
+ * On load the frame wipes open and the index panel rises into place. Slides
+ * then advance on their own, with the active number's hairline counting down
+ * the interval; the pointer over the band, keyboard focus inside it or
+ * scrolling it away holds the count. Reduced motion turns all of it off.
  */
 
 interface Props {
@@ -63,21 +68,21 @@ const slides = projects.map((project, index) => {
   aria-label="Featured projects"
 >
   <div
-    class="lg:grid lg:min-h-[min(88vh,900px)] lg:grid-cols-[minmax(0,35fr)_minmax(0,65fr)] lg:items-stretch"
+    class="max-lg:relative max-lg:isolate lg:grid lg:min-h-[min(88vh,900px)] lg:grid-cols-[minmax(0,35fr)_minmax(0,65fr)] lg:items-stretch"
   >
     {/* ----------------------------------------------------------- written */}
     <div
-      class="relative z-10 flex flex-col justify-center px-(--gutter) pt-[clamp(1.75rem,4vh,2.75rem)] pb-[clamp(2.25rem,5vh,3.25rem)] lg:py-[clamp(2.5rem,6vh,4.5rem)] lg:pr-[clamp(1.5rem,2.6vw,2.75rem)]"
+      class="zen-hero-written relative z-10 flex flex-col justify-center px-(--gutter) pt-[clamp(1.75rem,4vh,2.75rem)] pb-[clamp(2.25rem,5vh,3.25rem)] max-lg:pt-14 max-lg:pb-20 lg:py-[clamp(2.5rem,6vh,4.5rem)] lg:pr-[clamp(1.5rem,2.6vw,2.75rem)]"
     >
       {/*
         The page heading, set as the stacked label the reference puts against
         the frame. Small on purpose: the project title is the largest thing on
         the screen, and two display headings would fight.
       */}
-      <h1 class="label leading-[2] text-teal/60">
+      <h1 class="hero-intro label leading-[2] text-teal/60" style="--d:120ms">
         Spaces that hold<br />their composure.
       </h1>
-      <span class="mt-5 block h-px w-12 bg-beige" aria-hidden="true"></span>
+      <span class="hero-intro-rule mt-5 block h-px w-12 bg-beige" aria-hidden="true"></span>
 
       <div class="relative mt-[clamp(1.25rem,2.6vh,2.25rem)] grid">
         {
@@ -163,10 +168,15 @@ const slides = projects.map((project, index) => {
     </div>
 
     {/* ------------------------------------------------------------- framed */}
-    <div class="relative flex flex-col lg:pt-(--hero-top)">
+    {/*
+      Below lg the photograph is the ground of the band, behind the written
+      panel, rather than a second row under it: the same text-on-photograph
+      reading the spread has on a desktop.
+    */}
+    <div class="relative flex flex-col max-lg:absolute max-lg:inset-0 lg:pt-(--hero-top)">
       {/* Dark flag hung from the top edge, breaking the ivory band. */}
       <span
-        class="absolute top-0 right-[calc(var(--hero-panel-right)+var(--hero-panel-w)+clamp(2rem,5vw,5rem))] hidden h-(--hero-top) w-[clamp(3.5rem,6vw,7rem)] bg-teal lg:block"
+        class="hero-flag absolute top-0 right-[calc(var(--hero-panel-right)+var(--hero-panel-w)+clamp(2rem,5vw,5rem))] hidden h-(--hero-top) w-[clamp(3.5rem,6vw,7rem)] origin-top bg-teal lg:block"
         aria-hidden="true"></span>
 
       {/*
@@ -175,9 +185,18 @@ const slides = projects.map((project, index) => {
         on desktop instead of filling the space the grid row gives it.
       */}
       <div
-        class="relative flex aspect-[4/5] w-full overflow-hidden bg-stone sm:aspect-[16/10] lg:aspect-auto lg:flex-1"
+        class="hero-frame relative flex aspect-[4/5] w-full overflow-hidden bg-stone sm:aspect-[16/10] max-lg:aspect-auto max-lg:h-full lg:aspect-auto lg:flex-1"
         data-hero-frame
       >
+        {/* Where you are, set on the photograph for screens without the index panel. */}
+        <span
+          class="label absolute top-4 right-4 z-[2] flex items-center gap-1.5 rounded-full bg-ink/35 px-3.5 py-2 text-ivory tabular-nums backdrop-blur-sm lg:hidden"
+          aria-hidden="true"
+        >
+          <span data-hero-count>01</span>
+          <span class="text-ivory/55">/ {pad(total)}</span>
+        </span>
+
         <div class="absolute inset-0 grid overflow-hidden" data-hero-parallax>
           {
             slides.map((slide) => (
@@ -204,8 +223,16 @@ const slides = projects.map((project, index) => {
         >
         </div>
 
+        {/* Below lg only: the wash that holds the written panel's ivory type. */}
         <div
-          class="relative mt-auto grid w-full items-end gap-6 p-[clamp(1.25rem,2.6vw,2.5rem)] sm:grid-cols-[auto_minmax(0,1fr)] lg:pr-[calc(var(--hero-panel-right)+var(--hero-panel-w)+1.5rem)]"
+          class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-ink/90 via-ink/62 to-ink/45 lg:hidden"
+          aria-hidden="true"
+        >
+        </div>
+
+        {/* The written panel already carries the project link below lg. */}
+        <div
+          class="relative mt-auto grid w-full items-end gap-6 p-[clamp(1.25rem,2.6vw,2.5rem)] max-lg:hidden sm:grid-cols-[auto_minmax(0,1fr)] lg:pr-[calc(var(--hero-panel-right)+var(--hero-panel-w)+1.5rem)]"
         >
           <div class="grid">
             {
@@ -262,7 +289,7 @@ const slides = projects.map((project, index) => {
 
       {/* ------------------------------------------------------- index panel */}
       <div
-        class="absolute right-(--hero-panel-right) bottom-0 hidden w-(--hero-panel-w) flex-col items-center bg-teal pt-[clamp(1.75rem,3.4vh,2.75rem)] pb-[clamp(1.5rem,3vh,2.5rem)] lg:flex"
+        class="hero-panel absolute right-(--hero-panel-right) bottom-0 hidden w-(--hero-panel-w) flex-col items-center bg-teal pt-[clamp(1.75rem,3.4vh,2.75rem)] pb-[clamp(1.5rem,3vh,2.5rem)] lg:flex"
         style="top: calc(var(--hero-top) + clamp(2.5rem, 7vh, 5.5rem))"
       >
         <div
@@ -282,7 +309,7 @@ const slides = projects.map((project, index) => {
               >
                 {pad(slide.index + 1)}
                 <span
-                  class="absolute inset-x-1 -bottom-1 h-px origin-left scale-x-0 bg-brass-soft transition-transform duration-700 ease-(--ease-zen)"
+                  class="hero-dot-rule absolute inset-x-1 -bottom-1 h-px origin-left bg-brass-soft"
                   data-hero-dot-rule
                   aria-hidden="true"
                 />
@@ -309,7 +336,7 @@ const slides = projects.map((project, index) => {
   </div>
 
   {/* Running order for narrow screens, where the panel is not rendered. */}
-  <div class="flex items-center gap-4 px-(--gutter) pt-6 pb-2 lg:hidden">
+  <div class="hero-intro flex items-center gap-4 px-(--gutter) pt-6 pb-2 lg:hidden" style="--d:700ms">
     {
       slides.map((slide) => (
         <button
@@ -317,9 +344,17 @@ const slides = projects.map((project, index) => {
           data-hero-dot={slide.index}
           aria-label={`${slide.data.title}, project ${slide.index + 1} of ${total}`}
           aria-current={slide.index === 0 ? 'true' : 'false'}
-          class="label flex-1 border-t border-beige pt-3 text-left text-teal/50 transition-colors duration-500 aria-[current=true]:border-brass aria-[current=true]:text-teal"
+          class="label relative flex-1 border-t border-beige py-3 text-left text-teal/50 transition-colors duration-500 aria-[current=true]:text-teal"
         >
+          <span
+            class="hero-dot-rule absolute inset-x-0 -top-px h-px origin-left bg-brass"
+            data-hero-dot-rule
+            aria-hidden="true"
+          />
           {pad(slide.index + 1)}
+          <span class="mt-1.5 block truncate text-[0.625rem] tracking-[0.14em] normal-case opacity-0 transition-opacity duration-500 sm:opacity-100">
+            {slide.data.location}
+          </span>
         </button>
       ))
     }
@@ -354,7 +389,25 @@ const slides = projects.map((project, index) => {
   }
 
   [data-hero-image][data-active] {
+    z-index: 1;
     opacity: 1;
+  }
+
+  /* The outgoing photograph holds underneath while the next one wipes across. */
+  [data-hero-image][data-leaving] {
+    opacity: 1;
+    transition: none;
+  }
+
+  /* Running-order hairlines: full on the active number. */
+  .hero-dot-rule {
+    transform: scaleX(0);
+    transition: transform 700ms var(--ease-zen);
+  }
+
+  [aria-selected='true'] > .hero-dot-rule,
+  [aria-current='true'] > .hero-dot-rule {
+    transform: scaleX(1);
   }
 
   /* Vertical rules between the fact cells, following the column count. */
@@ -419,6 +472,143 @@ const slides = projects.map((project, index) => {
 
     .hero-cue {
       animation: hero-cue 2600ms var(--ease-zen) infinite;
+    }
+
+    /* ---- load ---- */
+    .hero-intro {
+      animation: hero-in 1000ms var(--ease-zen-out) var(--d, 0ms) both;
+    }
+
+    .hero-intro-rule {
+      transform-origin: left center;
+      animation: hero-rule-in 1100ms var(--ease-zen-out) 260ms both;
+    }
+
+    .hero-frame {
+      animation: hero-frame-in 1500ms var(--ease-zen-out) 60ms both;
+    }
+
+    .hero-flag {
+      animation: hero-flag-in 1000ms var(--ease-zen-out) 900ms both;
+    }
+
+    .hero-panel {
+      animation: hero-panel-in 1300ms var(--ease-zen-out) 520ms both;
+    }
+
+    /* ---- slide change ---- */
+    [data-hero-image][data-active][data-wipe] {
+      animation: hero-wipe 1250ms var(--ease-zen-out) both;
+    }
+
+    /* ---- autoplay: the active hairline counts down the interval ---- */
+    [data-hero][data-autoplay] [aria-selected='true'] > .hero-dot-rule,
+    [data-hero][data-autoplay] [aria-current='true'] > .hero-dot-rule {
+      transition: none;
+      animation: hero-count var(--hero-cycle, 7000ms) linear both;
+    }
+
+    [data-hero][data-paused] .hero-dot-rule {
+      animation-play-state: paused;
+    }
+  }
+
+  /*
+    Below lg the written panel sits on the photograph, so its type turns ivory.
+    Scoped, unlayered rules outrank the utility colours; none of this reaches
+    lg, where the panel sits on ivory beside the frame.
+  */
+  @media (width < 64rem) {
+    .zen-hero-written .label {
+      color: color-mix(in srgb, var(--color-ivory) 80%, transparent);
+    }
+
+    .zen-hero-written h2 .text-teal {
+      color: var(--color-ivory);
+    }
+
+    .zen-hero-written h2 .text-brass {
+      color: var(--color-brass-soft);
+    }
+
+    .zen-hero-written p:not(.label),
+    .zen-hero-written dd {
+      color: color-mix(in srgb, var(--color-ivory) 90%, transparent);
+    }
+
+    .zen-hero-written .bg-beige,
+    .zen-hero-written [class*='bg-teal/'] {
+      background-color: color-mix(in srgb, var(--color-ivory) 30%, transparent);
+    }
+
+    .zen-hero-written a[data-hero-link] {
+      border-color: color-mix(in srgb, var(--color-ivory) 55%, transparent);
+      color: var(--color-ivory);
+    }
+
+    .zen-hero-written .hero-facts > * {
+      border-left-color: color-mix(in srgb, var(--color-ivory) 25%, transparent);
+    }
+  }
+
+  /* The mobile running order names each place once there is room for it. */
+  [aria-current='true'] > span.truncate {
+    opacity: 1;
+  }
+
+  @keyframes hero-frame-in {
+    from {
+      clip-path: inset(0 0 0 100%);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes hero-wipe {
+    from {
+      clip-path: inset(0 0 0 100%);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes hero-flag-in {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes hero-panel-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 3rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes hero-rule-in {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes hero-count {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
     }
   }
 
@@ -485,15 +675,31 @@ const slides = projects.map((project, index) => {
     const images = Array.from(root.querySelectorAll<HTMLElement>('[data-hero-image]'));
     const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-hero-dot]'));
     const live = root.querySelector<HTMLElement>('[data-hero-live]');
+    const count = root.querySelector<HTMLElement>('[data-hero-count]');
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const total = images.length;
 
     if (total > 0) {
       let current = 0;
+      let leaving = 0;
 
       const show = (next: number, announce = true) => {
         const index = (next + total) % total;
         if (index === current && announce) return;
+
+        if (index !== current) {
+          const outgoing = images[current];
+          window.clearTimeout(leaving);
+          images.forEach((image) => image.removeAttribute('data-leaving'));
+          if (outgoing && !calm) {
+            outgoing.setAttribute('data-leaving', '');
+            leaving = window.setTimeout(() => outgoing.removeAttribute('data-leaving'), 1300);
+          }
+          images[index]?.setAttribute('data-wipe', '');
+        }
+
         current = index;
+        if (count) count.textContent = String(current + 1).padStart(2, '0');
 
         for (const node of [...panels, ...images]) {
           const key = node.dataset.heroPanel ?? node.dataset.heroImage;
@@ -514,16 +720,7 @@ const slides = projects.map((project, index) => {
           const active = Number(dot.dataset.heroDot) === current;
           if (dot.hasAttribute('role')) dot.setAttribute('aria-selected', String(active));
           else dot.setAttribute('aria-current', String(active));
-          const rule = dot.querySelector<HTMLElement>('[data-hero-dot-rule]');
-          if (rule) rule.style.transform = active ? 'scaleX(1)' : 'scaleX(0)';
         }
-
-        /* The rail listens for this and withholds whatever is on screen here. */
-        document.dispatchEvent(
-          new CustomEvent('zen:hero-change', {
-            detail: { id: images[current]?.dataset.project },
-          }),
-        );
 
         if (announce && live) {
           const title =
@@ -546,8 +743,12 @@ const slides = projects.map((project, index) => {
         }
       });
 
-      /* Swipe, on the photograph only. Touch and pen; the mouse has the index. */
-      const frame = root.querySelector<HTMLElement>('[data-hero-frame]');
+      /*
+        Swipe, anywhere on the band. Touch and pen; the mouse has the index.
+        Below lg the written panel sits over the photograph, so listening on
+        the frame alone would miss every swipe that lands on the type.
+      */
+      const frame: HTMLElement | null = root;
       let startX = 0;
       let startY = 0;
       let tracking = false;
@@ -577,6 +778,42 @@ const slides = projects.map((project, index) => {
       );
 
       show(0, false);
+
+      /*
+        Autoplay. The countdown is the CSS animation on the active hairline, so
+        pausing is a single attribute and the next slide follows its end.
+      */
+      if (!calm && total > 1) {
+        root.setAttribute('data-autoplay', '');
+        const holds = new Set<string>();
+        const hold = (key: string, on: boolean) => {
+          if (on) holds.add(key);
+          else holds.delete(key);
+          root.toggleAttribute('data-paused', holds.size > 0);
+        };
+
+        if (window.matchMedia('(hover: hover)').matches) {
+          root.addEventListener('pointerenter', () => hold('pointer', true));
+          root.addEventListener('pointerleave', () => hold('pointer', false));
+        }
+        root.addEventListener('focusin', (event) =>
+          hold('focus', (event.target as HTMLElement).matches(':focus-visible')),
+        );
+        root.addEventListener('focusout', () => hold('focus', false));
+        document.addEventListener('visibilitychange', () => hold('tab', document.hidden));
+
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(([entry]) => hold('view', !entry?.isIntersecting), {
+            threshold: 0.4,
+          }).observe(root);
+        }
+
+        root.addEventListener('animationend', (event) => {
+          if ((event.target as HTMLElement).matches('[data-hero-dot-rule]')) {
+            show(current + 1, false);
+          }
+        });
+      }
     }
 
     /*

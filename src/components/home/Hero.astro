@@ -119,7 +119,8 @@ const capabilities = [
   >
     <p class="label flex flex-wrap items-center gap-3 text-brass-soft" data-hero-line style="--line: 0">
       <span>Zen Interior</span>
-      <span class="opacity-50" aria-hidden="true">&#183;</span>
+      {/* The separator only makes sense on one line; a phone wraps the label. */}
+      <span class="opacity-50 max-sm:hidden" aria-hidden="true">&#183;</span>
       <span>Design &nbsp;|&nbsp; Furnish &nbsp;|&nbsp; Execute</span>
     </p>
 

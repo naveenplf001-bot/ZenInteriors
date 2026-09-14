@@ -34,7 +34,13 @@ import materialsImage from '@/assets/images/home/materials.jpg';
           {
             materials.map((material) => (
               <Reveal as="li">
-                <div class="flex flex-wrap items-baseline gap-x-5 gap-y-1 border-t border-beige py-4">
+                {/* Stacked on a phone, so every row reads the same way rather
+                    than short notes wrapping up beside their name. */}
+                <div class="group relative flex flex-wrap items-baseline gap-x-5 gap-y-1 border-t border-beige py-4 max-sm:flex-col max-sm:items-start">
+                  <span
+                    class="pointer-events-none absolute inset-x-0 -top-px block h-px origin-left scale-x-0 bg-brass transition-transform duration-700 ease-(--ease-zen) group-hover:scale-x-100"
+                    aria-hidden="true"
+                  />
                   <span class="font-display text-display-sm text-teal">{material.name}</span>
                   <span class="text-micro text-charcoal/68">{material.note}</span>
                 </div>
@@ -53,7 +59,7 @@ import materialsImage from '@/assets/images/home/materials.jpg';
               widths={[640, 1024, 1400, 1800]}
               sizes="(min-width: 1024px) 46vw, 92vw"
               loading="lazy"
-              class="h-full w-full object-cover"
+              class="zen-parallax h-full w-full object-cover"
             />
           </div>
         </Reveal>

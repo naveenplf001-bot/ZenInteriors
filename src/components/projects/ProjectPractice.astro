@@ -1,0 +1,683 @@
+---
+import { Image } from 'astro:assets';
+
+import Container from '@components/ui/Container.astro';
+import Eyebrow from '@components/ui/Eyebrow.astro';
+import Reveal from '@components/ui/Reveal.astro';
+import SectionNumber from '@components/ui/SectionNumber.astro';
+import SplitHeading from '@components/ui/SplitHeading.astro';
+import { pad } from '@lib/format';
+
+import thresholdImage from '@/assets/images/projects/the-emerald-residence/01-threshold.jpg';
+import marbleImage from '@/assets/images/projects/the-quiet-villa/01-living-volume.jpg';
+import lacquerImage from '@/assets/images/projects/the-slate-apartment/02-kitchen-detail.jpg';
+import detailImage from '@/assets/images/projects/the-emerald-residence/06-bedroom-detail.jpg';
+
+/**
+ * The practice behind the portfolio.
+ *
+ * The hero shows the work and the index lists all of it, so this section does
+ * not list projects a third time. It states what every project shares: the
+ * portfolio in figures, four working principles each shown against a detail
+ * photographed on site, and the material palette the work returns to.
+ *
+ * The principles behave as a small tabbed figure. On a desktop they advance on
+ * their own while the section is on screen, with a hairline counting down the
+ * active one; hovering or focusing the list holds it. On a touchscreen they
+ * change only when tapped, so nothing moves under a reading thumb.
+ */
+
+interface Props {
+  /** Portfolio figures. Two-digit values count up as they arrive. */
+  stats?: Array<{ label: string; value: string }>;
+}
+
+const { stats = [] } = Astro.props;
+
+/* Two-digit figures count up; a year does not. */
+const figures = stats.map((stat) => ({ ...stat, countable: /^\d{2}$/.test(stat.value) }));
+
+const principles = [
+  {
+    title: 'Architecture before furniture',
+    description:
+      'Storage, seating and light are built into the structure first, so a finished room needs very little added to it.',
+    image: thresholdImage,
+    alt: 'Shaped timber archway framing the dining and tea area beyond',
+    note: 'Structural joinery, not an applique',
+  },
+  {
+    title: 'Materials chosen at source',
+    description:
+      'Stone is selected slab by slab and numbered before it ships, so a vein runs unbroken from the console line to the ceiling.',
+    image: marbleImage,
+    alt: 'Double-height living volume with a book-matched marble elevation',
+    note: 'Book-matched across the full height',
+  },
+  {
+    title: 'Finished off site',
+    description:
+      'Joinery is dry-fitted and lacquer sprayed and cured in the workshop, where a surface can be controlled and a joint can be removed.',
+    image: lacquerImage,
+    alt: 'Handleless grey lacquer kitchen with a formed curved return',
+    note: 'Formed returns, no visible joint',
+  },
+  {
+    title: 'One team to handover',
+    description:
+      'Design, sourcing and every trade on site are sequenced by one accountable team, from the first drawing to the last detail.',
+    image: detailImage,
+    alt: 'Bedroom detail showing the headboard panel, side table and reading light',
+    note: 'Lighting set within the joinery',
+  },
+];
+
+/* The palette the work keeps returning to, read as one line. */
+const palette = [
+  'Book-matched marble',
+  'Fluted walnut',
+  'Antique bronze',
+  'European oak',
+  'Cane & rattan',
+  'Lime-washed plaster',
+  'Grey lacquer',
+  'Undyed linen',
+];
+---
+
+<section
+  id="practice"
+  class="zen-practice relative isolate scroll-mt-(--header-h) overflow-hidden border-t border-beige/60 bg-ivory-warm"
+  data-practice
+>
+  <Container class="section-tight">
+    {/* --------------------------------------------------------- heading row */}
+    <div class="grid gap-y-6 lg:grid-cols-12 lg:items-end lg:gap-x-10">
+      <div class="lg:col-span-6">
+        <Reveal variant="fade">
+          <SectionNumber value="02" />
+        </Reveal>
+        <Reveal variant="fade" class="mt-4">
+          <Eyebrow>The Practice</Eyebrow>
+        </Reveal>
+        <SplitHeading
+          lines={['Different rooms,', 'one standard.']}
+          accentFrom={1}
+          accentItalic
+          class="mt-6"
+        />
+      </div>
+
+      <div class="lg:col-span-5 lg:col-start-8">
+        <Reveal>
+          <p class="max-w-[44ch] text-small leading-[1.8] text-charcoal/78 sm:text-body">
+            A private residence, a villa and an apartment look nothing alike. What they share
+            is the way they were made: the same order of decisions, the same care over
+            materials, and the same team from drawing to handover.
+          </p>
+        </Reveal>
+      </div>
+    </div>
+
+    {/* ------------------------------------------------------------- figures */}
+    {
+      figures.length > 0 && (
+        <dl
+          class="mt-(--stack-lg) grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-0"
+          data-reveal-group="80"
+        >
+          {figures.map((stat, index) => (
+            <Reveal>
+              <div
+                class:list={[
+                  'zen-practice__stat relative h-full pt-5 max-sm:rounded-zen max-sm:border max-sm:border-beige/80 max-sm:bg-ivory max-sm:px-4 max-sm:pb-4',
+                  index > 0 && 'sm:border-l sm:border-beige/80 sm:pl-[clamp(1rem,2vw,2rem)]',
+                ]}
+              >
+                <span
+                  class="zen-practice__rule absolute inset-x-0 top-0 h-px bg-teal/15 max-sm:hidden"
+                  aria-hidden="true"
+                />
+                <dt class="label text-teal/60">{stat.label}</dt>
+                <dd
+                  class="mt-3 font-display text-[clamp(2.25rem,1.6rem+2.4vw,3.5rem)] leading-none font-light text-teal tabular-nums"
+                  data-count={stat.countable ? stat.value : undefined}
+                >
+                  {stat.value}
+                </dd>
+              </div>
+            </Reveal>
+          ))}
+        </dl>
+      )
+    }
+
+    {/* ---------------------------------------------------------- principles */}
+    <div
+      class="mt-(--section-y-tight) grid gap-y-8 lg:grid-cols-12 lg:items-center lg:gap-x-10"
+    >
+      <div class="lg:col-span-6">
+        <Reveal variant="clip">
+          <figure
+            class="zen-practice__frame relative aspect-[4/3.3] overflow-hidden rounded-zen bg-stone sm:aspect-[16/11] lg:aspect-[4/3.7]"
+          >
+            {
+              principles.map((principle, index) => (
+                <div
+                  class="zen-practice__image absolute inset-0"
+                  data-principle-image={index}
+                  data-active={index === 0 ? '' : undefined}
+                >
+                  <Image
+                    src={principle.image}
+                    alt={principle.alt}
+                    widths={[480, 800, 1100, 1400]}
+                    sizes="(min-width: 1024px) 46vw, 92vw"
+                    loading="lazy"
+                    class="zen-parallax h-full w-full object-cover"
+                  />
+                </div>
+              ))
+            }
+
+            <div
+              class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/55 via-ink/0 to-transparent"
+              aria-hidden="true"
+            >
+            </div>
+
+            <figcaption
+              class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 p-[clamp(1rem,2.2vw,1.75rem)] text-ivory"
+            >
+              <span class="grid">
+                {
+                  principles.map((principle, index) => (
+                    <span
+                      class="zen-practice__note col-start-1 row-start-1 font-display text-[clamp(1.0625rem,0.95rem+0.5vw,1.375rem)] leading-[1.3] italic"
+                      data-principle-note={index}
+                      data-active={index === 0 ? '' : undefined}
+                    >
+                      {principle.note}
+                    </span>
+                  ))
+                }
+              </span>
+              <span class="label shrink-0 tabular-nums text-ivory/80" aria-hidden="true">
+                <span data-principle-current>01</span>
+                <span class="text-ivory/50"> / {pad(principles.length)}</span>
+              </span>
+            </figcaption>
+
+            {/* Brass corner marks, the way a drawing frames its sheet. */}
+            <span class="zen-practice__corner top-3 left-3 border-t border-l" aria-hidden="true"
+            ></span>
+            <span class="zen-practice__corner top-3 right-3 border-t border-r" aria-hidden="true"
+            ></span>
+          </figure>
+        </Reveal>
+      </div>
+
+      <div class="lg:col-span-5 lg:col-start-8">
+        <ol class="border-b border-beige" data-principles data-reveal-group="90">
+          {
+            principles.map((principle, index) => (
+              <Reveal as="li" class="zen-principle relative border-t border-beige" >
+                <div data-principle={index} data-active={index === 0 ? '' : undefined}>
+                  <h3>
+                    <button
+                      type="button"
+                      class="group flex w-full items-center gap-5 py-5 text-left sm:py-6"
+                      aria-expanded={index === 0 ? 'true' : 'false'}
+                      aria-controls={`principle-${index}`}
+                      data-principle-button={index}
+                    >
+                      <span class="zen-principle__index label w-6 shrink-0 tabular-nums">
+                        {pad(index + 1)}
+                      </span>
+                      <span class="zen-principle__title flex-1 font-display text-[clamp(1.3125rem,1.1rem+0.8vw,1.75rem)] leading-[1.2]">
+                        {principle.title}
+                      </span>
+                      <span
+                        class="zen-principle__toggle relative h-8 w-8 shrink-0 rounded-full border"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </h3>
+
+                  <div class="zen-principle__panel" id={`principle-${index}`}>
+                    <div class="overflow-hidden">
+                      <p class="max-w-[46ch] pb-6 pl-11 text-small leading-[1.8] text-charcoal/78">
+                        {principle.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  <span
+                    class="zen-principle__bar absolute -top-px left-0 h-px w-full origin-left bg-brass"
+                    aria-hidden="true"
+                  />
+                </div>
+              </Reveal>
+            ))
+          }
+        </ol>
+
+        <Reveal
+          variant="fade"
+          class="mt-9 flex flex-wrap items-center gap-x-8 gap-y-5 max-sm:[&>a:first-child]:w-full max-sm:[&>a:first-child]:justify-center"
+        >
+          <a
+            href="#index"
+            class="zen-practice__cta label group relative inline-flex items-center gap-4 overflow-hidden rounded-zen bg-teal px-7 py-4 text-ivory"
+          >
+            <span class="relative z-10">Browse the Index</span>
+            <span
+              class="relative z-10 inline-block transition-transform duration-500 ease-(--ease-zen) group-hover:translate-y-0.5"
+              aria-hidden="true">&#8595;</span
+            >
+          </a>
+          <a
+            href="/services"
+            class="label group inline-flex items-center gap-4 text-teal transition-colors duration-300 hover:text-brass"
+          >
+            What we make
+            <span
+              class="block h-px w-8 origin-left bg-beige transition-[transform,background-color] duration-500 ease-(--ease-zen) group-hover:scale-x-150 group-hover:bg-brass"
+              aria-hidden="true"></span>
+          </a>
+        </Reveal>
+      </div>
+    </div>
+  </Container>
+
+  {/* ------------------------------------------------------------- palette */}
+  <div class="zen-ribbon relative border-t border-beige/70 py-5 sm:py-6" aria-label="Material palette">
+    <ul class="zen-ribbon__track flex w-max items-center">
+      {
+        [0, 1].map((copy) =>
+          palette.map((material) => (
+            <li
+              class="flex shrink-0 items-center font-display text-[clamp(1.375rem,1.1rem+1.2vw,2.25rem)] leading-none text-teal/80 italic"
+              aria-hidden={copy === 1 ? 'true' : undefined}
+            >
+              <span class="px-[clamp(1.25rem,2.4vw,2.5rem)]">{material}</span>
+              <span class="h-1.5 w-1.5 rotate-45 bg-brass" aria-hidden="true" />
+            </li>
+          )),
+        )
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* ------------------------------------------------------------- figures */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .zen-practice__rule {
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 1100ms var(--ease-zen-out) 200ms;
+    }
+
+    :global(html.js .is-revealed) > .zen-practice__stat .zen-practice__rule,
+    :global(html.js .is-revealed) .zen-practice__rule {
+      transform: scaleX(1);
+    }
+  }
+
+  /* ---------------------------------------------------------- image stack */
+  .zen-practice__image {
+    opacity: 0;
+    transition: opacity 700ms var(--ease-zen);
+  }
+
+  .zen-practice__image[data-active] {
+    z-index: 1;
+    opacity: 1;
+  }
+
+  /* The outgoing frame stays put underneath while the new one wipes across. */
+  .zen-practice__image[data-leaving] {
+    opacity: 1;
+    transition: none;
+  }
+
+  .zen-practice__note {
+    opacity: 0;
+    transform: translate3d(0, 0.5rem, 0);
+    transition:
+      opacity 500ms var(--ease-zen),
+      transform 700ms var(--ease-zen-out);
+  }
+
+  .zen-practice__note[data-active] {
+    opacity: 1;
+    transform: none;
+    transition-delay: 250ms;
+  }
+
+  .zen-practice__corner {
+    position: absolute;
+    z-index: 2;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-color: color-mix(in srgb, var(--color-brass-soft) 80%, transparent);
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .zen-practice__image[data-active][data-wipe] {
+      animation: zen-practice-wipe 1100ms var(--ease-zen-out) both;
+    }
+
+    .zen-practice__image[data-active][data-wipe] :global(img) {
+      animation: zen-practice-settle 1600ms var(--ease-zen-out) both;
+    }
+  }
+
+  /* ----------------------------------------------------------- principles */
+  .zen-principle__index {
+    color: color-mix(in srgb, var(--color-teal) 45%, transparent);
+    transition: color 400ms var(--ease-zen);
+  }
+
+  .zen-principle__title {
+    color: color-mix(in srgb, var(--color-teal) 62%, transparent);
+    transition:
+      color 400ms var(--ease-zen),
+      transform 600ms var(--ease-zen);
+  }
+
+  .zen-principle__toggle {
+    border-color: var(--color-beige);
+    transition:
+      border-color 400ms var(--ease-zen),
+      background-color 400ms var(--ease-zen),
+      transform 600ms var(--ease-zen);
+  }
+
+  /* A plus that turns into a minus. */
+  .zen-principle__toggle::before,
+  .zen-principle__toggle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.625rem;
+    height: 1px;
+    margin: 0 0 0 -0.3125rem;
+    background: var(--color-teal);
+    transition:
+      transform 500ms var(--ease-zen),
+      background-color 400ms var(--ease-zen);
+  }
+
+  .zen-principle__toggle::after {
+    transform: rotate(90deg);
+  }
+
+  [data-principle][data-active] .zen-principle__index {
+    color: var(--color-brass);
+  }
+
+  [data-principle][data-active] .zen-principle__title {
+    color: var(--color-teal);
+  }
+
+  [data-principle][data-active] .zen-principle__toggle {
+    border-color: var(--color-teal);
+    background: var(--color-teal);
+    transform: rotate(180deg);
+  }
+
+  [data-principle][data-active] .zen-principle__toggle::before,
+  [data-principle][data-active] .zen-principle__toggle::after {
+    background: var(--color-ivory);
+  }
+
+  [data-principle][data-active] .zen-principle__toggle::after {
+    transform: rotate(0deg);
+  }
+
+  .zen-principle__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 650ms var(--ease-zen);
+  }
+
+  [data-principle][data-active] .zen-principle__panel {
+    grid-template-rows: 1fr;
+  }
+
+  .zen-principle__panel p {
+    opacity: 0;
+    transform: translate3d(0, -0.375rem, 0);
+    transition:
+      opacity 400ms var(--ease-zen),
+      transform 600ms var(--ease-zen);
+  }
+
+  [data-principle][data-active] .zen-principle__panel p {
+    opacity: 1;
+    transform: none;
+    transition-delay: 150ms;
+  }
+
+  /* The active principle's hairline: full when still, a countdown when cycling. */
+  .zen-principle__bar {
+    transform: scaleX(0);
+    transition: transform 700ms var(--ease-zen);
+  }
+
+  [data-principle][data-active] .zen-principle__bar {
+    transform: scaleX(1);
+  }
+
+  @media (hover: hover) {
+    [data-principle]:not([data-active]) button:hover .zen-principle__title {
+      color: var(--color-teal);
+      transform: translate3d(0.375rem, 0, 0);
+    }
+
+    [data-principle]:not([data-active]) button:hover .zen-principle__toggle {
+      border-color: color-mix(in srgb, var(--color-teal) 45%, transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [data-practice][data-autoplay] [data-principle][data-active] .zen-principle__bar {
+      transition: none;
+      animation: zen-practice-count var(--cycle, 6000ms) linear both;
+    }
+
+    [data-practice][data-paused] [data-principle][data-active] .zen-principle__bar {
+      animation-play-state: paused;
+    }
+  }
+
+  /* ------------------------------------------------------------------ CTA */
+  .zen-practice__cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-teal-soft);
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 600ms var(--ease-zen);
+  }
+
+  @media (hover: hover) {
+    .zen-practice__cta:hover::before {
+      transform: scaleX(1);
+      transform-origin: left center;
+    }
+  }
+
+  /* --------------------------------------------------------------- ribbon */
+  .zen-ribbon {
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .zen-ribbon__track {
+      animation: zen-practice-ribbon 48s linear infinite;
+    }
+
+    @media (hover: hover) {
+      .zen-ribbon:hover .zen-ribbon__track {
+        animation-play-state: paused;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zen-ribbon {
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+  }
+
+  @keyframes zen-practice-wipe {
+    from {
+      clip-path: inset(0 0 0 100%);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes zen-practice-settle {
+    from {
+      transform: scale(1.12);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes zen-practice-count {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes zen-practice-ribbon {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Principles, figures and the autoplay that ties the list to the photograph.
+   * Without JavaScript the first principle is open and the rest read as titles.
+   */
+  const root = document.querySelector<HTMLElement>('[data-practice]');
+
+  if (root) {
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const items = Array.from(root.querySelectorAll<HTMLElement>('[data-principle]'));
+    const images = Array.from(root.querySelectorAll<HTMLElement>('[data-principle-image]'));
+    const notes = Array.from(root.querySelectorAll<HTMLElement>('[data-principle-note]'));
+    const current = root.querySelector<HTMLElement>('[data-principle-current]');
+    const list = root.querySelector<HTMLElement>('[data-principles]');
+    let active = 0;
+    let leaving = 0;
+
+    const select = (next: number) => {
+      const index = (next + items.length) % items.length;
+      if (index === active) return;
+
+      const previous = images[active];
+      window.clearTimeout(leaving);
+      images.forEach((image) => image.removeAttribute('data-leaving'));
+      if (previous && !calm) {
+        previous.setAttribute('data-leaving', '');
+        leaving = window.setTimeout(() => previous.removeAttribute('data-leaving'), 1150);
+      }
+
+      active = index;
+      const toggle = (nodes: HTMLElement[]) =>
+        nodes.forEach((node, i) => node.toggleAttribute('data-active', i === active));
+      toggle(items);
+      toggle(images);
+      toggle(notes);
+      images[active]?.setAttribute('data-wipe', '');
+
+      items.forEach((item, i) =>
+        item.querySelector('button')?.setAttribute('aria-expanded', String(i === active)),
+      );
+      if (current) current.textContent = String(active + 1).padStart(2, '0');
+    };
+
+    items.forEach((item, index) => {
+      item.querySelector('button')?.addEventListener('click', () => select(index));
+    });
+
+    /*
+      Desktop only: advance when the active hairline finishes counting. Holding
+      the pointer or focus in the list pauses it, and so does scrolling away.
+    */
+    const cycles =
+      !calm && window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 64rem)').matches;
+
+    if (cycles && list) {
+      root.setAttribute('data-autoplay', '');
+      const holds = new Set<string>();
+      const sync = () => root.toggleAttribute('data-paused', holds.size > 0);
+      const hold = (key: string, on: boolean) => {
+        on ? holds.add(key) : holds.delete(key);
+        sync();
+      };
+
+      list.addEventListener('pointerenter', () => hold('pointer', true));
+      list.addEventListener('pointerleave', () => hold('pointer', false));
+      list.addEventListener('focusin', () => hold('focus', true));
+      list.addEventListener('focusout', () => hold('focus', false));
+
+      new IntersectionObserver(([entry]) => hold('view', !entry?.isIntersecting), {
+        threshold: 0.35,
+      }).observe(list);
+
+      list.addEventListener('animationend', (event) => {
+        if ((event.target as HTMLElement).classList.contains('zen-principle__bar')) {
+          select(active + 1);
+        }
+      });
+    }
+
+    /* Two-digit figures count up the first time they come into view. */
+    const figures = Array.from(root.querySelectorAll<HTMLElement>('[data-count]'));
+    if (!calm && figures.length > 0 && 'IntersectionObserver' in window) {
+      figures.forEach((el) => (el.textContent = '00'));
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            observer.unobserve(entry.target);
+            const el = entry.target as HTMLElement;
+            const target = Number(el.dataset.count);
+            const start = performance.now() + 250;
+            const duration = 1300;
+            const tick = (now: number) => {
+              const t = Math.min(Math.max((now - start) / duration, 0), 1);
+              const eased = 1 - Math.pow(1 - t, 3);
+              el.textContent = String(Math.round(eased * target)).padStart(2, '0');
+              if (t < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          }
+        },
+        { threshold: 0.6 },
+      );
+      figures.forEach((el) => observer.observe(el));
+    }
+  }
+</script>

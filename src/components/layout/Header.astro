@@ -5,38 +5,26 @@ import { primaryNav, primaryAction, isActive } from '@data/navigation';
 
 interface Props {
   /**
-   * overlay — sits transparently over a full-bleed hero, then settles onto a
-   *           deep teal ground on scroll. Type stays ivory throughout, so the
-   *           reversed lockup is correct in both states and only one logo
-   *           file is ever downloaded.
-   * solid   — ivory ground from the first pixel, for pages without a hero.
+   * The header is the same ivory bar with the standard lockup on every page,
+   * so the logo never changes as a visitor moves around the site.
+   *
+   * overlay — a full-bleed hero runs up underneath the bar. Those heroes
+   *           already pad their content by --header-h, so nothing is hidden.
+   * solid   — pages without a hero; the layout pads <main> instead.
    */
   variant?: 'overlay' | 'solid';
 }
 
-const { variant = 'solid' } = Astro.props;
 const pathname = Astro.url.pathname;
 
-const isOverlay = variant === 'overlay';
-
 const shell =
-  'fixed inset-x-0 top-0 z-[50] h-(--header-h) transition-[background-color,border-color,backdrop-filter] duration-500 ease-(--ease-zen)';
-
-const skins = {
-  overlay:
-    'text-ivory border-b border-transparent data-[scrolled=true]:bg-teal/95 data-[scrolled=true]:border-ivory/12 data-[scrolled=true]:backdrop-blur-md',
-  solid: 'bg-ivory text-teal border-b border-beige/70',
-} as const;
-
-const ctaSkin = isOverlay
-  ? 'border-ivory/40 text-ivory hover:bg-ivory hover:text-teal'
-  : 'border-teal/25 text-teal hover:bg-teal hover:text-ivory';
+  'fixed inset-x-0 top-0 z-[50] h-(--header-h) bg-ivory text-teal border-b border-beige/70';
 ---
 
-<header data-header data-scrolled="false" class:list={[shell, skins[variant]]}>
+<header data-header data-scrolled="false" class={shell}>
   <div class="container-zen flex h-full items-center justify-between gap-6">
     <a href="/" class="shrink-0" aria-label="Zen Interior, home">
-      <Logo tone={isOverlay ? 'dark' : 'light'} eager />
+      <Logo tone="light" eager />
     </a>
 
     <nav class="hidden lg:block" aria-label="Primary">
@@ -67,10 +55,7 @@ const ctaSkin = isOverlay
     <div class="flex items-center gap-7">
       <a
         href={primaryAction.href}
-        class:list={[
-          'label hidden shrink-0 rounded-zen border px-6 py-3 transition-colors duration-300 lg:inline-block',
-          ctaSkin,
-        ]}
+        class="label hidden shrink-0 rounded-zen border border-teal/25 px-6 py-3 text-teal transition-colors duration-300 hover:bg-teal hover:text-ivory lg:inline-block"
       >
         {primaryAction.label}
       </a>

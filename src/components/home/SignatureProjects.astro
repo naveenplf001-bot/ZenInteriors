@@ -46,7 +46,7 @@ const slides = projects.map((project, index) => ({
   aria-label="Featured projects"
 >
   <div
-    class="lg:grid lg:min-h-[min(86vh,880px)] lg:grid-cols-[13fr_27fr_47fr_10fr] lg:items-stretch"
+    class="max-lg:relative max-lg:isolate lg:grid lg:min-h-[min(86vh,880px)] lg:grid-cols-[13fr_27fr_47fr_10fr] lg:items-stretch"
   >
     {/* ---------------------------------------------------------- left rail */}
     <div class="relative hidden overflow-hidden bg-ink lg:block">
@@ -80,7 +80,7 @@ const slides = projects.map((project, index) => ({
 
     {/* ------------------------------------------------------------ content */}
     <div
-      class="relative flex flex-col justify-center px-(--gutter) pt-[calc(var(--header-h)+2rem)] pb-12 lg:px-[clamp(2rem,3.4vw,3.5rem)] lg:py-16"
+      class="relative flex flex-col justify-center px-(--gutter) pt-[calc(var(--header-h)+2rem)] pb-12 zen-sp-content max-lg:z-10 max-lg:pt-14 max-lg:pb-24 lg:px-[clamp(2rem,3.4vw,3.5rem)] lg:py-16"
     >
       {/* Watermark numeral, sitting behind the title. */}
       <div class="pointer-events-none absolute inset-y-0 right-0 hidden items-start lg:flex" aria-hidden="true">
@@ -173,8 +173,13 @@ const slides = projects.map((project, index) => ({
     </div>
 
     {/* -------------------------------------------------------------- image */}
-    <div class="relative">
-      <div class="relative grid aspect-[4/3] w-full overflow-hidden bg-stone lg:aspect-auto lg:h-full">
+    {/*
+      Below lg the photograph is the ground of the band rather than a row under
+      the text: it fills the whole slide behind the written panel, the same
+      way the band reads as one composition on a desktop.
+    */}
+    <div class="relative max-lg:absolute max-lg:inset-0">
+      <div class="relative grid aspect-[4/3] w-full overflow-hidden bg-stone max-lg:aspect-auto max-lg:h-full max-lg:grid-rows-[minmax(0,1fr)] lg:aspect-auto lg:h-full">
         {
           slides.map((slide) => (
             <Image
@@ -189,8 +194,16 @@ const slides = projects.map((project, index) => ({
           ))
         }
 
-        {/* Controls, set into the lower right corner of the frame. */}
-        <div class="col-start-1 row-start-1 flex items-end justify-end self-end p-0">
+        {/* Below lg only: the wash that lets ivory type sit on the photograph. */}
+        <div
+          class="pointer-events-none col-start-1 row-start-1 bg-gradient-to-t from-ink/90 via-ink/62 to-ink/40 lg:hidden"
+          aria-hidden="true"
+        >
+        </div>
+
+        {/* Controls, set into the lower right corner of the frame. Held above
+            the written panel below lg, where the panel overlays the frame. */}
+        <div class="col-start-1 row-start-1 flex items-end justify-end self-end p-0 max-lg:relative max-lg:z-20">
           <div class="flex bg-ivory">
             <button
               type="button"
@@ -372,3 +385,40 @@ const slides = projects.map((project, index) => ({
     }
   }
 </script>
+
+<style>
+  /*
+    Below lg the written panel sits on the photograph, so its type turns ivory.
+    Scoped selectors outrank the utility colours, and none of this reaches lg,
+    where the panel sits on ivory beside the frame.
+  */
+  @media (width < 64rem) {
+    .zen-sp-content h3,
+    .zen-sp-content dd {
+      color: var(--color-ivory);
+    }
+
+    .zen-sp-content .label {
+      color: color-mix(in srgb, var(--color-ivory) 80%, transparent);
+    }
+
+    .zen-sp-content p:not(.label) {
+      color: color-mix(in srgb, var(--color-ivory) 88%, transparent);
+    }
+
+    .zen-sp-content .bg-beige,
+    .zen-sp-content [class*='bg-teal/'] {
+      background-color: color-mix(in srgb, var(--color-ivory) 32%, transparent);
+    }
+
+    .zen-sp-content .border-beige {
+      border-color: color-mix(in srgb, var(--color-ivory) 32%, transparent);
+    }
+
+    /* The solid action inverts, so it still reads as the primary one. */
+    .zen-sp-content a.label.bg-teal {
+      background-color: var(--color-ivory);
+      color: var(--color-teal);
+    }
+  }
+</style>

@@ -68,6 +68,7 @@ const cities = site.regions
 
 /* Graticule every degree, drawn from the frame rather than hand-listed. */
 const meridians = [77, 78, 79, 80].map((lon) => x(lon));
+const route = cities.map((entry) => `${entry.cx},${entry.cy}`).join(' ');
 const parallels = [9, 10, 11, 12, 13].map((lat) => y(lat));
 ---
 
@@ -78,7 +79,7 @@ const parallels = [9, 10, 11, 12, 13].map((lat) => y(lat));
     role="img"
     aria-label={`Cities served across ${site.regions.map((region) => region.name).join(' and ')}`}
   >
-    <g stroke="currentColor" class="text-teal/10" stroke-width="0.25">
+    <g stroke="currentColor" class="zen-plot-grid text-teal/10" stroke-width="0.25">
       {meridians.map((mx) => <line x1={mx} y1="0" x2={mx} y2={H} />)}
       {parallels.map((py) => <line x1="0" y1={py} x2={W} y2={py} />)}
     </g>
@@ -91,10 +92,29 @@ const parallels = [9, 10, 11, 12, 13].map((lat) => y(lat));
       <polyline points={`${W - 6},${H} ${W},${H} ${W},${H - 6}`} />
     </g>
 
+    {/* The route, drawn north to south, with a point of light that keeps travelling it. */}
+    <polyline
+      points={route}
+      pathLength="1"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="0.3"
+      class="zen-plot-route text-brass/45"
+    />
+    <polyline
+      points={route}
+      pathLength="1"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="0.6"
+      stroke-linecap="round"
+      class="zen-plot-spark text-brass"
+    />
+
     {
       cities.map((entry) => (
         <g
-          class="zen-plot-pin"
+          class="zen-plot-pin cursor-default"
           style={`--d:${180 + entry.index * 130}ms`}
           data-region={entry.region}
         >
@@ -117,12 +137,13 @@ const parallels = [9, 10, 11, 12, 13].map((lat) => y(lat));
             class="zen-plot-halo text-brass/35"
             stroke-width="0.3"
           />
-          <circle cx={entry.cx} cy={entry.cy} r="1.05" class="fill-brass" />
+          <circle cx={entry.cx} cy={entry.cy} r="4" fill="transparent" />
+          <circle cx={entry.cx} cy={entry.cy} r="1.05" class="zen-plot-dot fill-brass" />
           <text
             x={entry.side === 'left' ? entry.cx - 6.5 : entry.cx + 6.5}
             y={entry.cy + 1.15}
             text-anchor={entry.side === 'left' ? 'end' : 'start'}
-            class="fill-teal font-sans text-[3.2px] tracking-[0.16em] uppercase"
+            class="zen-plot-label fill-teal font-sans text-[3.2px] tracking-[0.16em] uppercase"
           >
             {entry.city}
           </text>
@@ -170,6 +191,88 @@ const parallels = [9, 10, 11, 12, 13].map((lat) => y(lat));
       animation: plot-halo 4200ms var(--ease-zen) calc(var(--d, 0ms) + 900ms) infinite;
       transform-box: fill-box;
       transform-origin: center;
+    }
+  }
+
+  /* Pins answer the pointer: the dot swells and the city turns brass. */
+  .zen-plot-dot,
+  .zen-plot-label {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      transform 500ms var(--ease-zen),
+      fill 400ms var(--ease-zen);
+  }
+
+  .zen-plot-pin:hover .zen-plot-dot {
+    transform: scale(1.7);
+  }
+
+  .zen-plot-pin:hover .zen-plot-label {
+    fill: var(--color-brass);
+  }
+
+  .zen-plot-route {
+    stroke-dasharray: 0.012 0.008;
+  }
+
+  .zen-plot-spark {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .zen-plot-grid,
+    :global(html.js) .zen-plot-route {
+      opacity: 0;
+    }
+
+    :global(.is-revealed) .zen-plot-grid {
+      animation: plot-fade 1400ms var(--ease-zen-out) both;
+    }
+
+    :global(.is-revealed) .zen-plot-route {
+      stroke-dasharray: 1;
+      animation:
+        plot-fade 10ms linear 300ms both,
+        plot-draw 2400ms var(--ease-zen-out) 300ms both;
+    }
+
+    :global(.is-revealed) .zen-plot-spark {
+      stroke-dasharray: 0.035 0.965;
+      animation: plot-spark 6s linear 2.6s infinite;
+    }
+  }
+
+  @keyframes plot-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes plot-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes plot-spark {
+    0% {
+      stroke-dashoffset: 0.035;
+      opacity: 0;
+    }
+    8%,
+    88% {
+      opacity: 0.9;
+    }
+    100% {
+      stroke-dashoffset: -0.965;
+      opacity: 0;
     }
   }
 

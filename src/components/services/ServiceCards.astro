@@ -1,0 +1,280 @@
+---
+import { Image } from 'astro:assets';
+
+import Reveal from '@components/ui/Reveal.astro';
+import { services } from '@data/services';
+import { pad } from '@lib/format';
+
+/**
+ * The service grid.
+ *
+ * Two wide frames, then four portrait frames in a row, on a twelve-column
+ * track. Each card is a photograph with its name set low on a dark wash, so
+ * the grid reads as a wall of rooms rather than a price sheet.
+ *
+ * On a phone the grid becomes a swipe rail: one card and a sliver of the
+ * next, snapped, with a counter and a progress hairline beneath it.
+ *
+ * The frame wipes in through the shared clip reveal. Hover movement lives on a
+ * wrapper around the image, because the reveal already owns the transform on
+ * the <img> itself.
+ */
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<ul
+  class:list={['zen-rail grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-12 lg:gap-4', className]}
+  data-reveal-group="90"
+  data-service-rail
+>
+  {
+    services.map((service, index) => {
+      const wide = index < 2;
+      return (
+        <li class:list={[wide ? 'lg:col-span-6' : 'lg:col-span-6 xl:col-span-3', 'min-w-0']}>
+          <Reveal variant="clip">
+            <a
+              href="/contact"
+              class:list={[
+                'zen-service group relative isolate flex flex-col justify-end overflow-hidden rounded-zen bg-teal-deep text-ivory',
+                'aspect-[4/5] sm:aspect-[4/4.2]',
+                wide ? 'lg:aspect-[16/10.5]' : 'lg:aspect-[16/10.5] xl:aspect-[4/5]',
+              ]}
+              aria-label={`${service.title}: ${service.description} Enquire about this service`}
+            >
+              <div
+                class="absolute inset-0 -z-20 transition-transform duration-[1400ms] ease-(--ease-zen) group-hover:scale-[1.06] group-focus-visible:scale-[1.06]"
+                aria-hidden="true"
+              >
+                <Image
+                  src={service.image}
+                  alt={service.alt}
+                  widths={wide ? [640, 960, 1280, 1600] : [480, 720, 960, 1200]}
+                  sizes={
+                    wide
+                      ? '(min-width: 1024px) 45vw, (min-width: 640px) 50vw, 100vw'
+                      : '(min-width: 1280px) 23vw, (min-width: 640px) 50vw, 100vw'
+                  }
+                  loading="lazy"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+
+              {/* Wash: always enough to hold the type, deeper on hover. */}
+              <div
+                class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/88 via-ink/35 to-ink/0 transition-opacity duration-700 ease-(--ease-zen)"
+                aria-hidden="true"
+              />
+              <div
+                class="absolute inset-0 -z-10 bg-gradient-to-t from-teal-deep/70 via-teal-deep/25 to-transparent opacity-0 transition-opacity duration-700 ease-(--ease-zen) group-hover:opacity-100 group-focus-visible:opacity-100"
+                aria-hidden="true"
+              />
+
+              <div class="relative p-[clamp(1.25rem,2vw,1.75rem)]">
+                <div class="min-w-0 transition-transform duration-700 ease-(--ease-zen) group-hover:-translate-y-1.5">
+                  <span
+                    class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-ivory/45 text-[0.625rem] tracking-[0.08em] text-ivory/92 transition-colors duration-500 group-hover:border-brass-soft group-hover:text-brass-soft"
+                    aria-hidden="true"
+                  >
+                    {service.index}
+                  </span>
+                  <h3
+                    class:list={[
+                      'mt-3.5 font-display text-[clamp(1.5rem,1.2rem+1vw,2.125rem)] leading-[1.1] font-light tracking-[-0.01em] text-ivory',
+                      !wide && 'xl:text-[1.625rem]',
+                    ]}
+                  >
+                    {service.title}
+                  </h3>
+                  <p class="mt-2 max-w-[34ch] pr-14 text-micro leading-[1.55] text-ivory/85">
+                    {service.description}
+                  </p>
+                  <span
+                    class="mt-4 block h-px w-10 origin-left scale-x-50 bg-brass-soft/70 transition-transform duration-700 ease-(--ease-zen) group-hover:scale-x-100"
+                    aria-hidden="true"
+                  />
+                </div>
+
+                <span
+                  class="absolute right-[clamp(1.25rem,2vw,1.75rem)] bottom-[clamp(1.25rem,2vw,1.75rem)] flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-ivory/60 text-ivory transition-[background-color,border-color,color] duration-500 ease-(--ease-zen) group-hover:border-ivory group-hover:bg-ivory group-hover:text-teal"
+                  aria-hidden="true"
+                >
+                  <svg
+                    viewBox="0 0 16 16"
+                    class="zen-service__arrow h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.2"
+                  >
+                    <path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+          </Reveal>
+        </li>
+      );
+    })
+  }
+</ul>
+
+{/* Phone only: where you are in the rail, and a hint that it moves. */}
+<div class="zen-rail-meta mt-5 flex items-center gap-4 sm:hidden" aria-hidden="true">
+  <span class="label tabular-nums text-teal">
+    <span data-rail-current>01</span>
+    <span class="text-teal/45"> / {pad(services.length)}</span>
+  </span>
+  <span class="relative h-px flex-1 overflow-hidden bg-beige">
+    <span
+      class="absolute inset-0 origin-left bg-brass transition-transform duration-300 ease-(--ease-zen)"
+      style={`transform: scaleX(${1 / services.length})`}
+      data-rail-bar></span>
+  </span>
+  <span class="zen-rail-hint label flex items-center gap-2 text-teal/60">
+    Swipe
+    <svg viewBox="0 0 16 16" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.2">
+      <path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" />
+    </svg>
+  </span>
+</div>
+
+<script>
+  /* Counter and progress for the phone rail. Inert wherever the rail does not scroll. */
+  document.querySelectorAll<HTMLElement>('[data-service-rail]').forEach((rail) => {
+    const meta = rail.nextElementSibling as HTMLElement | null;
+    const current = meta?.querySelector<HTMLElement>('[data-rail-current]');
+    const bar = meta?.querySelector<HTMLElement>('[data-rail-bar]');
+    const count = rail.children.length;
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const max = rail.scrollWidth - rail.clientWidth;
+      if (max <= 0) return;
+      const progress = Math.min(Math.max(rail.scrollLeft / max, 0), 1);
+      const index = Math.round(progress * (count - 1));
+      if (current) current.textContent = String(index + 1).padStart(2, '0');
+      if (bar) bar.style.transform = `scaleX(${(1 + progress * (count - 1)) / count})`;
+      if (rail.scrollLeft > 8) meta?.setAttribute('data-swiped', '');
+    };
+
+    rail.addEventListener(
+      'scroll',
+      () => {
+        if (!frame) frame = requestAnimationFrame(update);
+      },
+      { passive: true },
+    );
+  });
+</script>
+
+<style>
+  .zen-service {
+    outline: none;
+  }
+
+  /* Phone: the grid becomes a snapped horizontal rail that bleeds to the edge. */
+  @media (width < 40rem) {
+    .zen-rail {
+      display: flex;
+      gap: 0.75rem;
+      margin-inline: calc(var(--gutter) * -1);
+      padding-inline: var(--gutter);
+      scroll-padding-inline: var(--gutter);
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+
+    .zen-rail::-webkit-scrollbar {
+      display: none;
+    }
+
+    .zen-rail > li {
+      flex: 0 0 84%;
+      scroll-snap-align: start;
+    }
+
+    /* No hover on a touchscreen, so the brass rule under the title shows in full. */
+    .zen-rail .zen-service span.origin-left {
+      transform: scaleX(1);
+    }
+  }
+
+  .zen-rail-hint {
+    transition: opacity 500ms var(--ease-zen);
+  }
+
+  .zen-rail-meta[data-swiped] .zen-rail-hint {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .zen-rail-hint svg {
+      animation: zen-rail-nudge 2.2s var(--ease-zen) 1s infinite;
+    }
+  }
+
+  @keyframes zen-rail-nudge {
+    0%,
+    60%,
+    100% {
+      transform: translateX(0);
+    }
+    30% {
+      transform: translateX(0.3rem);
+    }
+  }
+
+  .zen-service:focus-visible {
+    box-shadow:
+      0 0 0 2px var(--color-ivory),
+      0 0 0 4px var(--color-brass);
+  }
+
+  /* The arrow leaves to the right and re-enters from the left. */
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .zen-service:hover .zen-service__arrow {
+      animation: zen-service-arrow 700ms var(--ease-zen) both;
+    }
+  }
+
+  /* The same arrow on a touchscreen, while the card is pressed (press.ts). */
+  @media (prefers-reduced-motion: no-preference) {
+    .zen-service[data-pressed] .zen-service__arrow {
+      animation: zen-service-arrow 700ms var(--ease-zen) both;
+    }
+  }
+
+  @keyframes zen-service-arrow {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    45% {
+      transform: translateX(140%);
+      opacity: 0;
+    }
+    46% {
+      transform: translateX(-140%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zen-service,
+    .zen-service * {
+      transition-duration: 0ms !important;
+    }
+  }
+</style>

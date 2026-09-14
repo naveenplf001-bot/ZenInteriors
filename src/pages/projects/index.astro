@@ -7,17 +7,16 @@ import SplitHeading from '@components/ui/SplitHeading.astro';
 import SectionNumber from '@components/ui/SectionNumber.astro';
 import ProjectCard from '@components/projects/ProjectCard.astro';
 import FeaturedHero from '@components/projects/FeaturedHero.astro';
-import ProjectRail from '@components/projects/ProjectRail.astro';
+import ProjectPractice from '@components/projects/ProjectPractice.astro';
 import { getProjects, projectCategories } from '@lib/content';
 import { slugify, pad } from '@lib/format';
 import { breadcrumbSchema } from '@lib/seo';
 
 /*
   Running order. The hero opens on the featured work and carries the rest of
-  the portfolio behind it, the rail runs the same projects horizontally as a
-  fast scan, and the index below is the complete, filterable archive. Nothing
-  is dropped from the index to avoid a repeat: an index that quietly omits a
-  project is the worse trade.
+  the portfolio behind it, the practice section says what every project
+  shares without listing any of them again, and the index below is the
+  complete, filterable archive.
 */
 const projects = await getProjects();
 const featuredFirst = [...projects].sort(
@@ -85,8 +84,8 @@ const schema = [
   {/* ------------------------------------------------- 01 · featured project */}
   <FeaturedHero projects={featuredFirst} />
 
-  {/* ---------------------------------------------------- 02 · more projects */}
-  <ProjectRail projects={projects} activeId={featuredFirst[0]?.id} stats={stats} />
+  {/* ------------------------------------------------------- 02 · practice */}
+  <ProjectPractice stats={stats} />
 
   {/* ----------------------------------------------------------- 03 · index */}
   <section id="index" class="scroll-mt-(--header-h) bg-ivory">
@@ -124,9 +123,9 @@ const schema = [
     <div
       class="sticky top-(--header-h) z-[40] border-y border-beige bg-ivory/92 backdrop-blur-md"
     >
-      <Container class="py-4">
+      <Container class="py-4 max-sm:py-0">
         <div
-          class="flex flex-wrap items-center gap-x-2.5 gap-y-2.5"
+          class="zen-pfilter flex flex-wrap items-center gap-x-2.5 gap-y-2.5"
           data-filter
           role="group"
           aria-label="Filter projects by category"
@@ -135,7 +134,7 @@ const schema = [
             type="button"
             data-filter-value="all"
             aria-pressed="true"
-            class="label rounded-zen border border-beige px-4 py-2.5 text-teal/68 transition-colors duration-300 hover:border-teal/45 hover:text-teal aria-pressed:border-teal aria-pressed:bg-teal aria-pressed:text-ivory"
+            class="zen-pfilter__btn label rounded-zen border border-beige px-4 py-2.5 text-teal/68 transition-colors duration-300 hover:border-teal/45 hover:text-teal aria-pressed:border-teal aria-pressed:bg-teal aria-pressed:text-ivory"
           >
             All
             <span class="ml-2 opacity-50" aria-hidden="true">{pad(total)}</span>
@@ -147,7 +146,7 @@ const schema = [
                 type="button"
                 data-filter-value={slugify(category)}
                 aria-pressed="false"
-                class="label rounded-zen border border-beige px-4 py-2.5 text-teal/68 transition-colors duration-300 hover:border-teal/45 hover:text-teal aria-pressed:border-teal aria-pressed:bg-teal aria-pressed:text-ivory"
+                class="zen-pfilter__btn label rounded-zen border border-beige px-4 py-2.5 text-teal/68 transition-colors duration-300 hover:border-teal/45 hover:text-teal aria-pressed:border-teal aria-pressed:bg-teal aria-pressed:text-ivory"
               >
                 {category}
                 <span class="ml-2 opacity-50" aria-hidden="true">
@@ -185,11 +184,58 @@ const schema = [
                   index={index + 1}
                   ratio={layout.ratio}
                   delay={(index % 3) * 90}
+                  enhance
                 />
               </div>
             );
           })
         }
+
+        {/*
+          The index closes on the next entry, left open. It fills the half of
+          the last row the grid rhythm leaves empty, and is never filtered out.
+        */}
+        <div class="sm:col-span-2 md:col-span-3 lg:col-span-6 lg:self-stretch">
+          <Reveal class="h-full" delay={180}>
+            <a
+              href="/contact"
+              class="zen-next group relative isolate flex h-full min-h-[22rem] flex-col justify-between overflow-hidden rounded-zen border border-beige bg-stone/55 p-[clamp(1.5rem,3.2vw,3.25rem)] focus-visible:outline-offset-8"
+            >
+              <span
+                class="zen-next__numeral pointer-events-none absolute -right-[0.06em] -bottom-[0.2em] -z-10 font-display text-[clamp(10rem,22vw,20rem)] leading-none lg:text-[clamp(18rem,26vw,28rem)] font-light tracking-[-0.05em] text-teal/[0.07] select-none"
+                aria-hidden="true"
+              >
+                {pad(total + 1)}
+              </span>
+
+              <div>
+                <p class="label flex items-center gap-3 text-teal/62">
+                  <span class="zen-next__pulse relative h-1.5 w-1.5 rounded-full bg-brass" aria-hidden="true" />
+                  Next in the index
+                </p>
+                <p class="mt-[clamp(1.25rem,2.4vw,2rem)] font-display text-display-md text-teal">
+                  Your space,
+                  <br />
+                  <span class="text-brass italic">considered next.</span>
+                </p>
+                <p class="mt-4 max-w-[38ch] text-small leading-[1.8] text-charcoal/75">
+                  Tell us about the rooms, the way you live in them and when you would like
+                  to begin. The next project in this index could be yours.
+                </p>
+              </div>
+
+              <span
+                class="zen-next__cta label relative mt-10 inline-flex items-center gap-4 self-start overflow-hidden rounded-zen bg-teal px-7 py-4 text-ivory max-sm:w-full max-sm:justify-center"
+              >
+                <span class="relative z-10">Start Your Project</span>
+                <span
+                  class="relative z-10 inline-block transition-transform duration-500 ease-(--ease-zen) group-hover:translate-x-1"
+                  aria-hidden="true">&#8594;</span
+                >
+              </span>
+            </a>
+          </Reveal>
+        </div>
       </div>
 
       <p class="label mt-20 hidden text-center text-teal/65" data-filter-empty>
@@ -212,13 +258,32 @@ const schema = [
       group.querySelectorAll<HTMLButtonElement>('[data-filter-value]'),
     );
 
-    const apply = (value: string) => {
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const apply = (value: string, animate = false) => {
       let visible = 0;
 
       for (const card of cards) {
         const matches = value === 'all' || card.dataset.projectCategory === value;
         card.hidden = !matches;
-        if (matches) visible += 1;
+        if (matches) {
+          // The cards that remain rise back into place, one after another.
+          if (animate && !calm) {
+            card.animate(
+              [
+                { opacity: 0, transform: 'translate3d(0, 1.5rem, 0)' },
+                { opacity: 1, transform: 'none' },
+              ],
+              {
+                duration: 800,
+                delay: visible * 90,
+                easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                fill: 'backwards',
+              },
+            );
+          }
+          visible += 1;
+        }
       }
 
       for (const button of buttons) {
@@ -237,7 +302,9 @@ const schema = [
     for (const button of buttons) {
       button.addEventListener('click', () => {
         const value = button.dataset.filterValue ?? 'all';
-        apply(value);
+        apply(value, true);
+        // On a phone the row scrolls; bring the chosen filter into view.
+        button.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: calm ? 'auto' : 'smooth' });
         // Keep the filter shareable and survivable across a back navigation.
         const url = new URL(window.location.href);
         value === 'all'
@@ -254,3 +321,97 @@ const schema = [
     }
   }
 </script>
+
+<style>
+  /* ------------------------------------------------------------ phone only */
+  @media (width < 40rem) {
+    .zen-pfilter {
+      flex-wrap: nowrap;
+      gap: 0.5rem;
+      margin-inline: calc(var(--gutter) * -1);
+      padding: 0.875rem var(--gutter);
+      overflow-x: auto;
+      scrollbar-width: none;
+      mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
+    }
+
+    .zen-pfilter::-webkit-scrollbar {
+      display: none;
+    }
+
+    .zen-pfilter__btn {
+      flex-shrink: 0;
+      border-radius: 9999px;
+      padding: 0.7rem 1.05rem;
+    }
+
+    .zen-pfilter [data-filter-count] {
+      width: auto;
+      flex-shrink: 0;
+      padding: 0 2rem 0 0.5rem;
+    }
+  }
+
+  /* ------------------------------------------------------- the next entry */
+  .zen-next {
+    transition:
+      border-color 500ms var(--ease-zen),
+      background-color 500ms var(--ease-zen);
+  }
+
+  .zen-next__numeral {
+    transition:
+      transform 1400ms var(--ease-zen),
+      color 700ms var(--ease-zen);
+  }
+
+  .zen-next__cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-teal-soft);
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 600ms var(--ease-zen);
+  }
+
+  @media (hover: hover) {
+    .zen-next:hover {
+      border-color: color-mix(in srgb, var(--color-teal) 30%, transparent);
+      background-color: var(--color-stone);
+    }
+
+    .zen-next:hover .zen-next__numeral {
+      color: color-mix(in srgb, var(--color-brass) 22%, transparent);
+      transform: translate3d(-0.04em, -0.04em, 0);
+    }
+
+    .zen-next:hover .zen-next__cta::before {
+      transform: scaleX(1);
+      transform-origin: left center;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .zen-next__pulse::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--color-brass);
+      animation: zen-next-pulse 2400ms var(--ease-zen) infinite;
+    }
+  }
+
+  @keyframes zen-next-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    70%,
+    100% {
+      transform: scale(3.2);
+      opacity: 0;
+    }
+  }
+</style>

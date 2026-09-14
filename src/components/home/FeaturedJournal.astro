@@ -31,7 +31,9 @@ const { articles } = Astro.props;
     </div>
 
     <div class="mt-(--stack-lg) grid gap-x-14 gap-y-14 lg:grid-cols-2">
-      {articles.map((article, index) => <ArticleCard article={article} delay={index * 90} />)}
+      {/* enhance: the photograph settles in, a reading cursor follows the
+          pointer, and the excerpt holds to four lines on a phone. */}
+      {articles.map((article, index) => <ArticleCard article={article} delay={index * 90} enhance />)}
     </div>
   </Container>
 </section>

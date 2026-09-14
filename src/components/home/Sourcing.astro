@@ -57,7 +57,11 @@ const pillars = [
           {
             pillars.map((pillar) => (
               <Reveal>
-                <div class="border-t border-beige pt-5 pb-5 lg:pb-6">
+                <div class="group relative border-t border-beige pt-5 pb-5 lg:pb-6">
+                  <span
+                    class="pointer-events-none absolute inset-x-0 -top-px block h-px origin-left scale-x-0 bg-brass transition-transform duration-700 ease-(--ease-zen) group-hover:scale-x-100"
+                    aria-hidden="true"
+                  />
                   <dt class="label text-teal">{pillar.title}</dt>
                   <dd class="mt-3 max-w-[44ch] text-micro text-charcoal/75">{pillar.body}</dd>
                 </div>
@@ -76,7 +80,7 @@ const pillars = [
               widths={[640, 1024, 1400, 1800]}
               sizes="(min-width: 1024px) 46vw, 92vw"
               loading="lazy"
-              class="h-full w-full object-cover"
+              class="zen-parallax h-full w-full object-cover"
             />
           </div>
         </Reveal>

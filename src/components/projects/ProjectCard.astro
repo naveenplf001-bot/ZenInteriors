@@ -12,9 +12,18 @@ interface Props {
   delay?: number;
   /** Only the first card above the fold should load eagerly. */
   priority?: boolean;
+  /** Projects index only: image settle, scroll drift, cursor label and a drawn hairline. */
+  enhance?: boolean;
 }
 
-const { project, index, ratio = 'portrait', delay, priority = false } = Astro.props;
+const {
+  project,
+  index,
+  ratio = 'portrait',
+  delay,
+  priority = false,
+  enhance = false,
+} = Astro.props;
 const { title, summary, location, category, cover, coverAlt } = project.data;
 
 const href = `/projects/${project.id}`;
@@ -27,22 +36,53 @@ const sizes =
 
 <Reveal as="article" delay={delay} class="group">
   <a href={href} class="block focus-visible:outline-offset-8">
-    <div class:list={['relative overflow-hidden rounded-zen bg-stone', aspect]}>
-      <Image
-        src={cover}
-        alt={coverAlt}
-        widths={[480, 800, 1200, 1600]}
-        sizes={sizes}
-        loading={priority ? 'eager' : 'lazy'}
-        fetchpriority={priority ? 'high' : 'auto'}
-        class="h-full w-full object-cover transition-transform duration-[1200ms] ease-(--ease-zen) group-hover:scale-[1.04]"
-      />
+    <div
+      class:list={['relative overflow-hidden rounded-zen bg-stone', aspect]}
+      data-project-frame={enhance ? '' : undefined}
+    >
+      {
+        enhance ? (
+          <div class="zen-project-media h-full w-full">
+            <div class="h-full w-full transition-transform duration-[1200ms] ease-(--ease-zen) group-hover:scale-[1.04]">
+              <Image
+                src={cover}
+                alt={coverAlt}
+                widths={[480, 800, 1200, 1600]}
+                sizes={sizes}
+                loading={priority ? 'eager' : 'lazy'}
+                fetchpriority={priority ? 'high' : 'auto'}
+                class="zen-parallax h-full w-full object-cover"
+              />
+            </div>
+          </div>
+        ) : (
+          <Image
+            src={cover}
+            alt={coverAlt}
+            widths={[480, 800, 1200, 1600]}
+            sizes={sizes}
+            loading={priority ? 'eager' : 'lazy'}
+            fetchpriority={priority ? 'high' : 'auto'}
+            class="h-full w-full object-cover transition-transform duration-[1200ms] ease-(--ease-zen) group-hover:scale-[1.04]"
+          />
+        )
+      }
+      {
+        enhance && (
+          <span class="zen-project-cursor label" aria-hidden="true">
+            View
+          </span>
+        )
+      }
     </div>
 
     {/* Hairline that draws across on hover, so the card responds without moving. */}
     <span
-      class="mt-5 block h-px w-full origin-left scale-x-100 bg-beige transition-colors duration-500 ease-(--ease-zen) group-hover:bg-brass"
-      aria-hidden="true"></span>
+      class="relative mt-5 block h-px w-full origin-left scale-x-100 bg-beige transition-colors duration-500 ease-(--ease-zen) group-hover:bg-brass"
+      aria-hidden="true"
+    >
+      {enhance && <span class="zen-project-rule absolute inset-0 origin-left bg-brass" />}
+    </span>
 
     <div class="mt-4 flex items-start justify-between gap-5">
       <div>
@@ -78,3 +118,87 @@ const sizes =
     </div>
   </a>
 </Reveal>
+
+<style>
+  /* The photograph settles back from a slight over-scale as the card arrives. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) [data-project-frame] .zen-project-media {
+      scale: 1.1;
+      transition: scale 1700ms var(--ease-zen-out);
+    }
+
+    :global(html.js .is-revealed) [data-project-frame] .zen-project-media {
+      scale: 1;
+    }
+
+    /* The hairline draws in beneath the photograph as the card arrives. */
+    :global(html.js) .zen-project-rule {
+      transform: scaleX(0);
+      transition: transform 1300ms var(--ease-zen-out) 350ms;
+    }
+
+    :global(html.js .is-revealed) .zen-project-rule {
+      transform: scaleX(1);
+    }
+  }
+
+  /* Brass only while the card is hovered; beige again at rest. */
+  .zen-project-rule {
+    opacity: 0.55;
+    transition: opacity 500ms var(--ease-zen);
+  }
+
+  @media (hover: hover) {
+    :global(.group:hover) .zen-project-rule {
+      opacity: 1;
+    }
+  }
+
+  .zen-project-cursor {
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .zen-project-cursor {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      display: flex;
+      width: 6rem;
+      height: 6rem;
+      margin: -3rem 0 0 -3rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      background: color-mix(in srgb, var(--color-ivory) 88%, transparent);
+      color: var(--color-teal);
+      backdrop-filter: blur(6px);
+      pointer-events: none;
+      opacity: 0;
+      scale: 0.5;
+      translate: var(--mx, 50%) var(--my, 50%);
+      transition:
+        opacity 400ms var(--ease-zen),
+        scale 500ms var(--ease-zen),
+        translate 220ms var(--ease-zen-out);
+    }
+
+    [data-project-frame]:hover .zen-project-cursor {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+</style>
+
+<script>
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll<HTMLElement>('[data-project-frame]').forEach((frame) => {
+      frame.addEventListener('pointermove', (event) => {
+        const rect = frame.getBoundingClientRect();
+        frame.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+        frame.style.setProperty('--my', `${event.clientY - rect.top}px`);
+      });
+    });
+  }
+</script>
