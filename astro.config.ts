@@ -13,7 +13,8 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      filter: (page) => !page.includes('/404'),
+      // /1 and /2 are private client documents, not public pages.
+      filter: (page) => !page.includes('/404') && !/\/(1|2)$/.test(page),
     }),
   ],
   vite: {
