@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Project Dossier — Zen Interior</title>
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   ZEN INTERIOR — PROJECT DOSSIER
+   Every .page is one physical A4 sheet. Running header, footer, page
+   numbers, contents and section numbers are all applied by the script.
+   ===================================================================== */
+:root {
+  --primary-brand: #083B32;
+  --secondary-brand: #4A6B62;
+  --bg-card: #F9FAF8;
+  --text-main: #1C2422;
+  --border-light: #E2E6E4;
+
+  /* Premium supporting colors */
+  --champagne-gold: #C6A15B;
+  --soft-gold: #D8C18A;
+  --warm-white: #FCFBF7;
+  --deep-black: #101513;
+  --muted-text: #6D7773;
+
+  --sage-line: #C9D3CF;
+  --ivory-deep: #F4F1E8;
+  --desk: #E9ECE9;
+
+  --serif: 'Cormorant Garamond', 'Cormorant', Georgia, serif;
+  --sans: 'Manrope', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --page-w: 210mm;
+  --page-h: 297mm;
+  --pad-x: 20mm;
+  --pad-top: 13mm;
+  --pad-bottom: 10mm;
+
+  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .40 0 0 0 0 .33 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  background: var(--desk);
+  color: var(--text-main);
+  font-family: var(--sans);
+  font-size: 8.8pt;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: lining-nums;
+}
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+
+/* ---------- Screen toolbar (never printed) ---------- */
+.toolbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 12px 24px;
+  background: rgba(16, 21, 19, .94);
+  backdrop-filter: blur(10px);
+  color: var(--warm-white);
+  border-bottom: 1px solid rgba(198, 161, 91, .35);
+}
+.toolbar__brand { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+.toolbar__brand strong { font-family: var(--serif); font-weight: 500; font-size: 20px; letter-spacing: .18em; white-space: nowrap; }
+.toolbar__brand span { font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: var(--soft-gold); white-space: nowrap; }
+.toolbar__actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.btn {
+  appearance: none; cursor: pointer;
+  padding: 9px 16px;
+  border: 1px solid rgba(252, 251, 247, .28);
+  background: transparent;
+  color: var(--warm-white);
+  font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+  transition: background .2s, border-color .2s, color .2s;
+}
+.btn:hover { border-color: var(--champagne-gold); color: var(--soft-gold); }
+.btn:focus-visible { outline: 2px solid var(--champagne-gold); outline-offset: 2px; }
+.btn--gold { background: var(--champagne-gold); border-color: var(--champagne-gold); color: var(--deep-black); }
+.btn--gold:hover { background: var(--soft-gold); color: var(--deep-black); }
+.toolbar__hint {
+  text-align: center; font-size: 11px; color: var(--muted-text);
+  padding: 14px 16px 0; letter-spacing: .04em;
+}
+@media (max-width: 760px) {
+  .toolbar { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+  .toolbar__brand { justify-content: space-between; }
+  .toolbar__actions { justify-content: stretch; }
+  .toolbar__actions .btn { flex: 1 1 calc(50% - 8px); padding: 10px 8px; letter-spacing: .12em; }
+}
+
+/* ---------- The sheet ---------- */
+.document {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12mm; padding: 10mm 0 24mm;
+}
+.page {
+  position: relative;
+  width: var(--page-w);
+  height: var(--page-h);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+  background-color: var(--warm-white);
+  background-image: var(--paper);
+  box-shadow: 0 1px 2px rgba(16, 21, 19, .06), 0 14px 40px rgba(16, 21, 19, .09);
+  break-after: page; page-break-after: always;
+  break-inside: avoid;
+}
+.page:last-child { break-after: auto; page-break-after: auto; }
+.page.is-landscape { width: 297mm; height: 210mm; page: landscape; }
+.page-body {
+  position: relative;
+  flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column;
+  padding: 11mm 0 7mm;
+  overflow: hidden;
+}
+
+/* Geometric corner marks on every internal sheet */
+.page:not(.page--bleed)::after {
+  content: ""; position: absolute; inset: 6mm; pointer-events: none;
+  background:
+    linear-gradient(var(--soft-gold), var(--soft-gold)) top left / 5mm .2mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) top left / .2mm 5mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) top right / 5mm .2mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) top right / .2mm 5mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) bottom left / 5mm .2mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) bottom left / .2mm 5mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) bottom right / 5mm .2mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) bottom right / .2mm 5mm no-repeat;
+  opacity: .8;
+}
+
+/* ---------- Running header (component: #tpl-head) ---------- */
+.run-head {
+  flex: none;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: end;
+  padding-bottom: 3.2mm;
+  border-bottom: .25mm solid var(--champagne-gold);
+}
+.run-head__brand { display: flex; align-items: center; gap: 2.6mm; }
+.run-head__brand img { width: 6.4mm; height: 6.4mm; object-fit: contain; }
+.run-head__name { font-family: var(--serif); font-size: 12.5pt; font-weight: 600; letter-spacing: .26em; color: var(--primary-brand); line-height: 1; }
+.run-head__tag { font-family: var(--serif); font-style: italic; font-size: 9.5pt; color: var(--secondary-brand); line-height: 1; padding-bottom: .4mm; }
+.run-head__section { justify-self: end; font-size: 6.3pt; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; color: var(--secondary-brand); line-height: 1; padding-bottom: .5mm; }
+
+/* ---------- Running footer (component: #tpl-foot) ---------- */
+.run-foot { flex: none; border-top: .2mm solid var(--border-light); padding-top: 2.8mm; }
+.run-foot__row {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: baseline;
+  font-size: 6.2pt; letter-spacing: .26em; text-transform: uppercase; color: var(--muted-text);
+}
+.run-foot__tag { font-family: var(--serif); font-style: italic; font-size: 8.5pt; letter-spacing: .02em; text-transform: none; color: var(--secondary-brand); }
+.run-foot__page { justify-self: end; }
+.run-foot__page b { color: var(--champagne-gold); font-weight: 700; }
+.run-foot__conf { margin-top: 1.6mm; text-align: center; font-size: 5.6pt; letter-spacing: .38em; color: #8E9894; }
+
+/* ---------- Type system ---------- */
+.eyebrow {
+  display: flex; align-items: center; gap: 3mm;
+  font-size: 6.6pt; font-weight: 600; letter-spacing: .34em; text-transform: uppercase;
+  color: var(--secondary-brand);
+}
+.eyebrow .sec-no { color: var(--champagne-gold); font-weight: 700; letter-spacing: .12em; }
+.eyebrow .sec-no:not(:empty)::after { content: ""; display: inline-block; width: 8mm; height: .2mm; margin-left: 3mm; vertical-align: middle; background: var(--champagne-gold); }
+.display {
+  font-family: var(--serif); font-weight: 400; color: var(--primary-brand);
+  font-size: 34pt; line-height: 1.02; letter-spacing: .005em;
+  margin-top: 4mm;
+}
+.display em { font-style: italic; font-weight: 300; color: var(--secondary-brand); }
+.display--sm { font-size: 27pt; }
+.lede { font-family: var(--serif); font-size: 13.5pt; line-height: 1.45; color: var(--text-main); font-weight: 400; }
+.muted { color: var(--muted-text); }
+.label { font-size: 6.2pt; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; color: var(--muted-text); }
+.value { font-size: 9.2pt; font-weight: 500; color: var(--text-main); }
+.value--serif { font-family: var(--serif); font-size: 14pt; font-weight: 500; line-height: 1.2; color: var(--primary-brand); }
+.gold { color: var(--champagne-gold); }
+.rule { height: .2mm; background: var(--border-light); border: 0; }
+.rule--gold { background: linear-gradient(90deg, var(--champagne-gold), rgba(198,161,91,.15)); }
+.head-block { flex: none; margin-bottom: 8mm; }
+.head-block p.intro { margin-top: 3.5mm; max-width: 125mm; color: var(--muted-text); font-size: 9pt; }
+.num { font-variant-numeric: tabular-nums lining-nums; }
+.spacer { flex: 1 1 auto; }
+
+/* ---------- Key/value grid ---------- */
+.kv { display: grid; column-gap: 8mm; }
+.kv > div { padding: 3.2mm 0 3.4mm; border-top: .2mm solid var(--border-light); }
+.kv .label { display: block; margin-bottom: 1.2mm; }
+.kv--2 { grid-template-columns: repeat(2, 1fr); }
+.kv--4 { grid-template-columns: repeat(4, 1fr); }
+
+/* ---------- Ledger (editorial table) ---------- */
+.ledger { width: 100%; border-collapse: collapse; }
+.ledger th {
+  text-align: left; padding: 0 0 2.4mm;
+  font-size: 6pt; font-weight: 700; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--primary-brand);
+  border-bottom: .3mm solid var(--primary-brand);
+}
+.ledger td { padding: 3mm 0; vertical-align: top; border-bottom: .2mm solid var(--border-light); font-size: 8.6pt; }
+.ledger th + th, .ledger td + td { padding-left: 4mm; }
+.ledger .r { text-align: right; }
+.ledger .c { text-align: center; }
+.ledger .idx { width: 9mm; color: var(--champagne-gold); font-weight: 700; font-size: 7pt; letter-spacing: .1em; padding-top: 3.5mm; }
+.ledger .desc strong { display: block; font-family: var(--serif); font-size: 12.5pt; font-weight: 500; color: var(--text-main); line-height: 1.2; }
+.ledger .desc span { display: block; margin-top: .8mm; font-size: 7.4pt; color: var(--muted-text); line-height: 1.45; }
+.ledger .amt { font-weight: 600; color: var(--primary-brand); white-space: nowrap; }
+.ledger tr.group td {
+  padding-top: 5mm; padding-bottom: 2mm; border-bottom: .2mm solid var(--sage-line);
+  font-family: var(--serif); font-size: 13pt; font-weight: 500; color: var(--primary-brand);
+}
+.ledger tr.group td .gold { font-family: var(--sans); font-size: 6.6pt; font-weight: 700; letter-spacing: .2em; margin-right: 3mm; }
+.ledger tr.group td.r { font-family: var(--sans); font-size: 8.4pt; font-weight: 600; }
+.ledger tr.sub td { font-size: 8pt; padding-top: 2.2mm; padding-bottom: 2.2mm; }
+.ledger tr.sub td:first-child { padding-left: 6mm; }
+.ledger--compact tr.sub td { padding-top: 1.5mm; padding-bottom: 1.5mm; }
+.ledger--spec td { font-size: 7.6pt; padding-top: 2.6mm; padding-bottom: 2.6mm; }
+.ledger--spec td:first-child { font-family: var(--serif); font-size: 11pt; font-weight: 500; color: var(--text-main); line-height: 1.25; }
+.tag {
+  display: inline-block; padding: .5mm 2mm;
+  font-size: 5.8pt; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  border: .2mm solid var(--sage-line); color: var(--secondary-brand); white-space: nowrap;
+}
+.tag--ok { border-color: var(--primary-brand); color: var(--primary-brand); }
+.tag--gold { border-color: var(--champagne-gold); color: #8F6F33; }
+.continued { margin-top: 2mm; text-align: right; font-size: 6.4pt; letter-spacing: .28em; text-transform: uppercase; color: var(--muted-text); }
+
+/* ---------- Totals ---------- */
+.totals { display: grid; grid-template-columns: 1fr 76mm; gap: 9mm; align-items: start; margin-top: 5mm; }
+.totals__note { margin-top: 2.4mm; font-size: 6.8pt; color: var(--muted-text); line-height: 1.55; }
+.totals__note .label { display: block; margin-bottom: 1.5mm; color: var(--secondary-brand); }
+.totals__lines { width: 100%; }
+.totals__line { display: flex; justify-content: space-between; gap: 4mm; padding: 1.6mm 0; border-bottom: .2mm solid var(--border-light); font-size: 8.4pt; }
+.totals__line span:first-child { color: var(--muted-text); }
+.totals__line span:last-child { font-weight: 600; }
+.totals__line.is-less span:last-child { color: var(--secondary-brand); }
+.grand {
+  position: relative;
+  padding: 5mm 6mm 5.2mm;
+  background: var(--primary-brand); color: var(--warm-white);
+}
+.grand::before { content: ""; position: absolute; left: 6mm; right: 6mm; top: 2.2mm; height: .2mm; background: var(--champagne-gold); }
+.grand .label { color: var(--soft-gold); }
+.grand__amount { display: block; margin-top: 1.4mm; font-family: var(--serif); font-size: 25pt; font-weight: 500; line-height: 1; letter-spacing: .01em; }
+.grand__words { display: block; margin-top: 2mm; font-size: 6.6pt; letter-spacing: .04em; color: rgba(252,251,247,.72); line-height: 1.45; }
+
+/* ---------- Payment schedule ---------- */
+.stages { display: flex; flex-direction: column; }
+.stage { display: grid; grid-template-columns: 14mm 1fr 30mm 34mm; gap: 5mm; align-items: center; padding: 5.4mm 0; border-top: .2mm solid var(--border-light); }
+.stage:last-child { border-bottom: .2mm solid var(--border-light); }
+.stage__no { font-family: var(--serif); font-size: 26pt; line-height: 1; color: var(--champagne-gold); font-weight: 400; }
+.stage__name { font-family: var(--serif); font-size: 14pt; font-weight: 500; color: var(--primary-brand); line-height: 1.1; }
+.stage__note { margin-top: .8mm; font-size: 7.4pt; color: var(--muted-text); }
+.stage__bar { position: relative; margin-top: 3mm; height: .8mm; background: var(--border-light); }
+.stage__bar i { position: absolute; inset: 0 auto 0 0; background: var(--secondary-brand); }
+.stage__bar b { position: absolute; top: -.6mm; height: 2mm; width: .3mm; background: var(--champagne-gold); }
+.stage__pct { font-family: var(--serif); font-size: 20pt; color: var(--text-main); text-align: right; line-height: 1; }
+.stage__pct small { font-family: var(--sans); font-size: 6pt; letter-spacing: .2em; color: var(--muted-text); display: block; margin-top: 1mm; }
+.stage__amt { text-align: right; }
+.stage__amt strong { display: block; font-size: 10pt; color: var(--primary-brand); }
+.stage__amt .tag { margin-top: 1.4mm; }
+
+/* ---------- Editorial two-column ---------- */
+.columns { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12mm; }
+.article { padding: 4.4mm 0 4.8mm; border-top: .2mm solid var(--border-light); break-inside: avoid; }
+.article h3 { display: flex; gap: 3mm; align-items: baseline; font-family: var(--serif); font-size: 14pt; font-weight: 500; color: var(--primary-brand); line-height: 1.15; margin-bottom: 1.6mm; }
+.article h3 .gold { font-family: var(--sans); font-size: 6.4pt; font-weight: 700; letter-spacing: .16em; }
+.article p, .article li { font-size: 8pt; color: #3D4744; line-height: 1.62; }
+.article ul { list-style: none; }
+.article li { position: relative; padding-left: 4mm; }
+.article li::before { content: ""; position: absolute; left: 0; top: 2.1mm; width: 2mm; height: .2mm; background: var(--champagne-gold); }
+
+/* ---------- Drawing sheets ---------- */
+.sheet-head {
+  flex: none; display: grid; grid-template-columns: 1.2fr 1.6fr repeat(3, .8fr); align-items: end; gap: 5mm;
+  padding-bottom: 3mm; border-bottom: .25mm solid var(--champagne-gold);
+}
+.sheet-head .run-head__name { display: block; white-space: nowrap; font-size: 11pt; letter-spacing: .2em; }
+.page:not(.is-landscape) .sheet-head { grid-template-columns: 1.1fr 1.6fr .8fr .6fr .8fr; gap: 4mm; }
+.sheet-head__cell .label { display: block; font-size: 5.4pt; margin-bottom: .8mm; }
+.sheet-head__cell .value { font-size: 8.2pt; }
+.sheet-head__title { font-family: var(--serif); font-size: 13pt; font-weight: 500; color: var(--primary-brand); line-height: 1.1; }
+.frame {
+  position: relative; flex: 1 1 auto; min-height: 0;
+  margin-top: 5mm;
+  background: #FFFFFF;
+  border: .3mm solid var(--primary-brand);
+  outline: .2mm solid var(--soft-gold); outline-offset: 1.2mm;
+  display: flex; align-items: center; justify-content: center;
+  padding: 6mm;
+}
+.frame > img, .frame > svg, .frame > canvas {
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain;
+}
+.frame > svg { width: 100%; height: 100%; }
+.frame__meta { flex: none; display: flex; justify-content: space-between; margin-top: 3.4mm; font-size: 6pt; letter-spacing: .24em; text-transform: uppercase; color: var(--muted-text); }
+.placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3mm;
+  text-align: center; color: var(--muted-text);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 9.8mm, rgba(74,107,98,.07) 9.8mm 10mm),
+    repeating-linear-gradient(90deg, transparent 0 9.8mm, rgba(74,107,98,.07) 9.8mm 10mm);
+  border: .2mm dashed var(--sage-line);
+}
+.placeholder strong { font-family: var(--serif); font-size: 18pt; font-weight: 400; color: var(--primary-brand); }
+.placeholder span { font-size: 6.4pt; letter-spacing: .3em; text-transform: uppercase; }
+.placeholder .btn { color: var(--primary-brand); border-color: var(--primary-brand); margin-top: 2mm; }
+.placeholder .btn:hover { background: var(--primary-brand); color: var(--warm-white); }
+.remove-page {
+  position: absolute; top: 3mm; right: 3mm; z-index: 5;
+  appearance: none; cursor: pointer; border: .2mm solid var(--sage-line); background: var(--warm-white);
+  font-size: 6pt; letter-spacing: .2em; text-transform: uppercase; padding: 1mm 2.4mm; color: var(--muted-text);
+}
+.remove-page:hover { color: #9B3B2F; border-color: #9B3B2F; }
+
+/* Drawing ink (inline SVG sample drawings) */
+.zd { font-family: var(--sans); }
+.zd .wall { fill: none; stroke: #1C2422; stroke-width: 9; stroke-linejoin: miter; }
+.zd .wall-out { fill: none; stroke: #1C2422; stroke-width: 16; stroke-linejoin: miter; }
+.zd .cut { fill: #FFFFFF; stroke: none; }
+.zd .thin { fill: none; stroke: #1C2422; stroke-width: 1.6; }
+.zd .hair { fill: none; stroke: #5E6A66; stroke-width: 1; }
+.zd .furn { fill: none; stroke: #4A6B62; stroke-width: 1.8; }
+.zd .furn-fill { fill: rgba(74,107,98,.07); stroke: #4A6B62; stroke-width: 1.8; }
+.zd .hatch { fill: url(#zd-hatch); stroke: #4A6B62; stroke-width: 1.8; }
+.zd .dash { fill: none; stroke: #4A6B62; stroke-width: 1.6; stroke-dasharray: 12 8; }
+.zd .gold { fill: none; stroke: #C6A15B; stroke-width: 1.6; }
+.zd .elec { fill: none; stroke: #083B32; stroke-width: 2; }
+.zd .elec-fill { fill: #083B32; stroke: none; }
+.zd .wire { fill: none; stroke: #C6A15B; stroke-width: 1.4; stroke-dasharray: 6 5; }
+.zd .dim { fill: none; stroke: #6D7773; stroke-width: 1.1; }
+.zd text { fill: #1C2422; }
+.zd .t-room { font-size: 19px; font-weight: 600; letter-spacing: 3.2px; }
+.zd .t-area { font-size: 14px; fill: #6D7773; letter-spacing: .6px; }
+.zd .t-dim { font-size: 15px; fill: #4F5A56; letter-spacing: .5px; }
+.zd .t-note { font-size: 14px; fill: #4A6B62; letter-spacing: 1.2px; }
+.zd .t-title { font-size: 22px; font-weight: 600; letter-spacing: 5px; fill: #083B32; }
+
+/* ---------- Attachment component ---------- */
+.attachment-header {
+  flex: none; display: flex; justify-content: space-between; align-items: baseline;
+  padding-bottom: 2.6mm; border-bottom: .2mm solid var(--sage-line);
+}
+.attachment-header span:first-child { font-size: 6.6pt; font-weight: 700; letter-spacing: .34em; color: var(--secondary-brand); }
+.attachment-header span:last-child { font-family: var(--serif); font-size: 26pt; line-height: .8; color: var(--champagne-gold); }
+.attachment-title { flex: none; margin-top: 4mm; font-family: var(--serif); font-size: 20pt; color: var(--primary-brand); line-height: 1.1; }
+.attachment-sub { flex: none; margin-top: 1mm; font-size: 7.2pt; color: var(--muted-text); }
+.attachment-content { position: relative; flex: 1 1 auto; min-height: 0; margin-top: 5mm; background: #FFFFFF; border: .2mm solid var(--border-light); padding: 5mm; display: flex; align-items: center; justify-content: center; }
+.attachment-content > img, .attachment-content > canvas { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; box-shadow: 0 0 0 .2mm var(--border-light); }
+.attachment-content > .doc-text { width: 100%; height: 100%; overflow: hidden; font-size: 7.4pt; line-height: 1.55; white-space: pre-wrap; font-family: ui-monospace, Consolas, monospace; color: var(--text-main); }
+
+.ledger--spec7 td { font-size: 7.3pt; }
+.ledger--spec7 td:nth-child(2) { font-family: var(--serif); font-size: 11pt; font-weight: 500; color: var(--text-main); }
+.ledger--spec7 td:first-child { font-family: var(--sans); }
+
+/* ---------- Print ---------- */
+@page { size: A4; margin: 0; }
+@page landscape { size: A4 landscape; margin: 0; }
+@media print {
+  html, body { background: none !important; }
+  .no-print { display: none !important; }
+  .document { display: block; padding: 0; gap: 0; zoom: 1 !important; }
+  .page { box-shadow: none; margin: 0; }
+}
+</style>
+<style>
+/* =============== Dossier page styling =============== */
+
+/* ---- Cover ---- */
+.cover { padding: 0; color: var(--warm-white); background: var(--deep-black); }
+.cover__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; filter: saturate(.6); }
+.cover__veil {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(16,21,19,.86) 0%, rgba(8,59,50,.66) 24%, rgba(8,59,50,.74) 50%, rgba(8,59,50,.95) 70%, rgba(16,21,19,.98) 100%);
+}
+.cover__inner { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; padding: 16mm 18mm 14mm 26mm; }
+.cover__rail { position: absolute; left: 16mm; top: 16mm; bottom: 14mm; width: .25mm; background: linear-gradient(180deg, var(--champagne-gold), rgba(198,161,91,.1) 45%, var(--champagne-gold)); }
+.cover__top { display: flex; justify-content: space-between; align-items: center; }
+.cover__top img { width: 40mm; }
+.cover__top span { font-size: 6.6pt; font-weight: 600; letter-spacing: .5em; color: var(--soft-gold); }
+.cover__kicker { margin-top: auto; font-size: 7.2pt; font-weight: 600; letter-spacing: .6em; color: var(--soft-gold); display: flex; align-items: center; gap: 4mm; }
+.cover__kicker::after { content: ""; width: 18mm; height: .25mm; background: var(--champagne-gold); }
+.cover__title { margin-top: 6mm; font-family: var(--serif); font-weight: 300; font-size: 54pt; line-height: .98; letter-spacing: -.005em; }
+.cover__title em { font-style: italic; color: var(--soft-gold); }
+.cover__brand { margin-top: 5mm; font-family: var(--serif); font-style: italic; font-size: 12pt; color: rgba(252,251,247,.75); }
+.cover__details { margin-top: 12mm; display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 0 8mm; border-top: .25mm solid rgba(216,193,138,.55); }
+.cover__details div { padding: 3mm 0 3.2mm; border-bottom: .2mm solid rgba(252,251,247,.12); }
+.cover__details .label { color: rgba(216,193,138,.9); font-size: 5.6pt; }
+.cover__details .value { display: block; margin-top: .8mm; color: var(--warm-white); font-size: 9pt; font-weight: 500; }
+.cover__details .big { grid-row: span 2; }
+.cover__details .big .value { font-family: var(--serif); font-size: 19pt; font-weight: 400; line-height: 1.12; }
+.cover__foot { margin-top: 9mm; display: flex; justify-content: space-between; align-items: center; font-size: 6.2pt; letter-spacing: .44em; color: rgba(252,251,247,.7); }
+.cover__foot b { color: var(--warm-white); font-weight: 600; }
+
+/* ---- Welcome ---- */
+.welcome-photo { position: relative; flex: none; height: 74mm; margin: 0 0 9mm; overflow: hidden; }
+.welcome-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; filter: saturate(.8); }
+.welcome-photo::after { content: ""; position: absolute; left: 6mm; right: 6mm; bottom: 5mm; height: .25mm; background: var(--soft-gold); opacity: .8; }
+.welcome-photo figcaption { position: absolute; left: 6mm; bottom: 7.5mm; font-size: 5.8pt; letter-spacing: .34em; color: var(--warm-white); }
+.welcome-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: 12mm; align-items: start; }
+.welcome-grid .lede { margin-top: 1mm; }
+.welcome-copy { margin-top: 5mm; font-size: 8.2pt; color: #3D4744; line-height: 1.7; }
+
+/* ---- At a glance ---- */
+.glance { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12mm; }
+.glance div { padding: 5.2mm 0 5.6mm; border-top: .2mm solid var(--border-light); }
+.glance .label { display: block; }
+.glance .big { display: block; margin-top: 1.6mm; font-family: var(--serif); font-size: 23pt; font-weight: 400; line-height: 1.05; color: var(--primary-brand); }
+.glance .big small { font-size: 12pt; color: var(--secondary-brand); }
+.glance .sub { display: block; margin-top: 1mm; font-size: 7.4pt; color: var(--muted-text); }
+.glance .wide { grid-column: 1 / -1; }
+.status-track { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5mm; margin-top: 3mm; }
+.status-track span { padding-top: 2mm; border-top: .8mm solid var(--border-light); font-size: 6.2pt; letter-spacing: .22em; text-transform: uppercase; color: var(--muted-text); }
+.status-track span.done { border-color: var(--secondary-brand); color: var(--secondary-brand); }
+.status-track span.now { border-color: var(--champagne-gold); color: var(--primary-brand); font-weight: 700; }
+
+/* ---- Scope ---- */
+.scope { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12mm; }
+.scope article { padding: 5mm 0 5.4mm; border-top: .2mm solid var(--border-light); display: grid; grid-template-columns: 19mm 1fr; }
+.scope .no { font-family: var(--serif); font-size: 34pt; font-weight: 300; line-height: .82; color: var(--champagne-gold); }
+.scope h3 { font-size: 7pt; font-weight: 700; letter-spacing: .34em; color: var(--primary-brand); }
+.scope p { margin-top: 1.8mm; font-size: 8pt; line-height: 1.62; color: #3D4744; }
+
+/* ---- Investment ---- */
+.invest { display: flex; flex-direction: column; }
+.invest__row { display: grid; grid-template-columns: 1fr 44mm; align-items: end; padding: 4.2mm 0; border-top: .2mm solid var(--border-light); }
+.invest__name { font-family: var(--serif); font-size: 16pt; color: var(--text-main); line-height: 1.1; }
+.invest__name small { display: block; margin-top: .6mm; font-family: var(--sans); font-size: 7pt; color: var(--muted-text); }
+.invest__bar { grid-column: 1 / -1; margin-top: 2.6mm; height: .7mm; background: var(--border-light); position: relative; }
+.invest__bar i { position: absolute; inset: 0 auto 0 0; background: var(--secondary-brand); }
+.invest__amt { text-align: right; font-family: var(--serif); font-size: 17pt; color: var(--primary-brand); line-height: 1; }
+.invest__amt small { display: block; font-family: var(--sans); font-size: 6.2pt; letter-spacing: .2em; color: var(--muted-text); margin-top: 1mm; }
+.invest-total { margin-top: auto; position: relative; background: var(--primary-brand); color: var(--warm-white); padding: 8mm 9mm; display: flex; justify-content: space-between; align-items: end; }
+.invest-total::before { content: ""; position: absolute; left: 9mm; right: 9mm; top: 3.2mm; height: .2mm; background: var(--champagne-gold); }
+.invest-total .label { color: var(--soft-gold); }
+.invest-total__amt { font-family: var(--serif); font-size: 38pt; font-weight: 400; line-height: 1; }
+.invest-total p { margin-top: 2mm; font-size: 7pt; color: rgba(252,251,247,.72); max-width: 70mm; }
+
+/* ---- Invoice ---- */
+.inv-top { display: flex; justify-content: space-between; align-items: end; }
+.inv-top .display { font-size: 36pt; }
+.inv-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 12mm; margin-top: 5mm; }
+.inv-parties h4 { font-size: 6.4pt; font-weight: 700; letter-spacing: .34em; color: var(--champagne-gold); margin-bottom: 2mm; }
+.inv-parties .value--serif { font-size: 15pt; }
+.inv-parties p { font-size: 8pt; color: #3D4744; line-height: 1.6; }
+.inv-parties dl { margin-top: 2mm; display: grid; grid-template-columns: 22mm 1fr; row-gap: .6mm; font-size: 7.8pt; }
+.inv-parties dt { color: var(--muted-text); font-size: 6.2pt; letter-spacing: .2em; text-transform: uppercase; padding-top: .5mm; }
+.ledger--invoice td { padding-top: 2.3mm; padding-bottom: 2.3mm; }
+.ledger--invoice .idx { padding-top: 2.8mm; }
+
+/* ---- Payment timeline ---- */
+.plan { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 6mm; }
+.plan::before { content: ""; position: absolute; left: 0; right: 0; top: 15mm; height: .25mm; background: var(--sage-line); }
+.plan__progress { position: absolute; z-index: 0; left: 0; top: 14.6mm; height: 1mm; background: var(--primary-brand); }
+.plan__stage { position: relative; z-index: 1; padding-right: 4mm; }
+.plan__no { font-family: var(--serif); font-size: 30pt; font-weight: 300; line-height: 1; color: var(--champagne-gold); }
+.plan__dot { position: relative; z-index: 2; width: 3.4mm; height: 3.4mm; border-radius: 50%; margin-top: 1.8mm; background: var(--warm-white); border: .35mm solid var(--secondary-brand); }
+.plan__stage.is-paid .plan__dot { background: var(--primary-brand); border-color: var(--primary-brand); }
+.plan__stage.is-due .plan__dot { border-color: var(--champagne-gold); box-shadow: 0 0 0 1.2mm rgba(198,161,91,.18); }
+.plan__name { min-height: 8mm; margin-top: 5mm; font-size: 6.8pt; font-weight: 700; letter-spacing: .26em; color: var(--primary-brand); }
+.plan__note { margin-top: 1.4mm; font-size: 7pt; color: var(--muted-text); line-height: 1.5; min-height: 16mm; }
+.plan__pct { margin-top: 3mm; font-family: var(--serif); font-size: 26pt; line-height: 1; color: var(--text-main); }
+.plan__amt { margin-top: 1.4mm; font-size: 9pt; font-weight: 600; color: var(--primary-brand); }
+.plan__stage .tag { margin-top: 2.4mm; }
+.plan-summary { margin-top: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8mm; }
+.plan-summary > div { border-top: .3mm solid var(--primary-brand); padding-top: 2.6mm; }
+.plan-summary .value--serif { margin-top: 1mm; }
+
+/* ---- Material board ---- */
+.board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7mm 5mm; }
+.swatch { cursor: default; }
+.swatch__img { position: relative; aspect-ratio: 1 / 1.08; overflow: hidden; background: var(--bg-card); box-shadow: inset 0 0 0 .2mm rgba(16,21,19,.08); }
+.swatch__img svg, .swatch__img img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.swatch__img button { position: absolute; inset: auto 2mm 2mm auto; }
+.swatch__img .btn { padding: 1mm 2mm; font-size: 5.4pt; background: rgba(252,251,247,.9); color: var(--primary-brand); border-color: transparent; }
+.swatch__cat { margin-top: 2.6mm; font-size: 5.8pt; font-weight: 700; letter-spacing: .32em; color: var(--champagne-gold); }
+.swatch__name { margin-top: .6mm; font-family: var(--serif); font-size: 12.5pt; line-height: 1.1; color: var(--primary-brand); }
+.swatch__meta { margin-top: 1mm; font-size: 6.8pt; line-height: 1.5; color: var(--muted-text); }
+.swatch__ref { margin-top: 1.2mm; font-size: 6pt; letter-spacing: .2em; color: var(--secondary-brand); border-top: .2mm solid var(--border-light); padding-top: 1.2mm; }
+
+/* ---- Divider pages ---- */
+.divider { padding: 0; background: var(--primary-brand); color: var(--warm-white); }
+.divider__grid { position: absolute; inset: 0; width: 100%; height: 100%; }
+.divider__inner { position: relative; height: 100%; display: flex; flex-direction: column; padding: 18mm 20mm 16mm; }
+.divider__top { display: flex; justify-content: space-between; font-size: 6.4pt; letter-spacing: .44em; color: var(--soft-gold); }
+.divider__no { margin-top: auto; font-family: var(--serif); font-size: 110pt; font-weight: 300; line-height: .8; color: var(--champagne-gold); }
+.divider__title { margin-top: 8mm; font-family: var(--serif); font-size: 50pt; font-weight: 300; line-height: .98; }
+.divider__sub { margin-top: 5mm; font-size: 7pt; font-weight: 600; letter-spacing: .5em; color: var(--soft-gold); }
+.divider__list { margin-top: 12mm; border-top: .25mm solid rgba(216,193,138,.5); columns: 2; column-gap: 12mm; }
+.divider__list div { break-inside: avoid; display: flex; justify-content: space-between; gap: 4mm; padding: 2.4mm 0; border-bottom: .2mm solid rgba(252,251,247,.12); font-size: 8pt; color: rgba(252,251,247,.88); }
+.divider__list b { font-weight: 600; font-size: 6.6pt; letter-spacing: .16em; color: var(--soft-gold); white-space: nowrap; }
+.divider__foot { margin-top: 12mm; display: flex; justify-content: space-between; font-size: 6pt; letter-spacing: .38em; color: rgba(252,251,247,.55); }
+
+/* ---- Drawing sheet with title block ---- */
+.sheet { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: 1fr 58mm; gap: 0; border: .3mm solid var(--primary-brand); background: #FFFFFF; }
+.sheet .frame { margin: 0; border: 0; outline: 0; padding: 5mm; }
+.tblock { display: flex; flex-direction: column; border-left: .3mm solid var(--primary-brand); background: var(--warm-white); }
+.tblock > div { padding: 2.3mm 3.5mm; border-bottom: .2mm solid var(--border-light); }
+.tblock .label { display: block; font-size: 5.2pt; margin-bottom: .6mm; }
+.tblock .value { font-size: 8pt; line-height: 1.3; display: block; }
+.tblock__brand { background: var(--primary-brand); color: var(--warm-white); border-bottom: 0 !important; padding: 3.4mm 3.5mm !important; }
+.tblock__brand img { width: 30mm; }
+.tblock__brand span { display: block; margin-top: 1.4mm; font-family: var(--serif); font-style: italic; font-size: 8pt; color: var(--soft-gold); }
+.tblock__title .value { font-family: var(--serif); font-size: 13pt; color: var(--primary-brand); line-height: 1.1; }
+.tblock__no { display: flex; justify-content: space-between; align-items: end; }
+.tblock__no .value { font-family: var(--serif); font-size: 24pt; line-height: 1; color: var(--champagne-gold); }
+.tblock__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+.tblock__sign { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; align-content: start; }
+.tblock__sign i { display: block; height: 7mm; border-bottom: .2mm solid var(--text-main); }
+.tblock__conf { border-bottom: 0 !important; margin-top: auto; font-size: 5.2pt; letter-spacing: .3em; color: var(--muted-text); text-align: center; }
+.page:not(.is-landscape) .sheet { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+.page:not(.is-landscape) .tblock { border-left: 0; border-top: .3mm solid var(--primary-brand); display: grid; grid-template-columns: repeat(4, 1fr); }
+.page:not(.is-landscape) .tblock__brand, .page:not(.is-landscape) .tblock__conf { display: none; }
+.page:not(.is-landscape) .tblock__sign { grid-column: span 2; }
+
+/* ---- Care ---- */
+.care { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12mm; }
+.care article { padding: 4.6mm 0 5mm; border-top: .2mm solid var(--border-light); }
+.care h3 { display: flex; justify-content: space-between; font-family: var(--serif); font-size: 15pt; font-weight: 500; color: var(--primary-brand); }
+.care h3 span { font-family: var(--sans); font-size: 6.4pt; font-weight: 700; letter-spacing: .2em; color: var(--champagne-gold); }
+.care p { margin-top: 1.6mm; font-size: 8pt; line-height: 1.62; color: #3D4744; }
+.care .tag { margin-top: 2.4mm; }
+.service-card { margin-top: auto; display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 8mm; padding: 6mm 7mm; background: var(--bg-card); border-top: .3mm solid var(--champagne-gold); }
+
+/* ---- Approval ---- */
+.approval-statement { margin-top: 10mm; font-family: var(--serif); font-size: 17pt; line-height: 1.42; color: var(--text-main); max-width: 152mm; }
+.sign-grid { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 14mm; }
+.sign-block h4 { font-size: 6.4pt; font-weight: 700; letter-spacing: .34em; color: var(--champagne-gold); margin-bottom: 8mm; }
+.sign-field { padding-top: 14mm; border-bottom: .25mm solid var(--text-main); margin-bottom: 1.6mm; }
+.sign-field.pre { padding-top: 0; min-height: 14mm; display: flex; align-items: end; padding-bottom: 1.5mm; font-family: var(--serif); font-size: 13pt; }
+.sign-block .label { display: block; margin-bottom: 6mm; }
+.seal { width: 26mm; height: 26mm; border: .25mm solid var(--soft-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 5.2pt; letter-spacing: .26em; color: var(--champagne-gold); line-height: 1.8; }
+
+/* ---- Closing ---- */
+.closing { padding: 0; background: var(--primary-brand); color: var(--warm-white); }
+.closing__lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+.closing__inner { position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 40mm 26mm 18mm; }
+.closing__thanks { font-family: var(--serif); font-weight: 300; font-size: 76pt; line-height: .9; letter-spacing: .06em; }
+.closing__for { margin-top: 6mm; font-size: 8pt; font-weight: 600; letter-spacing: .56em; padding-left: .56em; color: var(--soft-gold); }
+.closing__msg { margin-top: 16mm; font-family: var(--serif); font-style: italic; font-size: 16pt; line-height: 1.45; color: rgba(252,251,247,.88); }
+.closing__rule { width: .25mm; height: 18mm; background: var(--champagne-gold); margin: 14mm auto; }
+.closing__logo { width: 48mm; }
+.closing__tag { margin-top: 3mm; font-family: var(--serif); font-style: italic; font-size: 12pt; color: var(--soft-gold); }
+.closing__contact { margin-top: auto; width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm; padding-top: 5mm; border-top: .2mm solid rgba(252,251,247,.16); text-align: left; }
+.closing__contact .label { color: rgba(216,193,138,.85); font-size: 5.6pt; }
+.closing__contact .value { display: block; color: var(--warm-white); font-size: 7.8pt; margin-top: .8mm; word-break: break-word; }
+.closing__foot { margin-top: 6mm; font-size: 5.8pt; letter-spacing: .42em; color: rgba(252,251,247,.55); }
+</style>
+</head>
+<body>
+
+<!-- ================= Screen controls (never printed) ================= -->
+<div class="toolbar no-print" role="toolbar" aria-label="Dossier controls">
+  <div class="toolbar__brand"><strong>ZEN INTERIOR</strong><span>Project Dossier</span></div>
+  <div class="toolbar__actions">
+    <button class="btn" type="button" data-action="print">Print Dossier</button>
+    <button class="btn btn--gold" type="button" data-action="pdf">Download / Save PDF</button>
+    <button class="btn" type="button" data-action="add-blueprint">Add Blueprint</button>
+    <button class="btn" type="button" data-action="add-document">Add Document</button>
+  </div>
+</div>
+<p class="toolbar__hint no-print">A4 · <span id="page-count">—</span> pages. To save a PDF, choose <b>Save as PDF</b> in the print dialog with margins set to <b>None</b> and <b>Background graphics</b> on.</p>
+<input class="no-print" type="file" id="file-blueprint" accept="image/*,application/pdf" multiple hidden>
+<input class="no-print" type="file" id="file-document" accept="image/*,application/pdf,text/plain" multiple hidden>
+<input class="no-print" type="file" id="file-slot" accept="image/*,application/pdf" hidden>
+<input class="no-print" type="file" id="file-swatch" accept="image/*" hidden>
+
+<!-- ================= Reusable components ================= -->
+<template id="tpl-head">
+  <header class="run-head">
+    <div class="run-head__brand"><img src="/brand/zen-mark.png" alt=""><span class="run-head__name">ZEN INTERIOR</span></div>
+    <div class="run-head__tag"></div>
+    <div class="run-head__section">Project Dossier</div>
+  </header>
+</template>
+
+<template id="tpl-foot">
+  <footer class="run-foot">
+    <div class="run-foot__row">
+      <span>ZEN INTERIOR</span>
+      <span class="run-foot__tag">Modern Spaces. Better Living.</span>
+      <span class="run-foot__page"><b class="pg-now">00</b> / <span class="pg-total">00</span></span>
+    </div>
+    <div class="run-foot__conf">CONFIDENTIAL — CLIENT COPY</div>
+  </footer>
+</template>
+
+<template id="tpl-drawing">
+  <section class="page drawing-page is-landscape" data-section="Project Drawings">
+    <div class="page-body" style="padding-top:5mm; padding-bottom:4mm">
+      <div class="sheet">
+        <div class="frame"></div>
+        <aside class="tblock">
+          <div class="tblock__brand"><img src="/brand/zen-interior-reversed.png" alt="Zen Interior"><span>Modern Spaces. Better Living.</span></div>
+          <div><span class="label">Project</span><span class="value" data-bind="projectName"></span></div>
+          <div class="tblock__title"><span class="label">Drawing Title</span><span class="value" data-f="title"></span></div>
+          <div class="tblock__no"><div><span class="label">Drawing No.</span><span class="value" data-f="no"></span></div><div style="text-align:right"><span class="label">Revision</span><span class="value" style="font-family:var(--sans);font-size:9pt;color:var(--text-main)" data-f="rev"></span></div></div>
+          <div class="tblock__pair"><div><span class="label">Scale</span><span class="value" data-f="scale"></span></div><div><span class="label">Date</span><span class="value" data-f="date"></span></div></div>
+          <div class="tblock__sign">
+            <div><span class="label">Prepared By</span><span class="value" data-f="preparedBy"></span><i></i></div>
+            <div><span class="label">Approved By</span><span class="value" data-f="approvedBy"></span><i></i></div>
+          </div>
+          <div class="tblock__conf">CONFIDENTIAL — CLIENT COPY</div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</template>
+
+<template id="tpl-attachment">
+  <section class="page attachment-page" data-section="Project Documents">
+    <div class="page-body">
+      <div class="attachment-header"><span>PROJECT DOCUMENTS</span><span data-f="no">01</span></div>
+      <div class="attachment-title" data-f="title">Document</div>
+      <div class="attachment-sub" data-f="sub"></div>
+      <div class="attachment-content"><!-- External document --></div>
+    </div>
+  </section>
+</template>
+
+<!-- ================= THE DOSSIER ================= -->
+<main class="document" id="document">
+
+  <!-- 01 · COVER -->
+  <section class="page page--bleed cover" data-chrome="none" data-section="Cover">
+    <img class="cover__photo" src="/documents/cover-dossier.jpg" alt="">
+    <div class="cover__veil"></div>
+    <div class="cover__rail"></div>
+    <div class="cover__inner">
+      <div class="cover__top">
+        <img src="/brand/zen-interior-reversed.png" alt="Zen Interior">
+        <span data-bind="projectReference"></span>
+      </div>
+
+      <p class="cover__kicker">PROJECT DOSSIER</p>
+      <h1 class="cover__title">A space<br>crafted<br><em>around you.</em></h1>
+      <p class="cover__brand">Zen Interior — Modern Spaces. Better Living.</p>
+
+      <div class="cover__details">
+        <div class="big"><span class="label">Client</span><span class="value" data-bind="clientName"></span></div>
+        <div><span class="label">Project</span><span class="value" data-bind="projectName"></span></div>
+        <div><span class="label">Location</span><span class="value" data-bind="location"></span></div>
+        <div><span class="label">Project Reference</span><span class="value" data-bind="projectReference"></span></div>
+        <div><span class="label">Date</span><span class="value" data-bind="invoiceDate"></span></div>
+      </div>
+      <div class="cover__foot"><b>CONFIDENTIAL — CLIENT COPY</b><span>ZENINTERIOR.IN</span></div>
+    </div>
+  </section>
+
+  <!-- 02 · WELCOME -->
+  <section class="page" data-section="Project Welcome" data-toc="Welcome">
+    <div class="page-body" style="padding-top:8mm">
+      <figure class="welcome-photo"><img src="/documents/living-volume.jpg" alt="A living space designed by Zen Interior"><figcaption>THE STUDIO'S WORK · LIVING VOLUME</figcaption></figure>
+      <div class="welcome-grid">
+        <div>
+          <p class="eyebrow"><span class="sec-no"></span>Project Welcome</p>
+          <h2 class="display">Welcome to<br><em>your project.</em></h2>
+        </div>
+        <div>
+          <p class="lede">“Every space has its own character. Our approach brings together thoughtful design, refined materials and precise execution to create an environment that feels distinctly yours.”</p>
+          <p class="welcome-copy">This dossier is the complete record of your home — what we will build, how it is priced, the materials we have chosen together and the drawings our craftspeople will follow. Keep it close; each revision will be issued in the same form.</p>
+        </div>
+      </div>
+      <div class="kv" style="grid-template-columns:repeat(3,1fr); margin-top:auto">
+        <div><span class="label">Client</span><span class="value" data-bind="clientName"></span></div>
+        <div><span class="label">Project</span><span class="value" data-bind="projectName"></span></div>
+        <div><span class="label">Location</span><span class="value" data-bind="location"></span></div>
+        <div><span class="label">Design Studio</span><span class="value" data-brand="studio"></span></div>
+        <div><span class="label">Project Reference</span><span class="value" data-bind="projectReference"></span></div>
+        <div><span class="label">Document Date</span><span class="value" data-bind="invoiceDate"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 · AT A GLANCE -->
+  <section class="page" data-section="Project at a Glance" data-toc="At a Glance">
+    <div class="page-body">
+      <div class="head-block">
+        <p class="eyebrow"><span class="sec-no"></span>Overview</p>
+        <h2 class="display">Project<br><em>at a glance.</em></h2>
+      </div>
+      <div class="glance" id="glance"></div>
+    </div>
+  </section>
+
+  <!-- 04 · SCOPE -->
+  <section class="page" data-section="Project Scope" data-toc="Scope">
+    <div class="page-body">
+      <div class="head-block">
+        <p class="eyebrow"><span class="sec-no"></span>Project Scope</p>
+        <h2 class="display">The<br><em>scope.</em></h2>
+        <p class="intro">Six stages take your home from first sketch to handover. Each is led by a named member of the studio and closed with your sign-off.</p>
+      </div>
+      <div class="scope" id="scope"></div>
+    </div>
+  </section>
+
+  <!-- 05 · COMMERCIAL OVERVIEW -->
+  <section class="page" data-section="Commercial Overview" data-toc="Commercial">
+    <div class="page-body">
+      <div class="head-block" style="margin-bottom:5mm">
+        <p class="eyebrow"><span class="sec-no"></span>Commercial Overview</p>
+        <h2 class="display">Project<br><em>investment.</em></h2>
+      </div>
+      <div class="invest" id="invest"></div>
+      <div class="invest-total" id="invest-total"></div>
+    </div>
+  </section>
+
+  <!-- 06 · PROJECT INVOICE -->
+  <section class="page" data-section="Project Invoice" data-toc="Invoice">
+    <div class="page-body">
+      <div class="inv-top">
+        <div>
+          <p class="eyebrow"><span class="sec-no"></span>Zen Interior / Project Dossier</p>
+          <h2 class="display">Project Invoice</h2>
+        </div>
+        <span class="tag tag--gold">Tax Invoice · Original</span>
+      </div>
+      <div class="kv kv--4" style="margin-top:5mm">
+        <div><span class="label">Invoice No.</span><span class="value" data-bind="invoiceNumber"></span></div>
+        <div><span class="label">Invoice Date</span><span class="value" data-bind="invoiceDate"></span></div>
+        <div><span class="label">Due Date</span><span class="value" data-bind="dueDate"></span></div>
+        <div><span class="label">Project Ref.</span><span class="value" data-bind="projectReference"></span></div>
+      </div>
+      <div class="inv-parties">
+        <div>
+          <h4>CLIENT</h4>
+          <div class="value--serif" data-bind="clientName"></div>
+          <p data-bind="address"></p>
+          <dl><dt>Phone</dt><dd data-bind="phone"></dd><dt>Email</dt><dd data-bind="email"></dd></dl>
+        </div>
+        <div>
+          <h4>PROJECT</h4>
+          <div class="value--serif" data-bind="projectName"></div>
+          <p data-bind="location"></p>
+          <dl><dt>Type</dt><dd data-bind="projectType"></dd><dt>Area</dt><dd data-bind="projectArea"></dd></dl>
+        </div>
+      </div>
+      <table class="ledger ledger--invoice" style="margin-top:6mm">
+        <thead><tr><th colspan="2">Description</th><th class="c">Qty</th><th>Unit</th><th class="r">Rate</th><th class="r">Amount</th></tr></thead>
+        <tbody id="invoice-rows"></tbody>
+      </table>
+      <div id="invoice-totals"></div>
+    </div>
+  </section>
+
+  <!-- 07+ · DETAILED COST BREAKDOWN -->
+  <div data-slot="breakdown" hidden></div>
+
+  <!-- PAYMENT PLAN -->
+  <section class="page" data-section="Payment Schedule" data-toc="Payment">
+    <div class="page-body">
+      <div class="head-block">
+        <p class="eyebrow"><span class="sec-no"></span>Payment Schedule</p>
+        <h2 class="display">Project<br><em>payment plan.</em></h2>
+        <p class="intro">Five instalments, each tied to a visible milestone. An instalment falls due only once the stage before it is complete and approved.</p>
+      </div>
+      <div class="plan" id="plan"></div>
+      <div class="plan-summary" id="plan-summary"></div>
+      <div class="columns" style="margin-top:8mm">
+        <div class="article"><h3><span class="gold">A</span>Bank Details</h3><dl id="bank"></dl></div>
+        <div class="article"><h3><span class="gold">B</span>How to Pay</h3><ul id="howtopay"></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MATERIAL & FINISH SPECIFICATIONS -->
+  <div data-slot="specs" hidden></div>
+
+  <!-- MATERIAL BOARD -->
+  <section class="page" data-section="Material Palette" data-toc="Material Board">
+    <div class="page-body">
+      <div class="head-block" style="margin-bottom:6mm">
+        <p class="eyebrow"><span class="sec-no"></span>Material Board</p>
+        <h2 class="display display--sm">The palette, <em>in hand.</em></h2>
+        <p class="intro">Physical samples of each finish are held at the studio. Images are indicative; natural materials vary in tone and grain.</p>
+      </div>
+      <div class="board" id="board"></div>
+    </div>
+  </section>
+
+  <!-- PROJECT DRAWINGS · divider -->
+  <section class="page page--bleed divider" data-chrome="none" data-section="Project Drawings" data-toc="Drawings">
+    <svg class="divider__grid" viewBox="0 0 210 297" preserveAspectRatio="none" aria-hidden="true">
+      <g stroke="rgba(252,251,247,.07)" stroke-width=".2"><line x1="20" y1="0" x2="20" y2="297"/><line x1="70" y1="0" x2="70" y2="297"/><line x1="120" y1="0" x2="120" y2="297"/><line x1="170" y1="0" x2="170" y2="297"/><line x1="0" y1="60" x2="210" y2="60"/><line x1="0" y1="140" x2="210" y2="140"/></g>
+      <path d="M120 140V92a28 28 0 0 1 56 0v48" fill="none" stroke="#C6A15B" stroke-width=".3"/>
+      <path d="M130 140V96a18 18 0 0 1 36 0v44" fill="none" stroke="#C6A15B" stroke-width=".2" opacity=".6"/>
+    </svg>
+    <div class="divider__inner">
+      <div class="divider__top"><span>ZEN INTERIOR</span><span>PROJECT DOSSIER</span></div>
+      <div class="divider__no" data-secno></div>
+      <h2 class="divider__title">Project<br>Drawings</h2>
+      <p class="divider__sub">ARCHITECTURAL DOCUMENTATION</p>
+      <div class="divider__list" id="drawing-register"></div>
+      <div class="divider__foot"><span>MODERN SPACES. BETTER LIVING.</span><span>CONFIDENTIAL — CLIENT COPY</span></div>
+    </div>
+  </section>
+
+  <div data-slot="drawings" hidden></div>
+
+  <!-- PROJECT DOCUMENTS · divider -->
+  <section class="page page--bleed divider" data-chrome="none" data-section="Project Documents" data-toc="Documents">
+    <svg class="divider__grid" viewBox="0 0 210 297" preserveAspectRatio="none" aria-hidden="true">
+      <g stroke="rgba(252,251,247,.07)" stroke-width=".2"><line x1="20" y1="0" x2="20" y2="297"/><line x1="70" y1="0" x2="70" y2="297"/><line x1="120" y1="0" x2="120" y2="297"/><line x1="170" y1="0" x2="170" y2="297"/><line x1="0" y1="60" x2="210" y2="60"/><line x1="0" y1="140" x2="210" y2="140"/></g>
+      <rect x="130" y="70" width="40" height="52" fill="none" stroke="#C6A15B" stroke-width=".3"/>
+      <rect x="136" y="64" width="40" height="52" fill="none" stroke="#C6A15B" stroke-width=".2" opacity=".6"/>
+    </svg>
+    <div class="divider__inner">
+      <div class="divider__top"><span>ZEN INTERIOR</span><span>PROJECT DOSSIER</span></div>
+      <div class="divider__no" data-secno></div>
+      <h2 class="divider__title">Project<br>Documents</h2>
+      <p class="divider__sub">SUPPORTING RECORDS</p>
+      <div class="divider__list" id="document-register"></div>
+      <div class="divider__foot"><span>MODERN SPACES. BETTER LIVING.</span><span>CONFIDENTIAL — CLIENT COPY</span></div>
+    </div>
+  </section>
+
+  <div data-slot="attachments" hidden></div>
+
+  <!-- TERMS -->
+  <section class="page" data-section="Project Terms" data-toc="Terms">
+    <div class="page-body">
+      <div class="head-block" style="margin-bottom:5mm">
+        <p class="eyebrow"><span class="sec-no"></span>Terms &amp; Conditions</p>
+        <h2 class="display display--sm">Project <em>terms.</em></h2>
+      </div>
+      <div class="columns" id="terms" style="column-gap:10mm"></div>
+    </div>
+  </section>
+
+  <!-- CARE & WARRANTY -->
+  <section class="page" data-section="Care &amp; Warranty">
+    <div class="page-body">
+      <div class="head-block">
+        <p class="eyebrow"><span class="sec-no"></span>Warranty &amp; Care Information</p>
+        <h2 class="display display--sm">Care &amp; <em>warranty.</em></h2>
+        <p class="intro">A home is lived in. These notes will keep every surface as it was on the day we handed it over.</p>
+      </div>
+      <div class="care" id="care"></div>
+      <div class="service-card">
+        <div><span class="label">Service Contact</span><div class="value--serif" style="margin-top:1mm">Zen Interior Care</div><p class="muted" style="font-size:7pt;margin-top:1mm">Quote <b data-bind="projectReference"></b> for faster service.</p></div>
+        <div><span class="label">Phone</span><span class="value" style="display:block;margin-top:1mm" data-brand="phone"></span></div>
+        <div><span class="label">Email</span><span class="value" style="display:block;margin-top:1mm;word-break:break-word" data-brand="email"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENT APPROVAL -->
+  <section class="page" data-section="Client Approval" data-toc="Approval">
+    <div class="page-body">
+      <p class="eyebrow"><span class="sec-no"></span>Sign-off</p>
+      <h2 class="display">Client<br><em>approval.</em></h2>
+      <p class="approval-statement">“I confirm that the project details, scope, specifications and commercial terms presented in this dossier have been reviewed and approved.”</p>
+      <div class="kv kv--4" style="margin-top:12mm">
+        <div><span class="label">Project</span><span class="value" data-bind="projectName"></span></div>
+        <div><span class="label">Project Reference</span><span class="value" data-bind="projectReference"></span></div>
+        <div><span class="label">Invoice</span><span class="value" data-bind="invoiceNumber"></span></div>
+        <div><span class="label">Project Value</span><span class="value" data-total="grand"></span></div>
+      </div>
+      <div class="sign-grid">
+        <div class="sign-block">
+          <h4>CLIENT</h4>
+          <div class="sign-field pre" data-bind="clientName"></div><span class="label">Client Name</span>
+          <div class="sign-field"></div><span class="label">Signature</span>
+          <div class="sign-field"></div><span class="label">Date</span>
+        </div>
+        <div class="sign-block">
+          <h4>ZEN INTERIOR</h4>
+          <div class="sign-field pre" data-brand="representative"></div><span class="label">Zen Interior Representative</span>
+          <div class="sign-field"></div><span class="label">Signature</span>
+          <div style="display:flex; justify-content:space-between; align-items:end; gap:6mm">
+            <div style="flex:1"><div class="sign-field"></div><span class="label">Date</span></div>
+            <div class="seal">STUDIO<br>SEAL</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL · THANK YOU -->
+  <section class="page page--bleed closing" data-chrome="none" data-section="Thank You">
+    <svg class="closing__lines" viewBox="0 0 210 297" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="105" y1="0" x2="105" y2="24" stroke="#C6A15B" stroke-width=".25"/>
+      <rect x="10" y="10" width="190" height="277" fill="none" stroke="rgba(252,251,247,.1)" stroke-width=".2"/>
+    </svg>
+    <div class="closing__inner">
+      <h2 class="closing__thanks">THANK YOU</h2>
+      <p class="closing__for">FOR TRUSTING ZEN INTERIOR</p>
+      <p class="closing__msg">Your space is more than an interior.<br>It is where everyday life takes shape.</p>
+      <div class="closing__rule"></div>
+      <img class="closing__logo" src="/brand/zen-interior-reversed.png" alt="Zen Interior">
+      <p class="closing__tag">Modern Spaces. Better Living.</p>
+      <div class="closing__contact">
+        <div><span class="label">Phone</span><span class="value" data-brand="phone"></span></div>
+        <div><span class="label">Email</span><span class="value" data-brand="email"></span></div>
+        <div><span class="label">Website</span><span class="value" data-brand="website"></span></div>
+        <div><span class="label">Office</span><span class="value" data-brand="address"></span></div>
+      </div>
+      <p class="closing__foot">CONFIDENTIAL — CLIENT COPY</p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* =====================================================================
+   DATA — every client, project and commercial value lives here.
+   ===================================================================== */
+const brand = {
+  name: 'ZEN INTERIOR',
+  legalName: 'Zen Interior',
+  studio: 'Zen Interior Design Studio',
+  tagline: 'Modern Spaces. Better Living.',
+  phone: '+91 96007 85286',
+  email: 'naveenplf001@gmail.com',
+  website: 'www.zeninterior.in',
+  address: 'Chennai, Tamil Nadu · Bangalore, Karnataka',
+  gstin: 'GSTIN — to be added',
+  representative: 'Authorised Signatory',
+  bank: [
+    ['Account Name', 'Zen Interior'],
+    ['Bank', 'XXXXXXXX Bank, Chennai'],
+    ['Account No.', 'XXXX XXXX XXXX'],
+    ['IFSC', 'XXXX0000000'],
+    ['UPI', 'zeninterior@xxxx'],
+  ],
+};
+
+const project = {
+  clientName: 'Mr. & Mrs. Arjun Mehta',
+  projectName: 'The Mehta Residence',
+  location: 'Poes Garden, Chennai, Tamil Nadu',
+  address: 'Villa 7, Poes Garden, Teynampet, Chennai 600086',
+  projectReference: 'ZI-2026-001',
+  invoiceNumber: 'INV-2026-001',
+  invoiceDate: '17 September 2026',
+  dueDate: '30 September 2026',
+  phone: '+91 98410 00000',
+  email: 'arjun.mehta@example.com',
+  projectType: 'Residential Interior',
+  projectArea: '2,400 sq.ft · 4 BHK villa',
+  designScope: 'Interior Design + Execution',
+  status: 'Design',              // one of: Design, Production, Installation, Completed
+  timelineWeeks: 16,
+  preparedBy: 'Design Studio · ZI',
+  approvedBy: 'Principal Designer',
+};
+
+const invoiceItems = [
+  {
+    description: 'Modular Kitchen', detail: 'Parallel kitchen with tall appliance wall and breakfast counter',
+    quantity: 1, unit: 'Project',
+    breakdown: [
+      { item: 'Carcass — BWP marine plywood, 18 mm', qty: 160, unit: 'sq.ft', rate: 640 },
+      { item: 'Shutters — lacquered glass & matte acrylic', qty: 132, unit: 'sq.ft', rate: 1180 },
+      { item: 'Hardware — Blum Legrabox, Aventos & Space Tower', qty: 1, unit: 'Set', rate: 146000 },
+      { item: 'Countertop — Italian marble, 20 mm, honed', qty: 56, unit: 'sq.ft', rate: 1650 },
+      { item: 'Breakfast counter with walnut top', qty: 1, unit: 'Nos.', rate: 58000 },
+    ],
+  },
+  {
+    description: 'Wardrobe', detail: 'Master and guest wardrobes, full height with lofts',
+    quantity: 2, unit: 'Nos.',
+    breakdown: [
+      { item: 'Carcass — BWP plywood, 18 mm', qty: 150, unit: 'sq.ft', rate: 580 },
+      { item: 'Shutters — PU lacquer with fluted glass inserts', qty: 140, unit: 'sq.ft', rate: 940 },
+      { item: 'Internal fittings — drawers, pull-outs, lighting', qty: 2, unit: 'Set', rate: 26000 },
+    ],
+  },
+  {
+    description: 'TV Unit', detail: 'Fluted walnut wall with floating console',
+    quantity: 1, unit: 'Nos.',
+    breakdown: [
+      { item: 'Fluted veneer panelling — American walnut', qty: 110, unit: 'sq.ft', rate: 1280 },
+      { item: 'Floating console, push-to-open', qty: 1, unit: 'Nos.', rate: 68000 },
+    ],
+  },
+  {
+    description: 'Lighting', detail: 'Architectural lighting with scene control',
+    quantity: 1, unit: 'Lot',
+    breakdown: [
+      { item: 'COB downlights, 9 W, 3000 K', qty: 64, unit: 'Nos.', rate: 1650 },
+      { item: 'Linear LED profiles', qty: 180, unit: 'r.ft', rate: 420 },
+      { item: 'Scene controller & dimmers', qty: 1, unit: 'Set', rate: 54000 },
+    ],
+  },
+  {
+    description: 'False Ceiling', detail: 'Gypsum ceiling with coves and reveal details',
+    quantity: 1, unit: 'Lot',
+    breakdown: [
+      { item: 'Gypsum ceiling — Saint-Gobain Gyproc', qty: 1650, unit: 'sq.ft', rate: 135 },
+      { item: 'Cove and reveal detailing', qty: 340, unit: 'r.ft', rate: 180 },
+    ],
+  },
+  {
+    description: 'Foyer & Pooja Joinery', detail: 'Entrance console, shoe storage and pooja unit',
+    quantity: 1, unit: 'Project',
+    breakdown: [
+      { item: 'Foyer console with shoe storage', qty: 1, unit: 'Nos.', rate: 86000 },
+      { item: 'Pooja unit — teak with brass inlay', qty: 1, unit: 'Nos.', rate: 124000 },
+    ],
+  },
+];
+
+const charges = {
+  additional: [
+    { label: 'Design & project management', amount: 140000, bucket: 'Design' },
+    { label: 'Styling, décor sourcing & deep clean', amount: 45000, bucket: 'Additional Services' },
+  ],
+  discountPercent: 4,
+  discountLabel: 'Studio courtesy',
+  gstPercent: 18,
+};
+
+/* How the work itself (after discount) divides across stages, for the
+   investment summary. Shares must add to 1. */
+const investmentShares = [
+  { name: 'Materials', note: 'Boards, finishes, stone, hardware and fittings', share: 0.52 },
+  { name: 'Manufacturing', note: 'Precision joinery at our partner facility', share: 0.31 },
+  { name: 'Installation', note: 'Site installation, finishing and commissioning', share: 0.17 },
+];
+
+const paymentSchedule = [
+  { stage: 'Booking', note: 'On signing the dossier', percent: 10, status: 'Paid' },
+  { stage: 'Design Approval', note: 'On sign-off of drawings and samples', percent: 15, status: 'Due' },
+  { stage: 'Production', note: 'On release to the factory', percent: 40, status: 'Upcoming' },
+  { stage: 'Installation', note: 'On delivery of modules to site', percent: 25, status: 'Upcoming' },
+  { stage: 'Handover', note: 'On completion and walkthrough', percent: 10, status: 'Upcoming' },
+];
+const howToPay = [
+  'NEFT / RTGS / IMPS or cheque in favour of Zen Interior.',
+  'Quote the invoice number as the payment reference.',
+  'A stamped receipt follows within one working day.',
+  'All amounts include GST at the applicable rate.',
+];
+
+const scope = [
+  { t: 'DESIGN', p: 'Space planning, 3D visualisation and a complete set of working drawings, refined with you until every room feels right.' },
+  { t: 'MATERIALS', p: 'Boards, stone, veneer, fabric and hardware selected with you and approved as physical samples before ordering.' },
+  { t: 'MANUFACTURING', p: 'Joinery built on CNC lines at our partner facility, with quality checks at cutting, edging and finishing.' },
+  { t: 'INSTALLATION', p: 'Modules installed dry and in sequence by our own teams, with floors and finished surfaces protected throughout.' },
+  { t: 'FINISHING', p: 'Paint, lighting scenes, appliances and soft furnishings brought together and adjusted in place.' },
+  { t: 'HANDOVER', p: 'A joint walkthrough, a closed snag list, care briefing and warranty records — then the keys are yours.' },
+];
+
+const specifications = [
+  ['Kitchen', 'Marine plywood', 'Greenply', 'Laminated', 'Frosty white', 'BWP 710 · 18 mm', 'Approved'],
+  ['Kitchen', 'Lacquered glass', 'Saint-Gobain', 'Gloss', 'Deep emerald', '6 mm toughened', 'Approved'],
+  ['Kitchen', 'Acrylic shutters', 'Senosan', 'Matte AFP', 'Warm ivory', '18 mm · ABS edge', 'Approved'],
+  ['Kitchen', 'Countertop', 'Italian marble', 'Honed', 'Statuario', '20 mm · sealed', 'Sample due'],
+  ['Wardrobe', 'Plywood', 'Century', 'Laminated', 'Linen grey', 'BWR 303 · 18 mm', 'Approved'],
+  ['Wardrobe', 'PU lacquer', 'Asian Paints', 'Matte 10%', 'Sandstone', 'MDF 18 mm · 6-coat', 'Approved'],
+  ['Wardrobe', 'Fluted glass', 'Saint-Gobain', 'Reeded', 'Bronze tint', '5 mm', 'Approved'],
+  ['Living', 'Veneer', 'Decowood', 'Open pore', 'American walnut', '4 mm on 12 mm ply', 'Approved'],
+  ['Living', 'Upholstery', 'Sarom', 'Boucle', 'Oatmeal', '38,000 rubs', 'Client choice'],
+  ['Hardware', 'Drawer systems', 'Blum', 'Legrabox', 'Orion grey', 'Soft-close · 40 kg', 'Approved'],
+  ['Hardware', 'Handles', 'Hettich', 'Anodised', 'Champagne', 'Aluminium profile', 'Approved'],
+  ['Pooja', 'Solid wood', 'Burma teak', 'Oil finish', 'Natural', 'Kiln-dried', 'Approved'],
+  ['Pooja', 'Inlay', 'Artisan made', 'Hand polished', 'Brass', '2 mm strip', 'Sample due'],
+  ['Ceiling', 'Gypsum board', 'Gyproc', 'Emulsion', 'Brilliant white', '12.5 mm', 'Approved'],
+  ['Lighting', 'Downlights', 'Philips', 'Anti-glare', '3000 K', '9 W · CRI 90+', 'Approved'],
+  ['Lighting', 'LED profile', 'Klus', 'Opal diffuser', '2700 K', '12 V · 10 W/m', 'Approved'],
+];
+
+const materials = [
+  { cat: 'WOOD', name: 'American Walnut', finish: 'Open-pore matte lacquer', spec: '4 mm veneer on 12 mm ply', ref: 'ZI-MT-01', tex: 'wood' },
+  { cat: 'MARBLE', name: 'Statuario', finish: 'Honed, sealed', spec: '20 mm slab', ref: 'ZI-MT-02', tex: 'marble' },
+  { cat: 'FABRIC', name: 'Oatmeal Boucle', finish: 'Stain-guard treated', spec: '38,000 Martindale rubs', ref: 'ZI-MT-03', tex: 'fabric' },
+  { cat: 'LAMINATE', name: 'Sage Suede', finish: 'Super-matte AFP', spec: '1 mm · anti-fingerprint', ref: 'ZI-MT-04', tex: 'laminate' },
+  { cat: 'METAL', name: 'Champagne Brass', finish: 'Brushed, anodised', spec: 'Aluminium profiles', ref: 'ZI-MT-05', tex: 'metal' },
+  { cat: 'GLASS', name: 'Reeded Bronze', finish: 'Fluted, toughened', spec: '5 mm', ref: 'ZI-MT-06', tex: 'glass' },
+  { cat: 'LIGHTING', name: 'Warm Cove', finish: '2700 K linear', spec: '10 W/m · CRI 90+', ref: 'ZI-MT-07', tex: 'light' },
+  { cat: 'ACCENT', name: 'Emerald Lacquer', finish: 'High-gloss glass', spec: '6 mm back-painted', ref: 'ZI-MT-08', tex: 'emerald' },
+];
+
+const drawings = [
+  { no: 'DR-01', title: 'Floor Plan', kind: 'floor', scale: '1:50 @ A3', rev: 'R2', date: '12 Sep 2026' },
+  { no: 'DR-02', title: 'Furniture Layout', kind: 'furniture', scale: '1:50 @ A3', rev: 'R2', date: '12 Sep 2026' },
+  { no: 'DR-03', title: 'Electrical Layout', kind: 'electrical', scale: '1:50 @ A3', rev: 'R1', date: '13 Sep 2026' },
+  { no: 'DR-04', title: 'False Ceiling', kind: 'ceiling', scale: '1:50 @ A3', rev: 'R1', date: '13 Sep 2026' },
+  { no: 'DR-05', title: 'Elevation — Living TV Wall', kind: 'elevation', scale: '1:25 @ A3', rev: 'R1', date: '14 Sep 2026' },
+  { no: 'DR-06', title: 'Kitchen Detail', kind: 'kitchen', scale: '1:25 @ A3', rev: 'R0', date: '14 Sep 2026' },
+  { no: 'DR-07', title: 'Wardrobe Detail', kind: 'wardrobe', scale: '1:20 @ A3', rev: 'R0', date: '15 Sep 2026' },
+];
+
+/* Supporting documents. `attach: true` reserves a page for the document. */
+const documentsIndex = [
+  { title: 'Material Quotations', attach: true, sub: 'Vendor quotations for stone, veneer and hardware' },
+  { title: 'Appliance Details', attach: true, sub: 'Model sheets for the built-in appliances' },
+  { title: 'Product Specifications', attach: false },
+  { title: 'Lighting Details', attach: false },
+  { title: 'Warranty Documents', attach: false },
+  { title: 'Vendor Documents', attach: false },
+  { title: 'Installation Information', attach: false },
+  { title: 'Other Approvals', attach: false },
+];
+
+const terms = [
+  ['Payment Terms', 'Instalments are payable within seven days of each milestone. Production begins once the design-approval instalment is received.'],
+  ['Project Scope', 'The scope is limited to the work described in this dossier. Civil changes, plumbing re-routing and unlisted loose furniture are quoted separately.'],
+  ['Material Selection', 'Natural stone and veneer vary in grain and tone. Approved samples indicate character rather than an exact match.'],
+  ['Design Approval', 'Working drawings are issued for signature. Changes after sign-off are handled as variations.'],
+  ['Production', 'Production starts after drawing approval and payment. Factory slots are reserved on confirmation.'],
+  ['Installation', 'The client provides uninterrupted site access, power, water and secure storage during agreed working hours.'],
+  ['Changes & Variations', 'Every variation is priced in writing and carried out only after written approval. Timelines adjust accordingly.'],
+  ['Cancellation', 'Cancellation after production begins is charged at the value of work done and materials procured, subject to the advance paid.'],
+  ['Warranty', 'Warranties begin on the handover date and are subject to the care guidance in this dossier.'],
+  ['Handover', 'Handover is recorded by joint walkthrough. Materials remain the property of Zen Interior until payment is complete.'],
+];
+
+const care = [
+  { t: 'Material Care', tag: 'Daily', p: 'Wipe lacquer, acrylic and glass with a soft damp microfibre cloth. Avoid abrasive pads, ammonia and solvents.' },
+  { t: 'Product Care', tag: 'Monthly', p: 'Keep drawer runners and hinges free of debris. Do not exceed the rated load of pull-outs and lift-ups.' },
+  { t: 'Installation Warranty', tag: '1 year', p: 'Covers alignment, fixing and finishing workmanship carried out by the studio.' },
+  { t: 'Manufacturer Warranty', tag: 'Up to 10 years', p: 'Carcasses carry ten years against swelling and delamination. Hardware and appliances follow the brand warranty.' },
+  { t: 'Maintenance', tag: 'Annual', p: 'Seal marble and re-oil veneer and teak once a year. Our care team can schedule this for you.' },
+  { t: 'Not Covered', tag: 'Exclusions', p: 'Damage from water leakage, pests, misuse, or alterations made by others after handover.' },
+];
+
+/* ==== DRAWINGS:BEGIN ==== */
+/* Sample architectural drawings, generated as inline SVG so the document is
+   complete before real drawings are attached. Replace any sheet by
+   attaching an image or PDF to it. Plan units are centimetres. */
+const Drawings = (() => {
+  const W = 1600, H = 1000;
+  const M = { l: 170, t: 150, r: 130, b: 150 };
+  const VW = W + M.l + M.r, VH = H + M.t + M.b;
+
+  const rooms = [
+    { n: 'LIVING & DINING', x: 0, y: 0, w: 900, h: 560, lx: 330, ly: 380 },
+    { n: 'KITCHEN', x: 900, y: 0, w: 400, h: 360, lx: 1070, ly: 290 },
+    { n: 'UTILITY', x: 1300, y: 0, w: 300, h: 360 },
+    { n: 'GALLERY', x: 900, y: 360, w: 450, h: 200 },
+    { n: 'FOYER', x: 1350, y: 360, w: 250, h: 200 },
+    { n: 'MASTER BEDROOM', x: 0, y: 560, w: 560, h: 440, lx: 280, ly: 640 },
+    { n: 'DRESS & BATH', x: 560, y: 560, w: 240, h: 440, ly: 900 },
+    { n: 'BEDROOM 02', x: 800, y: 560, w: 450, h: 440, lx: 1025, ly: 650 },
+    { n: 'BATH 02', x: 1250, y: 560, w: 350, h: 200 },
+    { n: 'STUDY', x: 1250, y: 760, w: 350, h: 240, ly: 830 },
+  ];
+  const openings = [
+    { d: 'v', x: 900, y: 380, len: 160 },
+    { d: 'v', x: 1350, y: 385, len: 150 },
+    { d: 'h', x: 960, y: 360, len: 180 },
+  ];
+  const doors = [
+    { d: 'v', x: 1600, y: 410, len: 110, s: -1, main: true },
+    { d: 'v', x: 1300, y: 200, len: 90, s: 1 },
+    { d: 'h', x: 400, y: 560, len: 100, s: 1 },
+    { d: 'v', x: 560, y: 620, len: 90, s: 1 },
+    { d: 'h', x: 1050, y: 560, len: 100, s: 1 },
+    { d: 'h', x: 1265, y: 560, len: 80, s: 1 },
+    { d: 'v', x: 1250, y: 880, len: 90, s: 1 },
+  ];
+  const windows = [
+    { d: 'h', x: 150, y: 0, len: 300 }, { d: 'h', x: 560, y: 0, len: 220 }, { d: 'h', x: 1020, y: 0, len: 180 },
+    { d: 'h', x: 120, y: 1000, len: 300 }, { d: 'h', x: 900, y: 1000, len: 250 }, { d: 'h', x: 1340, y: 1000, len: 180 },
+    { d: 'v', x: 0, y: 150, len: 250 }, { d: 'v', x: 0, y: 680, len: 200 }, { d: 'v', x: 1600, y: 100, len: 160 },
+  ];
+
+  const f = (n) => Math.round(n * 10) / 10;
+  const R = (x, y, w, h, c, extra = '') => `<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" class="${c}" ${extra}/>`;
+  const L = (x1, y1, x2, y2, c) => `<line x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}" class="${c}"/>`;
+  const C = (cx, cy, r, c) => `<circle cx="${f(cx)}" cy="${f(cy)}" r="${r}" class="${c}"/>`;
+  const T = (x, y, s, c, a = 'middle', extra = '') => `<text x="${f(x)}" y="${f(y)}" class="${c}" text-anchor="${a}" ${extra}>${s}</text>`;
+
+  const defs = `<defs><pattern id="zd-hatch" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="12" stroke="#4A6B62" stroke-width="1"/></pattern></defs>`;
+
+  function dimH(x1, x2, y, label, tickLen = 14) {
+    return L(x1, y, x2, y, 'dim') +
+      L(x1 - 6, y + 6, x1 + 6, y - 6, 'thin') + L(x2 - 6, y + 6, x2 + 6, y - 6, 'thin') +
+      L(x1, y - tickLen, x1, y + tickLen, 'dim') + L(x2, y - tickLen, x2, y + tickLen, 'dim') +
+      T((x1 + x2) / 2, y - 9, label, 't-dim');
+  }
+  function dimV(x, y1, y2, label, tickLen = 14) {
+    const cy = (y1 + y2) / 2;
+    return L(x, y1, x, y2, 'dim') +
+      L(x - 6, y1 + 6, x + 6, y1 - 6, 'thin') + L(x - 6, y2 + 6, x + 6, y2 - 6, 'thin') +
+      L(x - tickLen, y1, x + tickLen, y1, 'dim') + L(x - tickLen, y2, x + tickLen, y2, 'dim') +
+      T(x - 9, cy, label, 't-dim', 'middle', `transform="rotate(-90 ${f(x - 9)} ${f(cy)})"`);
+  }
+
+  function shell() {
+    let s = '';
+    rooms.forEach((r) => { s += R(r.x, r.y, r.w, r.h, 'wall'); });
+    s += R(0, 0, W, H, 'wall-out');
+    openings.forEach((o) => {
+      s += o.d === 'h' ? R(o.x, o.y - 10, o.len, 20, 'cut') : R(o.x - 10, o.y, 20, o.len, 'cut');
+      s += o.d === 'h' ? L(o.x, o.y - 5, o.x, o.y + 5, 'thin') + L(o.x + o.len, o.y - 5, o.x + o.len, o.y + 5, 'thin')
+                       : L(o.x - 5, o.y, o.x + 5, o.y, 'thin') + L(o.x - 5, o.y + o.len, o.x + 5, o.y + o.len, 'thin');
+    });
+    windows.forEach((w) => {
+      if (w.d === 'h') s += R(w.x, w.y - 9, w.len, 18, 'cut') + L(w.x, w.y - 8, w.x + w.len, w.y - 8, 'thin') + L(w.x, w.y, w.x + w.len, w.y, 'hair') + L(w.x, w.y + 8, w.x + w.len, w.y + 8, 'thin');
+      else s += R(w.x - 9, w.y, 18, w.len, 'cut') + L(w.x - 8, w.y, w.x - 8, w.y + w.len, 'thin') + L(w.x, w.y, w.x, w.y + w.len, 'hair') + L(w.x + 8, w.y, w.x + 8, w.y + w.len, 'thin');
+    });
+    doors.forEach((d) => {
+      const sw = d.main ? 'wall' : 'thin';
+      if (d.d === 'h') {
+        s += R(d.x, d.y - 10, d.len, 20, 'cut');
+        s += L(d.x, d.y, d.x, d.y + d.s * d.len, 'thin');
+        s += `<path d="M${d.x} ${d.y + d.s * d.len} A${d.len} ${d.len} 0 0 ${d.s > 0 ? 0 : 1} ${d.x + d.len} ${d.y}" class="hair" stroke-dasharray="5 4"/>`;
+      } else {
+        s += R(d.x - 10, d.y, 20, d.len, 'cut');
+        s += L(d.x, d.y, d.x + d.s * d.len, d.y, sw === 'wall' ? 'thin' : 'thin');
+        s += `<path d="M${d.x + d.s * d.len} ${d.y} A${d.len} ${d.len} 0 0 ${d.s > 0 ? 1 : 0} ${d.x} ${d.y + d.len}" class="hair" stroke-dasharray="5 4"/>`;
+      }
+    });
+    // entry marker
+    s += `<path d="M${W + 70} ${465} l-34 -14 v28 z" class="elec-fill"/>` + T(W + 60, 510, 'ENTRY', 't-note');
+    return s;
+  }
+
+  function labels(withArea = true) {
+    return rooms.map((r) => {
+      const x = r.lx ?? r.x + r.w / 2, y = r.ly ?? r.y + r.h / 2;
+      const m2 = (r.w * r.h) / 10000, ft = Math.round(m2 * 10.764);
+      return T(x, y, r.n, 't-room') + (withArea ? T(x, y + 22, `${m2.toFixed(1)} m² · ${ft} sq.ft`, 't-area') : '');
+    }).join('');
+  }
+
+  function dims() {
+    let s = '';
+    const xs = [0, 900, 1300, 1600];
+    for (let i = 0; i < xs.length - 1; i++) s += dimH(xs[i], xs[i + 1], -60, `${(xs[i + 1] - xs[i]) * 10}`);
+    s += dimH(0, W, -110, `${W * 10}`);
+    const ys = [0, 560, 1000];
+    for (let i = 0; i < ys.length - 1; i++) s += dimV(-60, ys[i], ys[i + 1], `${(ys[i + 1] - ys[i]) * 10}`);
+    s += dimV(-115, 0, H, `${H * 10}`);
+    const bx = [0, 560, 800, 1250, 1600];
+    for (let i = 0; i < bx.length - 1; i++) s += dimH(bx[i], bx[i + 1], H + 60, `${(bx[i + 1] - bx[i]) * 10}`);
+    return s;
+  }
+
+  function furniture() {
+    let s = '';
+    // living
+    s += R(60, 60, 320, 85, 'furn-fill', 'rx="8"') + R(60, 145, 85, 210, 'furn-fill', 'rx="8"');
+    s += R(200, 190, 150, 90, 'furn', 'rx="4"') + C(275, 235, 26, 'furn');
+    s += R(400, 250, 80, 80, 'furn-fill', 'rx="10"');
+    s += R(70, 515, 330, 30, 'hatch');
+    s += R(150, 390, 220, 110, 'hair', 'stroke-dasharray="4 4"');
+    // dining
+    s += R(580, 170, 230, 120, 'furn', 'rx="4"');
+    [605, 670, 735].forEach((x) => { s += R(x, 135, 45, 30, 'furn-fill', 'rx="6"') + R(x, 295, 45, 30, 'furn-fill', 'rx="6"'); });
+    s += C(695, 230, 30, 'hair');
+    // kitchen
+    s += R(912, 12, 380, 62, 'hatch') + R(1230, 74, 62, 240, 'hatch');
+    s += R(1010, 150, 160, 80, 'furn-fill', 'rx="4"');
+    s += C(1040, 43, 14, 'furn') + C(1080, 43, 14, 'furn') + R(1140, 25, 70, 38, 'furn', 'rx="10"');
+    // utility
+    s += R(1312, 12, 276, 60, 'hatch') + C(1540, 280, 34, 'furn');
+    // master
+    s += R(160, 720, 200, 220, 'furn-fill', 'rx="6"') + R(172, 730, 80, 38, 'furn', 'rx="8"') + R(268, 730, 80, 38, 'furn', 'rx="8"');
+    s += L(160, 790, 360, 790, 'furn');
+    s += R(105, 725, 45, 45, 'furn') + R(370, 725, 45, 45, 'furn');
+    s += R(12, 580, 60, 90, 'hatch');
+    s += R(420, 870, 110, 110, 'furn-fill', 'rx="30"');
+    // dress & bath
+    s += R(572, 580, 60, 220, 'hatch') + R(740, 580, 50, 150, 'hatch');
+    s += `<ellipse cx="760" cy="960" rx="22" ry="28" class="furn"/>` + R(575, 850, 70, 45, 'furn', 'rx="14"') + R(680, 820, 108, 70, 'hair', 'stroke-dasharray="4 4"');
+    // bedroom 02
+    s += R(950, 780, 180, 205, 'furn-fill', 'rx="6"') + R(962, 790, 70, 34, 'furn', 'rx="8"') + R(1048, 790, 70, 34, 'furn', 'rx="8"');
+    s += L(950, 845, 1130, 845, 'furn');
+    s += R(812, 580, 58, 230, 'hatch');
+    s += R(812, 880, 90, 100, 'furn');
+    // bath 02
+    s += `<ellipse cx="1560" cy="660" rx="22" ry="28" class="furn"/>` + R(1270, 580, 80, 50, 'furn', 'rx="14"') + R(1440, 690, 150, 60, 'hair', 'stroke-dasharray="4 4"');
+    // study
+    s += R(1270, 925, 220, 62, 'furn-fill') + C(1380, 895, 22, 'furn') + R(1540, 780, 50, 200, 'hatch');
+    return s;
+  }
+
+  const lightPts = [[250, 220], [650, 230], [450, 90], [1100, 180], [1450, 180], [1120, 460], [1475, 460], [260, 800], [680, 700], [1030, 880], [1425, 660], [1425, 860]];
+  function electrical() {
+    let s = '';
+    lightPts.forEach(([x, y]) => { s += C(x, y, 15, 'elec') + L(x - 10, y - 10, x + 10, y + 10, 'elec') + L(x - 10, y + 10, x + 10, y - 10, 'elec'); });
+    const switches = [[1580, 540], [880, 530], [420, 580], [1070, 580], [1330, 150], [540, 700], [1270, 950]];
+    switches.forEach(([x, y]) => { s += R(x - 9, y - 9, 18, 18, 'elec-fill'); });
+    const sockets = [[20, 300], [240, 530], [880, 120], [1000, 80], [1180, 80], [20, 800], [540, 950], [1230, 700], [1580, 950], [1450, 580]];
+    sockets.forEach(([x, y]) => { s += C(x, y, 11, 'elec') + L(x - 11, y, x + 11, y, 'elec'); });
+    const ac = [[30, 240], [30, 780], [1030, 580], [1580, 880]];
+    ac.forEach(([x, y]) => { s += R(x - 12, y - 32, 24, 64, 'elec', 'rx="4"') + T(x + 26, y + 5, 'AC', 't-note', 'start'); });
+    // circuits
+    s += `<path d="M880 530 Q760 380 650 230 M650 230 Q450 160 450 90 M650 230 Q430 260 250 220" class="wire"/>`;
+    s += `<path d="M420 580 Q330 690 260 800 M540 700 Q610 690 680 700" class="wire"/>`;
+    s += `<path d="M1070 580 Q1050 730 1030 880 M1580 540 Q1520 500 1475 460 M1475 460 Q1300 440 1120 460" class="wire"/>`;
+    s += `<path d="M1330 150 Q1390 170 1450 180 M1330 150 Q1210 160 1100 180" class="wire"/>`;
+    // DB
+    s += R(1560, 290, 30, 50, 'elec-fill') + T(1545, 320, 'DB', 't-note', 'end');
+    return s;
+  }
+  function electricalLegend() {
+    const y = H + 115;
+    return `<g transform="translate(260 ${y})">` +
+      C(0, 0, 13, 'elec') + L(-9, -9, 9, 9, 'elec') + L(-9, 9, 9, -9, 'elec') + T(24, 5, 'CEILING LIGHT', 't-note', 'start') +
+      R(200, -9, 18, 18, 'elec-fill') + T(232, 5, 'SWITCH PLATE', 't-note', 'start') +
+      C(420, 0, 11, 'elec') + L(409, 0, 431, 0, 'elec') + T(444, 5, '6/16A SOCKET', 't-note', 'start') +
+      R(628, -16, 20, 32, 'elec', 'rx="4"') + T(660, 5, 'AC POINT', 't-note', 'start') +
+      L(800, 0, 850, 0, 'wire') + T(862, 5, 'SWITCHING CIRCUIT', 't-note', 'start') + `</g>`;
+  }
+
+  function ceiling() {
+    let s = '';
+    const big = rooms.filter((r) => r.w * r.h > 70000);
+    big.forEach((r) => {
+      s += R(r.x + 45, r.y + 45, r.w - 90, r.h - 90, 'dash');
+      s += R(r.x + 60, r.y + 60, r.w - 120, r.h - 120, 'gold');
+      const nx = Math.max(2, Math.round((r.w - 120) / 170)), ny = Math.max(2, Math.round((r.h - 120) / 170));
+      for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) {
+        const x = r.x + 90 + (i * (r.w - 180)) / (nx - 1), y = r.y + 90 + (j * (r.h - 180)) / (ny - 1);
+        s += C(x, y, 7, 'elec') + C(x, y, 2.5, 'elec-fill');
+      }
+      s += T(r.x + r.w - 70, r.y + r.h - 62, 'FC +2850', 't-note', 'end');
+    });
+    rooms.filter((r) => r.w * r.h <= 70000).forEach((r) => {
+      s += C(r.x + r.w / 2, r.y + r.h / 2 - 45, 7, 'elec') + C(r.x + r.w / 2, r.y + r.h / 2 - 45, 2.5, 'elec-fill');
+      s += T(r.x + r.w / 2, r.y + r.h - 22, 'GYPSUM +2700', 't-note');
+    });
+    return s;
+  }
+  function ceilingLegend() {
+    const y = H + 115;
+    return `<g transform="translate(260 ${y})">` +
+      L(0, 0, 60, 0, 'dash') + T(74, 5, 'COVE LINE', 't-note', 'start') +
+      L(230, 0, 290, 0, 'gold') + T(304, 5, 'LED PROFILE', 't-note', 'start') +
+      C(470, 0, 7, 'elec') + C(470, 0, 2.5, 'elec-fill') + T(488, 5, 'COB DOWNLIGHT 9W · 3000K', 't-note', 'start') +
+      T(830, 5, 'FC = FALSE CEILING · LEVELS FROM FFL', 't-note', 'start') + `</g>`;
+  }
+
+  function northAndScale() {
+    const nx = W + 60, ny = -80;
+    return `<g transform="translate(${nx} ${ny})">` + C(0, 0, 30, 'thin') +
+      `<path d="M0 -26 L10 12 L0 5 L-10 12 Z" class="elec-fill"/>` + T(0, -40, 'N', 't-room') + `</g>` +
+      `<g transform="translate(0 ${H + 115})">` +
+      R(0, -6, 50, 12, 'elec-fill') + R(50, -6, 50, 12, 'thin') + R(100, -6, 100, 12, 'elec-fill') +
+      T(0, -14, '0', 't-dim') + T(100, -14, '1', 't-dim') + T(200, -14, '2 m', 't-dim') + `</g>`;
+  }
+
+  function plan(kind) {
+    let body = '';
+    if (kind === 'furniture') body = furniture() + shell() + labels(false);
+    else if (kind === 'electrical') body = furniture().replace(/class="(furn|furn-fill|hatch)"/g, 'class="hair" opacity=".35"') + shell() + electrical() + labels(false) + electricalLegend();
+    else if (kind === 'ceiling') body = shell() + ceiling() + labels(false) + ceilingLegend();
+    else body = shell() + labels(true);
+    return body + dims() + northAndScale();
+  }
+
+  /* ---- Elevations (units: 1 = 2.5 mm) ---- */
+  function kitchenElevation() {
+    const k = 0.4, fl = 1000, X = (mm) => 40 + mm * k, Y = (mm) => fl - mm * k;
+    let s = L(-40, fl, 1620, fl, 'wall') + R(X(0), Y(3000), 3800 * k, 3000 * k, 'hair');
+    // tall unit
+    s += R(X(0), Y(2250), 600 * k, 2150 * k, 'thin') + L(X(0), Y(100), X(600), Y(100), 'thin');
+    s += R(X(40), Y(1350), 520 * k, 520 * k, 'furn') + R(X(40), Y(1950), 520 * k, 500 * k, 'furn');
+    s += R(X(80), Y(1300), 440 * k, 420 * k, 'dash');
+    // base run
+    s += R(X(600), Y(850), 3200 * k, 750 * k, 'thin') + L(X(600), Y(100), X(3800), Y(100), 'thin') + R(X(600), Y(890), 3200 * k, 40 * k, 'furn-fill');
+    [600, 1200, 1800, 2400, 3000].forEach((x) => { s += L(X(x), Y(850), X(x), Y(100), 'thin'); });
+    [1200, 1800].forEach((x) => { s += L(X(x), Y(600), X(x + 600), Y(600), 'thin') + L(X(x), Y(350), X(x + 600), Y(350), 'thin'); });
+    [600, 1200, 1800, 2400, 3000, 3800].forEach((x, i, a) => { if (i < a.length - 1) s += L(X(x + 40), Y(820), X(a[i + 1] - 40), Y(820), 'gold'); });
+    // hob, sink, chimney
+    s += R(X(2450), Y(930), 500 * k, 30 * k, 'elec-fill');
+    s += `<path d="M${X(2500)} ${Y(1600)} L${X(2900)} ${Y(1600)} L${X(2800)} ${Y(2250)} L${X(2600)} ${Y(2250)} Z" class="thin"/>`;
+    s += R(X(1300), Y(930), 600 * k, 40 * k, 'dash') + L(X(1600), Y(930), X(1600), Y(1050), 'thin') + L(X(1600), Y(1050), X(1540), Y(1050), 'thin');
+    // wall units
+    s += R(X(600), Y(2250), 1800 * k, 700 * k, 'thin') + R(X(3000), Y(2250), 800 * k, 700 * k, 'thin');
+    [1200, 1800].forEach((x) => { s += L(X(x), Y(2250), X(x), Y(1550), 'thin'); });
+    s += L(X(3400), Y(2250), X(3400), Y(1550), 'thin');
+    s += L(X(600), Y(1560), X(2400), Y(1560), 'gold') + L(X(3000), Y(1560), X(3800), Y(1560), 'gold');
+    // backsplash
+    s += R(X(600), Y(1550), 3200 * k, 660 * k, 'hair', 'stroke-dasharray="3 5"');
+    // tall unit on right
+    s += R(X(3800), Y(2250), 0, 0, 'thin');
+    // dimensions
+    s += dimV(X(0) - 60, Y(3000), Y(2250), '750') + dimV(X(0) - 60, Y(2250), Y(100), '2150') + dimV(X(0) - 60, Y(100), Y(0), '100');
+    s += dimV(X(3800) + 60, Y(2250), Y(1550), '700') + dimV(X(3800) + 60, Y(1550), Y(890), '660') + dimV(X(3800) + 60, Y(890), Y(0), '890');
+    s += dimH(X(0), X(600), Y(3000) - 50, '600') + dimH(X(600), X(3800), Y(3000) - 50, '3200') + dimH(X(0), X(3800), Y(3000) - 100, '3800');
+    s += T(X(1900), fl + 50, 'FFL ±0', 't-note');
+    s += T(X(2700), Y(1000) - 12, 'HOB', 't-note') + T(X(1600), Y(1000) - 12, 'SINK', 't-note');
+    s += T(X(300), Y(2380), 'TALL UNIT · BUILT-IN OVEN', 't-note') + T(X(2100), Y(2380), 'SOFT-CLOSE LIFT-UP SHUTTERS', 't-note');
+    return s + L(0, 0, 0, 0, 'hair');
+  }
+
+  function tvElevation() {
+    const k = 0.34, fl = 1020, X = (mm) => 50 + mm * k, Y = (mm) => fl - mm * k;
+    let s = L(-40, fl, 1620, fl, 'wall') + R(X(0), Y(3000), 4400 * k, 3000 * k, 'thin');
+    s += R(X(0), Y(3000), 4400 * k, 300 * k, 'dash');
+    // fluted centre
+    s += R(X(1000), Y(2700), 2400 * k, 2700 * k, 'furn-fill');
+    for (let x = 1040; x < 3400; x += 60) s += L(X(x), Y(2690), X(x), Y(10), 'hair');
+    s += L(X(1000), Y(2700), X(3400), Y(2700), 'gold');
+    // tv
+    s += R(X(1550), Y(1850), 1300 * k, 740 * k, 'elec-fill', 'opacity=".9"');
+    // console
+    s += R(X(1150), Y(650), 2100 * k, 300 * k, 'cut') + R(X(1150), Y(650), 2100 * k, 300 * k, 'thin');
+    [1850, 2550].forEach((x) => { s += L(X(x), Y(650), X(x), Y(350), 'thin'); });
+    s += L(X(1150), Y(340), X(3250), Y(340), 'gold');
+    // side shelves
+    [0, 3400].forEach((x0) => {
+      s += R(X(x0 + 150), Y(2700), 700 * k, 2400 * k, 'thin');
+      [900, 1400, 1900, 2400].forEach((y) => { s += L(X(x0 + 150), Y(y), X(x0 + 850), Y(y), 'thin'); });
+      s += R(X(x0 + 150), Y(900), 700 * k, 600 * k, 'hatch');
+      s += C(X(x0 + 500), Y(1650), 26, 'hair') + R(X(x0 + 300), Y(2150), 120 * k, 220 * k, 'hair');
+    });
+    s += dimH(X(0), X(1000), Y(3000) - 50, '1000') + dimH(X(1000), X(3400), Y(3000) - 50, '2400') + dimH(X(3400), X(4400), Y(3000) - 50, '1000') + dimH(X(0), X(4400), Y(3000) - 100, '4400');
+    s += dimV(X(4400) + 60, Y(3000), Y(2700), '300') + dimV(X(4400) + 60, Y(2700), Y(0), '2700');
+    s += dimV(X(0) - 60, Y(1850), Y(1110), '740') + dimV(X(0) - 60, Y(650), Y(350), '300') + dimV(X(0) - 60, Y(350), Y(0), '350');
+    s += T(X(2200), Y(2780), 'FLUTED VENEER PANEL · AMERICAN WALNUT', 't-note') + T(X(2200), Y(500) + 5, 'FLOATING CONSOLE', 't-note');
+    s += T(X(2200), fl + 50, 'FFL ±0', 't-note');
+    return s;
+  }
+
+  function wardrobe() {
+    const k = 0.34, fl = 1030, X = (mm) => 60 + mm * k, Y = (mm) => fl - mm * k;
+    const X2 = (mm) => 900 + mm * k;
+    let s = L(-40, fl, 1640, fl, 'wall');
+    // closed elevation
+    s += R(X(0), Y(2400), 2000 * k, 2300 * k, 'thin') + R(X(0), Y(100), 2000 * k, 100 * k, 'hatch');
+    [500, 1000, 1500].forEach((x) => { s += L(X(x), Y(2400), X(x), Y(100), 'thin'); });
+    [480, 520, 1480, 1520].forEach((x) => { s += L(X(x), Y(1300), X(x), Y(900), 'gold'); });
+    s += L(X(0), Y(2150), X(2000), Y(2150), 'hair');
+    s += T(X(1000), Y(2400) - 110, 'ELEVATION — SHUTTERS CLOSED', 't-title');
+    // open / internal
+    s += R(X2(0), Y(2400), 2000 * k, 2300 * k, 'thin') + R(X2(0), Y(100), 2000 * k, 100 * k, 'hatch');
+    s += L(X2(1000), Y(2400), X2(1000), Y(100), 'thin') + L(X2(0), Y(2150), X2(2000), Y(2150), 'thin');
+    s += L(X2(0), Y(1950), X2(1000), Y(1950), 'furn') + C(X2(40), Y(1950), 4, 'elec-fill');
+    for (let x = 60; x < 960; x += 70) s += `<path d="M${X2(x)} ${Y(1950)} l0 12 l-18 ${40 + (x % 3) * 30} h36 z" class="hair"/>`;
+    s += L(X2(0), Y(900), X2(1000), Y(900), 'thin');
+    [700, 500, 300].forEach((y) => { s += L(X2(0), Y(y), X2(1000), Y(y), 'thin') + L(X2(420), Y(y + 110), X2(580), Y(y + 110), 'gold'); });
+    [1700, 1400, 1100, 800, 500].forEach((y) => { s += L(X2(1000), Y(y), X2(2000), Y(y), 'thin'); });
+    s += R(X2(1100), Y(470), 800 * k, 350 * k, 'dash') + T(X2(1500), Y(300), 'SHOE PULL-OUT', 't-note');
+    s += T(X2(500), Y(1600), 'LONG HANGING', 't-note') + T(X2(1500), Y(1880), 'LOFT', 't-note') + T(X2(500), Y(2280), 'LOFT', 't-note');
+    s += T(X2(500), Y(560), 'DRAWERS · BLUM TANDEMBOX', 't-note');
+    s += T(X2(1000), Y(2400) - 110, 'INTERNAL LAYOUT — SHUTTERS REMOVED', 't-title');
+    s += dimH(X(0), X(2000), Y(2400) - 50, '2000') + dimH(X2(0), X2(1000), Y(2400) - 50, '1000') + dimH(X2(1000), X2(2000), Y(2400) - 50, '1000');
+    s += dimV(X(0) - 40, Y(2400), Y(2150), '250') + dimV(X(0) - 40, Y(2150), Y(100), '2050') + dimV(X(0) - 40, Y(100), Y(0), '100');
+    s += dimV(X2(2000) + 50, Y(1700), Y(1400), '300') + dimV(X2(2000) + 50, Y(900), Y(500), '400');
+    s += T(X(1000), fl + 50, 'FFL ±0', 't-note') + T(X2(1000), fl + 50, 'FFL ±0', 't-note');
+    return s;
+  }
+
+  const titles = {
+    floor: 'FLOOR PLAN', furniture: 'FURNITURE LAYOUT', electrical: 'ELECTRICAL LAYOUT', ceiling: 'REFLECTED CEILING PLAN',
+    kitchen: 'KITCHEN ELEVATION — A', elevation: 'LIVING ROOM — TV WALL ELEVATION', wardrobe: 'MASTER WARDROBE — DETAIL',
+  };
+
+  function render(kind) {
+    let inner;
+    if (kind === 'kitchen') inner = `<g transform="translate(100 60)">${kitchenElevation()}</g>`;
+    else if (kind === 'elevation') inner = `<g transform="translate(90 60)">${tvElevation()}</g>`;
+    else if (kind === 'wardrobe') inner = `<g transform="translate(60 40)">${wardrobe()}</g>`;
+    else inner = `<g transform="translate(${M.l} ${M.t})">${plan(kind)}</g>`;
+    return `<svg class="zd" viewBox="0 0 ${VW} ${VH}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${titles[kind] || 'Drawing'}" xmlns="http://www.w3.org/2000/svg">${defs}${inner}</svg>`;
+  }
+
+  return { render, aspect: VW / VH };
+})();
+/* ==== DRAWINGS:END ==== */
+
+/* ==== ENGINE:BEGIN ==== */
+/* Shared page engine: formatting, pagination, running header/footer,
+   page numbering, contents and file attachments. */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (v) => String(v ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const pad2 = (n) => String(n).padStart(2, '0');
+const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
+const money = (n) => `₹ ${inr.format(Math.round(n))}`;
+const el = (html) => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+
+function amountInWords(num) {
+  const a = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+  const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+  const two = (n) => (n < 20 ? a[n] : `${b[Math.floor(n / 10)]}${n % 10 ? ' ' + a[n % 10] : ''}`);
+  const three = (n) => `${n >= 100 ? a[Math.floor(n / 100)] + ' Hundred' + (n % 100 ? ' ' : '') : ''}${n % 100 ? two(n % 100) : ''}`;
+  let n = Math.round(num);
+  if (n === 0) return 'Zero';
+  const parts = [];
+  const crore = Math.floor(n / 1e7); n %= 1e7;
+  const lakh = Math.floor(n / 1e5); n %= 1e5;
+  const thousand = Math.floor(n / 1e3); n %= 1e3;
+  if (crore) parts.push(`${three(crore)} Crore`);
+  if (lakh) parts.push(`${two(lakh)} Lakh`);
+  if (thousand) parts.push(`${two(thousand)} Thousand`);
+  if (n) parts.push(three(n));
+  return parts.join(' ');
+}
+
+/* Fill [data-bind] from `project` and [data-brand] from `brand`. */
+function bindData(root = document) {
+  $$('[data-bind]', root).forEach((n) => { const v = project[n.dataset.bind]; if (v != null) n.textContent = v; });
+  $$('[data-brand]', root).forEach((n) => { const v = brand[n.dataset.brand]; if (v != null) n.textContent = v; });
+}
+
+/* A page overflows when its body's content is taller than the space it has. */
+const overflows = (page) => { const b = $('.page-body', page); return b.scrollHeight > b.clientHeight + 1; };
+
+/* Flow table rows across as many pages as needed.
+   makePage(isFirst) must return an unattached .page whose table body is [data-flow]. */
+function flowRows({ slot, makePage, rows, tail }) {
+  const pages = [];
+  let page, body;
+  const open = (first) => {
+    page = makePage(first);
+    slot.before(page);
+    applyChrome();
+    body = $('[data-flow]', page);
+    pages.push(page);
+  };
+  open(true);
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    body.append(row);
+    if (overflows(page) && body.children.length > 1) {
+      row.remove();
+      $('.page-body', page).append(el('<p class="continued">Continued overleaf</p>'));
+      // make room for the note, and never strand a group heading at the foot
+      const carry = [];
+      while (body.children.length > 1 && (overflows(page) || body.lastElementChild.classList.contains('group'))) {
+        const last = body.lastElementChild;
+        last.remove();
+        carry.unshift(last);
+      }
+      open(false);
+      carry.forEach((r) => body.append(r));
+      body.append(row);
+    }
+  }
+  // Trailing blocks (summaries, totals) follow the rows; each moves on whole.
+  [].concat(tail || []).forEach((block) => {
+    $('.page-body', page).append(block);
+    if (overflows(page)) {
+      block.remove();
+      open(false);
+      $('[data-flow]', page).closest('table').remove();
+      $('.page-body', page).append(block);
+    }
+  });
+  slot.remove();
+  return pages;
+}
+
+/* Running header, footer and section numbers. */
+function applyChrome() {
+  const head = $('#tpl-head'), sheet = $('#tpl-sheet-head'), foot = $('#tpl-foot');
+  $$('#document > .page').forEach((page) => {
+    const mode = page.dataset.chrome;
+    if (mode === 'none' || page.dataset.chromed) return;
+    page.dataset.chromed = '1';
+    if (mode === 'sheet' && sheet) {
+      const h = sheet.content.firstElementChild.cloneNode(true);
+      const d = page._drawing || {};
+      $$('[data-f]', h).forEach((n) => { n.textContent = d[n.dataset.f] ?? ''; });
+      bindData(h);
+      page.prepend(h);
+    } else {
+      const h = head.content.firstElementChild.cloneNode(true);
+      const tag = $('.run-head__tag', h);
+      if (tag.textContent.trim()) $('.run-head__section', h).textContent = page.dataset.section || 'Project Document';
+      else tag.textContent = page.dataset.section || '';
+      page.prepend(h);
+    }
+    page.append(foot.content.firstElementChild.cloneNode(true));
+  });
+}
+
+/* Page numbers, section numbers, contents and registers — rerun after any change. */
+function renumber() {
+  const pages = $$('#document > .page');
+  const total = pages.length;
+  let sec = 0;
+  const toc = [];
+  pages.forEach((page, i) => {
+    page.id ||= `page-${i + 1}`;
+    if (page.dataset.toc) { sec += 1; toc.push({ no: sec, name: page.dataset.toc, sub: page.dataset.tocSub || '', page: i + 1, id: page.id }); }
+    $$('.sec-no', page).forEach((n) => { n.textContent = sec ? pad2(sec) : ''; });
+    $$('[data-secno]', page).forEach((n) => { n.textContent = pad2(sec); });
+    $$('.pg-now', page).forEach((n) => { n.textContent = pad2(i + 1); });
+    $$('.pg-total', page).forEach((n) => { n.textContent = pad2(total); });
+    page.dataset.pageNo = i + 1;
+  });
+  const tocHost = $('#toc');
+  if (tocHost) {
+    tocHost.innerHTML = toc.map((t) => `<a class="toc__item" href="#${t.id}"><span class="toc__no">${pad2(t.no)}</span><span class="toc__name">${esc(t.name)}<small>${esc(t.sub)}</small></span><span class="toc__page">PAGE <b>${pad2(t.page)}</b></span></a>`).join('');
+  }
+  const count = $('#page-count');
+  if (count) count.textContent = total;
+  if (typeof afterRenumber === 'function') afterRenumber(pages);
+}
+
+/* Screen scaling so an A4 sheet fits narrow screens without reflowing. */
+function fitToScreen() {
+  const doc = $('#document');
+  const mm = 3.7795;
+  const widest = Math.max(...$$('#document > .page').map((p) => p.offsetWidth), 210 * mm);
+  const avail = window.innerWidth - 24;
+  doc.style.zoom = avail < widest ? (avail / widest).toFixed(3) : '';
+}
+window.addEventListener('resize', fitToScreen);
+window.addEventListener('beforeprint', () => { $('#document').style.zoom = ''; });
+window.addEventListener('afterprint', fitToScreen);
+
+/* ---------- Attachments: images directly, PDFs rasterised with pdf.js ---------- */
+let pdfjsReady;
+function loadPdfJs() {
+  pdfjsReady ||= new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      resolve(window.pdfjsLib);
+    };
+    s.onerror = () => reject(new Error('Could not load the PDF renderer. Check your connection.'));
+    document.head.append(s);
+  });
+  return pdfjsReady;
+}
+
+/* Resolves to [{ src, w, h, label }] — one entry per image or PDF page. */
+async function fileToImages(file) {
+  if (file.type === 'application/pdf') {
+    const pdfjs = await loadPdfJs();
+    const pdf = await pdfjs.getDocument({ data: await file.arrayBuffer() }).promise;
+    const out = [];
+    for (let p = 1; p <= pdf.numPages; p++) {
+      const pg = await pdf.getPage(p);
+      const vp = pg.getViewport({ scale: 2 });
+      const canvas = document.createElement('canvas');
+      canvas.width = vp.width; canvas.height = vp.height;
+      await pg.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+      out.push({ src: canvas.toDataURL('image/jpeg', 0.9), w: vp.width, h: vp.height, label: pdf.numPages > 1 ? `${file.name} · page ${p} of ${pdf.numPages}` : file.name });
+    }
+    return out;
+  }
+  if (file.type.startsWith('image/')) {
+    const src = URL.createObjectURL(file);
+    const img = new Image();
+    img.src = src;
+    await img.decode();
+    return [{ src, w: img.naturalWidth, h: img.naturalHeight, label: file.name }];
+  }
+  if (file.type.startsWith('text/')) return [{ text: await file.text(), label: file.name }];
+  throw new Error(`${file.name}: unsupported file type.`);
+}
+
+const titleFromFile = (name) => name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, (c) => c.toUpperCase());
+
+/* Put an image into a frame; landscape images turn the sheet landscape. */
+function placeImage(frame, page, img, allowLandscape) {
+  frame.innerHTML = '';
+  if (img.text != null) {
+    frame.append(el(`<div class="doc-text">${esc(img.text)}</div>`));
+    return;
+  }
+  const node = document.createElement('img');
+  node.src = img.src;
+  node.alt = img.label || 'Attached drawing';
+  node.className = 'drawing-image';
+  frame.append(node);
+  if (allowLandscape) page.classList.toggle('is-landscape', img.w / img.h > 1.15);
+}
+
+function addRemoveButton(page) {
+  const b = el('<button class="remove-page no-print" type="button">Remove page</button>');
+  b.addEventListener('click', () => { page.remove(); refresh(); });
+  page.append(b);
+}
+
+async function withBusy(btn, fn) {
+  const label = btn?.textContent;
+  if (btn) { btn.disabled = true; btn.textContent = 'Working…'; }
+  try { await fn(); } catch (e) { console.error(e); alertInline(e.message); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = label; } }
+}
+function alertInline(msg) {
+  const hint = $('.toolbar__hint');
+  if (!hint) return;
+  const note = el(`<p class="toolbar__hint no-print" role="status" style="color:#9B3B2F">${esc(msg)}</p>`);
+  hint.after(note);
+  setTimeout(() => note.remove(), 6000);
+}
+
+function refresh() { applyChrome(); renumber(); fitToScreen(); }
+
+/* Download PDF — the browser's print-to-PDF gives vector text and exact A4. */
+function printDocument(asPdf) {
+  const prev = document.title;
+  if (asPdf) document.title = `${brand.legalName.replace(/\s+/g, '-')}_${project.projectReference}_${DOC_KIND}`;
+  window.print();
+  setTimeout(() => { document.title = prev; }, 500);
+}
+/* ==== ENGINE:END ==== */
+
+/* =====================================================================
+   RENDER — Project Dossier
+   ===================================================================== */
+const DOC_KIND = 'Project-Dossier';
+
+/* ---- Calculations ---- */
+invoiceItems.forEach((it) => {
+  if (it.breakdown?.length) {
+    it.breakdown.forEach((b) => { b.amount = b.qty * b.rate; });
+    it.rate = it.breakdown.reduce((s, b) => s + b.amount, 0) / it.quantity;
+  }
+  it.amount = it.quantity * it.rate;
+});
+const totals = (() => {
+  const subtotal = invoiceItems.reduce((s, it) => s + it.amount, 0);
+  const additional = charges.additional.reduce((s, c) => s + c.amount, 0);
+  const discount = Math.round(subtotal * charges.discountPercent / 100);
+  const taxable = subtotal + additional - discount;
+  const gst = Math.round(taxable * charges.gstPercent / 100);
+  return { subtotal, additional, discount, taxable, gst, grand: taxable + gst };
+})();
+
+function totalsBlock(withNote = true) {
+  const lines = [
+    ['Subtotal', money(totals.subtotal)],
+    [`Discount · ${charges.discountLabel} (${charges.discountPercent}%)`, `− ${money(totals.discount)}`, 'is-less'],
+    ...charges.additional.map((c) => [c.label, money(c.amount)]),
+    [`GST @ ${charges.gstPercent}% on ${money(totals.taxable)}`, money(totals.gst)],
+  ];
+  return el(`<div class="totals">
+    <div class="totals__lines">
+      ${lines.map(([a, b, c]) => `<div class="totals__line ${c || ''}"><span>${esc(a)}</span><span class="num">${b}</span></div>`).join('')}
+    </div>
+    <div>
+      <div class="grand"><span class="label">Total Project Value</span><span class="grand__amount num">${money(totals.grand)}</span><span class="grand__words">Indian Rupees ${amountInWords(totals.grand)} only</span></div>
+      ${withNote ? `<p class="totals__note">Inclusive of materials, manufacture, delivery and installation as detailed overleaf. Due ${esc(project.dueDate)}. ${esc(brand.gstin)}.</p>` : ''}
+    </div>
+  </div>`);
+}
+
+/* ---- Project pages ---- */
+function renderGlance() {
+  const stages = ['Design', 'Production', 'Installation', 'Completed'];
+  const at = stages.indexOf(project.status);
+  const city = project.location.split(',').slice(-2).join(',').trim();
+  $('#glance').innerHTML = `
+    <div><span class="label">Project Type</span><span class="big">${esc(project.projectType)}</span><span class="sub">${esc(project.projectArea)}</span></div>
+    <div><span class="label">Project Location</span><span class="big">${esc(project.location.split(',')[0])}</span><span class="sub">${esc(city)}</span></div>
+    <div><span class="label">Design Scope</span><span class="big">${esc(project.designScope)}</span><span class="sub">Turnkey — one studio, one point of contact</span></div>
+    <div><span class="label">Project Reference</span><span class="big">${esc(project.projectReference)}</span><span class="sub">Invoice ${esc(project.invoiceNumber)}</span></div>
+    <div><span class="label">Project Area</span><span class="big">${esc(project.projectArea.split('·')[0].trim())}</span><span class="sub">Carpet area, as measured on site</span></div>
+    <div><span class="label">Estimated Timeline</span><span class="big">${project.timelineWeeks} <small>weeks</small></span><span class="sub">From design approval to handover</span></div>
+    <div class="wide"><span class="label">Project Status</span><span class="big">${esc(project.status)}</span>
+      <div class="status-track">${stages.map((s, i) => `<span class="${i < at ? 'done' : i === at ? 'now' : ''}">${pad2(i + 1)} · ${s}</span>`).join('')}</div></div>`;
+}
+
+function renderScope() {
+  $('#scope').innerHTML = scope.map((s, i) => `<article><div class="no">${pad2(i + 1)}</div><div><h3>${esc(s.t)}</h3><p>${esc(s.p)}</p></div></article>`).join('');
+}
+
+function renderInvestment() {
+  const work = totals.subtotal - totals.discount;
+  const rows = [
+    ...charges.additional.filter((c) => c.bucket === 'Design').map((c) => ({ name: 'Design', note: c.label, amount: c.amount })),
+    ...investmentShares.map((s) => ({ name: s.name, note: s.note, amount: Math.round(work * s.share) })),
+    ...charges.additional.filter((c) => c.bucket !== 'Design').map((c) => ({ name: 'Additional Services', note: c.label, amount: c.amount })),
+    { name: 'GST', note: `${charges.gstPercent}% on the taxable value`, amount: totals.gst },
+  ];
+  // absorb rounding so the rows always add up to the grand total
+  const diff = totals.grand - rows.reduce((s, r) => s + r.amount, 0);
+  rows[1].amount += diff;
+  const max = Math.max(...rows.map((r) => r.amount));
+  $('#invest').innerHTML = `<div class="invest__row" style="border-top:.3mm solid var(--primary-brand)"><div class="invest__name">Estimated Project Value<small>Design, materials, manufacture and installation</small></div><div class="invest__amt num">${money(totals.grand)}<small>ALL-INCLUSIVE</small></div></div>` +
+    rows.map((r) => `<div class="invest__row"><div class="invest__name">${esc(r.name)}<small>${esc(r.note)}</small></div><div class="invest__amt num">${money(r.amount)}<small>${((r.amount / totals.grand) * 100).toFixed(1)}% OF VALUE</small></div><div class="invest__bar"><i style="width:${(r.amount / max) * 100}%"></i></div></div>`).join('');
+  $('#invest-total').innerHTML = `<div><span class="label">Total Project Value</span><p>Indian Rupees ${amountInWords(totals.grand)} only. Payable in five instalments linked to milestones.</p></div><div class="invest-total__amt num">${money(totals.grand)}</div>`;
+}
+
+function renderInvoice() {
+  $('#invoice-rows').innerHTML = invoiceItems.map((it, i) => `<tr>
+    <td class="idx">${pad2(i + 1)}</td>
+    <td class="desc"><strong>${esc(it.description)}</strong><span>${esc(it.detail || '')}</span></td>
+    <td class="c num">${it.quantity}</td><td>${esc(it.unit)}</td>
+    <td class="r num">${money(it.rate)}</td><td class="r amt num">${money(it.amount)}</td></tr>`).join('');
+  $('#invoice-totals').replaceWith(totalsBlock());
+  $$('[data-total="grand"]').forEach((n) => { n.textContent = money(totals.grand); });
+}
+
+const rowEl = (html) => el(`<table><tbody>${html}</tbody></table>`).querySelector('tr');
+
+function renderBreakdown() {
+  const rows = [];
+  invoiceItems.forEach((it, i) => {
+    rows.push(rowEl(`<tr class="group"><td colspan="4"><span class="gold">${pad2(i + 1)}</span>${esc(it.description)} <span class="muted" style="font-family:var(--sans);font-size:7pt">· ${it.quantity} ${esc(it.unit)}</span></td><td class="r num">${money(it.amount)}</td></tr>`));
+    (it.breakdown || []).forEach((b) => rows.push(rowEl(`<tr class="sub"><td>${esc(b.item)}</td><td class="r num">${inr.format(b.qty)}</td><td>${esc(b.unit)}</td><td class="r num">${money(b.rate)}</td><td class="r amt num">${money(b.amount)}</td></tr>`)));
+  });
+  const summary = el('<div></div>');
+  summary.append(el('<p class="eyebrow" style="margin-top:6mm">Cost Summary</p>'), el(`<div style="margin-top:2mm"><table class="ledger ledger--compact"><tbody>${invoiceItems.map((it, i) => `<tr class="sub"><td><span class="gold" style="font-weight:700;margin-right:3mm">${pad2(i + 1)}</span>${esc(it.description)}</td><td class="r num">${((it.amount / totals.subtotal) * 100).toFixed(1)}%</td><td class="r amt num" style="width:34mm">${money(it.amount)}</td></tr>`).join('')}</tbody></table></div>`));
+  flowRows({
+    slot: $('[data-slot="breakdown"]'),
+    rows,
+    tail: [summary, totalsBlock(false)],
+    makePage: (first) => el(`<section class="page" data-section="Cost Breakdown" ${first ? 'data-toc="Breakdown"' : ''}>
+      <div class="page-body">
+        <div class="head-block" style="margin-bottom:5mm">
+          <p class="eyebrow"><span class="sec-no"></span>Detailed Cost Breakdown${first ? '' : ' · Continued'}</p>
+          ${first ? '<h2 class="display display--sm">Every line,<br><em>accounted for.</em></h2>' : ''}
+        </div>
+        <table class="ledger">
+          <thead><tr><th>Item &amp; Specification</th><th class="r">Qty</th><th>Unit</th><th class="r">Rate</th><th class="r">Amount</th></tr></thead>
+          <tbody data-flow></tbody>
+        </table>
+      </div></section>`),
+  });
+}
+
+function renderPlan() {
+  let cum = 0, paidTo = 0;
+  $('#plan').innerHTML = paymentSchedule.map((p, i) => {
+    cum += p.percent;
+    const cls = p.status === 'Paid' ? 'is-paid' : p.status === 'Due' ? 'is-due' : '';
+    if (p.status === 'Paid') paidTo = i + 1;
+    const tag = p.status === 'Paid' ? 'tag--ok' : p.status === 'Due' ? 'tag--gold' : '';
+    return `<div class="plan__stage ${cls}">
+      <div class="plan__no">${pad2(i + 1)}</div><div class="plan__dot"></div>
+      <div class="plan__name">${esc(p.stage.toUpperCase())}</div>
+      <div class="plan__note">${esc(p.note)}</div>
+      <div class="plan__pct">${p.percent}%</div>
+      <div class="plan__amt num">${money(totals.grand * p.percent / 100)}</div>
+      <span class="tag ${tag}">${esc(p.status)}</span>
+    </div>`;
+  }).join('') + `<div class="plan__progress" style="width:calc(${(Math.min(paidTo, paymentSchedule.length - 1) / paymentSchedule.length) * 100}% + 1.7mm)"></div>`;
+  const paid = paymentSchedule.filter((p) => p.status === 'Paid').reduce((s, p) => s + p.percent, 0);
+  const due = paymentSchedule.find((p) => p.status === 'Due');
+  $('#plan-summary').innerHTML = `
+    <div><span class="label">Received to date</span><div class="value--serif num">${money(totals.grand * paid / 100)}</div></div>
+    <div><span class="label">Now due${due ? ' · ' + esc(due.stage) : ''}</span><div class="value--serif num">${due ? money(totals.grand * due.percent / 100) : '—'}</div></div>
+    <div><span class="label">Balance after this payment</span><div class="value--serif num">${money(totals.grand * (100 - paid - (due?.percent || 0)) / 100)}</div></div>`;
+  $('#bank').outerHTML = `<dl id="bank" style="display:grid;grid-template-columns:24mm 1fr;row-gap:1mm;font-size:7.8pt">${brand.bank.map(([k, v]) => `<dt class="label" style="padding-top:.6mm">${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;
+  $('#howtopay').innerHTML = howToPay.map((h) => `<li>${esc(h)}</li>`).join('') + `<li>Reference: <b>${esc(project.invoiceNumber)}</b></li>`;
+}
+
+function renderSpecs() {
+  const rows = specifications.map((s) => {
+    const tag = /approved/i.test(s[6]) ? 'tag--ok' : /due/i.test(s[6]) ? 'tag--gold' : '';
+    return rowEl(`<tr><td class="label" style="font-size:5.8pt;color:var(--champagne-gold);padding-top:3.2mm">${esc(s[0])}</td><td>${esc(s[1])}</td><td>${esc(s[2])}</td><td>${esc(s[3])}</td><td>${esc(s[4])}</td><td>${esc(s[5])}</td><td class="r"><span class="tag ${tag}">${esc(s[6])}</span></td></tr>`);
+  });
+  flowRows({
+    slot: $('[data-slot="specs"]'),
+    rows,
+    makePage: (first) => el(`<section class="page" data-section="Material Specifications" ${first ? 'data-toc="Materials"' : ''}>
+      <div class="page-body">
+        <div class="head-block">
+          <p class="eyebrow"><span class="sec-no"></span>Material &amp; Finish Specifications${first ? '' : ' · Continued'}</p>
+          ${first ? '<h2 class="display display--sm">Material &amp;<br><em>finish palette.</em></h2><p class="intro">Every finish is approved as a physical sample. Brands may be substituted only with an equivalent of equal or higher grade, and only with your written approval.</p>' : ''}
+        </div>
+        <table class="ledger ledger--spec ledger--spec7">
+          <thead><tr><th>Category</th><th>Material</th><th>Brand</th><th>Finish</th><th>Colour</th><th>Specification</th><th class="r">Remarks</th></tr></thead>
+          <tbody data-flow></tbody>
+        </table>
+      </div></section>`),
+  });
+}
+
+/* Procedural sample textures — replaced by real photographs when attached. */
+function texture(kind, i) {
+  const id = `tx${i}`;
+  const svg = (inner) => `<svg viewBox="0 0 200 216" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${inner}</svg>`;
+  switch (kind) {
+    case 'wood': return svg(`<filter id="${id}"><feTurbulence type="fractalNoise" baseFrequency="0.006 0.22" numOctaves="4" seed="7"/><feColorMatrix values="0 0 0 .34 .2  0 0 0 .22 .12  0 0 0 .12 .06  0 0 0 0 1"/></filter><rect width="200" height="216" filter="url(#${id})"/><rect width="200" height="216" fill="#2A1A10" opacity=".18"/>`);
+    case 'marble': return svg(`<defs><filter id="${id}" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="26"/><feGaussianBlur stdDeviation=".5"/></filter><filter id="${id}c"><feTurbulence type="fractalNoise" baseFrequency=".02" numOctaves="3" seed="9"/><feColorMatrix values="0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .48  0 0 0 .12 0"/></filter></defs><rect width="200" height="216" fill="#F3F1EC"/><rect width="200" height="216" filter="url(#${id}c)"/><g filter="url(#${id})" fill="none" stroke="#8C8A86" stroke-linecap="round"><path d="M-10 40 C40 60 70 20 110 70 S170 120 220 100" stroke-width="2.2" opacity=".75"/><path d="M60 -10 C80 60 50 120 100 160 S150 200 170 230" stroke-width="1.2" opacity=".6"/><path d="M-10 170 C40 150 90 190 130 150 S190 150 220 130" stroke-width=".9" opacity=".5"/><path d="M110 70 C120 100 150 110 160 150" stroke-width=".7" opacity=".55"/></g>`);
+    case 'fabric': return svg(`<defs><pattern id="${id}p" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#D9CFBF"/><path d="M0 0h2v2H0zM2 2h2v2H2z" fill="#CBBFAD"/></pattern><filter id="${id}"><feTurbulence type="fractalNoise" baseFrequency=".5" numOctaves="2"/><feColorMatrix values="0 0 0 0 .95  0 0 0 0 .92  0 0 0 0 .86  0 0 0 .35 0"/></filter></defs><rect width="200" height="216" fill="url(#${id}p)"/><rect width="200" height="216" filter="url(#${id})"/>`);
+    case 'laminate': return svg(`<filter id="${id}"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .06 0"/></filter><rect width="200" height="216" fill="#8FA39A"/><rect width="200" height="216" filter="url(#${id})"/>`);
+    case 'metal': return svg(`<defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E4CE98"/><stop offset=".45" stop-color="#B89150"/><stop offset=".7" stop-color="#D8C18A"/><stop offset="1" stop-color="#9C7A3F"/></linearGradient><filter id="${id}"><feTurbulence type="fractalNoise" baseFrequency="0.002 0.9" numOctaves="2"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .22 0"/></filter></defs><rect width="200" height="216" fill="url(#${id}g)"/><rect width="200" height="216" filter="url(#${id})"/>`);
+    case 'glass': return svg(`<defs><linearGradient id="${id}g" x1="0" x2="1"><stop offset="0" stop-color="#7A5E45" stop-opacity=".55"/><stop offset=".5" stop-color="#E9DCCB" stop-opacity=".9"/><stop offset="1" stop-color="#7A5E45" stop-opacity=".55"/></linearGradient><pattern id="${id}p" width="12" height="216" patternUnits="userSpaceOnUse"><rect width="12" height="216" fill="url(#${id}g)"/></pattern></defs><rect width="200" height="216" fill="#A88D72"/><rect width="200" height="216" fill="url(#${id}p)"/>`);
+    case 'light': return svg(`<defs><radialGradient id="${id}g" cx=".5" cy=".18" r=".9"><stop offset="0" stop-color="#FFE7B8"/><stop offset=".25" stop-color="#E9B96A" stop-opacity=".85"/><stop offset=".7" stop-color="#3A2E22" stop-opacity=".9"/><stop offset="1" stop-color="#16120E"/></radialGradient></defs><rect width="200" height="216" fill="#16120E"/><rect width="200" height="216" fill="url(#${id}g)"/><rect x="20" y="30" width="160" height="3" fill="#FFF3D6"/>`);
+    default: return svg(`<defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0E5446"/><stop offset=".55" stop-color="#083B32"/><stop offset="1" stop-color="#04231D"/></linearGradient></defs><rect width="200" height="216" fill="url(#${id}g)"/><path d="M-20 40 L220 -10 L220 30 L-20 90Z" fill="#FFFFFF" opacity=".07"/>`);
+  }
+}
+
+let swatchTarget = null;
+function renderBoard() {
+  $('#board').innerHTML = materials.map((m, i) => `<figure class="swatch" data-i="${i}">
+    <div class="swatch__img">${m.image ? `<img src="${esc(m.image)}" alt="${esc(m.name)}">` : texture(m.tex, i)}<button class="btn no-print" type="button" data-action="swatch">Replace</button></div>
+    <figcaption><div class="swatch__cat">${esc(m.cat)}</div><div class="swatch__name">${esc(m.name)}</div>
+    <div class="swatch__meta">${esc(m.finish)}<br>${esc(m.spec)}</div><div class="swatch__ref">REF · ${esc(m.ref)}</div></figcaption></figure>`).join('');
+}
+
+function drawingPage(d) {
+  const page = $('#tpl-drawing').content.firstElementChild.cloneNode(true);
+  page._drawing = d;
+  d.preparedBy ??= project.preparedBy;
+  d.approvedBy ??= project.approvedBy;
+  $$('[data-f]', page).forEach((n) => { n.textContent = d[n.dataset.f] ?? ''; });
+  bindData(page);
+  const frame = $('.frame', page);
+  if (d.kind) frame.innerHTML = Drawings.render(d.kind);
+  else if (d.image) placeImage(frame, page, d.image, true);
+  else frame.innerHTML = `<div class="placeholder"><strong>${esc(d.title)}</strong><span>Drawing to be attached · ${esc(d.no)}</span><button class="btn no-print" type="button" data-action="fill-slot">Attach drawing</button></div>`;
+  return page;
+}
+
+function renderDrawings() {
+  const slot = $('[data-slot="drawings"]');
+  drawings.forEach((d) => slot.before(drawingPage(d)));
+  slot.remove();
+}
+
+function attachmentPage(title, sub) {
+  const page = $('#tpl-attachment').content.firstElementChild.cloneNode(true);
+  page.dataset.doc = title;
+  $('[data-f="title"]', page).textContent = title;
+  $('[data-f="sub"]', page).textContent = sub;
+  return page;
+}
+
+function renderAttachments() {
+  const slot = $('[data-slot="attachments"]');
+  documentsIndex.filter((d) => d.attach).forEach((d) => {
+    const page = attachmentPage(d.title, d.sub || '');
+    $('.attachment-content', page).innerHTML = `<div class="placeholder"><strong>${esc(d.title)}</strong><span>Image · PDF · Scanned copy</span><button class="btn no-print" type="button" data-action="fill-slot">Attach here</button></div>`;
+    slot.before(page);
+  });
+  slot.remove();
+}
+
+function renderTermsCare() {
+  $('#terms').innerHTML = terms.map(([t, p], i) => `<div class="article" style="padding:3.6mm 0 3.8mm"><h3 style="font-size:12.5pt;margin-bottom:1mm"><span class="gold">${pad2(i + 1)}</span>${esc(t)}</h3><p style="font-size:7.8pt">${esc(p)}</p></div>`).join('');
+  $('#care').innerHTML = care.map((c) => `<article><h3>${esc(c.t)}<span>${esc(c.tag.toUpperCase())}</span></h3><p>${esc(c.p)}</p></article>`).join('');
+}
+
+function afterRenumber(pages) {
+  const reg = $('#drawing-register');
+  if (reg) reg.innerHTML = pages.filter((p) => p._drawing).map((p) => `<div><span>${esc(p._drawing.no)} · ${esc(p._drawing.title)}</span><b>P. ${pad2(p.dataset.pageNo)}</b></div>`).join('');
+  const dreg = $('#document-register');
+  if (dreg) {
+    const attached = pages.filter((p) => p.classList.contains('attachment-page'));
+    const listed = documentsIndex.map((d) => {
+      const page = attached.find((p) => p.dataset.doc === d.title);
+      return `<div><span>${esc(d.title)}</span><b>${page ? `P. ${pad2(page.dataset.pageNo)}` : 'ON REQUEST'}</b></div>`;
+    });
+    const extra = attached.filter((p) => !documentsIndex.some((d) => d.title === p.dataset.doc)).map((p) => `<div><span>${esc(p.dataset.doc)}</span><b>P. ${pad2(p.dataset.pageNo)}</b></div>`);
+    dreg.innerHTML = listed.concat(extra).join('');
+  }
+  $$('.attachment-page').forEach((p, i) => { $('[data-f="no"]', p).textContent = pad2(i + 1); });
+}
+
+/* ---- Attachments ---- */
+let slotTarget = null;
+async function addBlueprints(files) {
+  let anchor = $$('.drawing-page').pop();
+  let n = $$('.drawing-page').length;
+  for (const file of files) {
+    for (const img of await fileToImages(file)) {
+      n += 1;
+      const page = drawingPage({ no: `DR-${pad2(n)}`, title: titleFromFile(img.label), image: img, scale: 'As drawn', rev: 'R0', date: project.invoiceDate });
+      addRemoveButton(page);
+      anchor.after(page);
+      anchor = page;
+    }
+  }
+  refresh();
+  anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function addDocuments(files) {
+  let anchor = $$('.attachment-page').pop();
+  for (const file of files) {
+    for (const img of await fileToImages(file)) {
+      const page = attachmentPage(titleFromFile(file.name), img.label);
+      placeImage($('.attachment-content', page), page, img, false);
+      addRemoveButton(page);
+      anchor.after(page);
+      anchor = page;
+    }
+  }
+  refresh();
+  anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function fillSlot(file) {
+  const page = slotTarget;
+  const imgs = await fileToImages(file);
+  const isDrawing = !!page._drawing;
+  const host = isDrawing ? $('.frame', page) : $('.attachment-content', page);
+  placeImage(host, page, imgs[0], isDrawing);
+  if (isDrawing) page._drawing.image = imgs[0];
+  else $('[data-f="sub"]', page).textContent = imgs[0].label;
+  let anchor = page;
+  imgs.slice(1).forEach((img) => {
+    const p = isDrawing
+      ? drawingPage({ ...page._drawing, kind: null, image: img, title: `${page._drawing.title} (cont.)` })
+      : attachmentPage(page.dataset.doc, img.label);
+    if (!isDrawing) placeImage($('.attachment-content', p), p, img, false);
+    addRemoveButton(p);
+    anchor.after(p);
+    anchor = p;
+  });
+  refresh();
+}
+
+function wireControls() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const a = btn.dataset.action;
+    if (a === 'print') printDocument(false);
+    else if (a === 'pdf') printDocument(true);
+    else if (a === 'add-blueprint') $('#file-blueprint').click();
+    else if (a === 'add-document') $('#file-document').click();
+    else if (a === 'fill-slot') { slotTarget = btn.closest('.page'); $('#file-slot').click(); }
+    else if (a === 'swatch') { swatchTarget = Number(btn.closest('.swatch').dataset.i); $('#file-swatch').click(); }
+  });
+  $('#file-blueprint').addEventListener('change', (e) => { const f = [...e.target.files]; e.target.value = ''; if (f.length) withBusy($('[data-action="add-blueprint"]'), () => addBlueprints(f)); });
+  $('#file-document').addEventListener('change', (e) => { const f = [...e.target.files]; e.target.value = ''; if (f.length) withBusy($('[data-action="add-document"]'), () => addDocuments(f)); });
+  $('#file-slot').addEventListener('change', (e) => { const f = e.target.files[0]; e.target.value = ''; if (f && slotTarget) withBusy(null, () => fillSlot(f)); });
+  $('#file-swatch').addEventListener('change', (e) => {
+    const f = e.target.files[0]; e.target.value = '';
+    if (!f || swatchTarget == null) return;
+    materials[swatchTarget].image = URL.createObjectURL(f);
+    renderBoard();
+  });
+}
+
+/* ---- Boot ---- */
+(async function boot() {
+  bindData();
+  renderGlance();
+  renderScope();
+  renderInvestment();
+  renderInvoice();
+  renderPlan();
+  renderBoard();
+  renderDrawings();
+  renderAttachments();
+  renderTermsCare();
+  await document.fonts.ready;
+  applyChrome();
+  renderBreakdown();
+  renderSpecs();
+  refresh();
+  wireControls();
+  document.documentElement.dataset.ready = '1';
+})();
+</script>
+</body>
+</html>

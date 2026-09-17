@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Project Document — Zen Interior</title>
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   ZEN INTERIOR — PROJECT DOCUMENT
+   Every .page is one physical A4 sheet. Running header, footer, page
+   numbers, contents and section numbers are all applied by the script.
+   ===================================================================== */
+:root {
+  --primary-brand: #083B32;
+  --secondary-brand: #4A6B62;
+  --bg-card: #F9FAF8;
+  --text-main: #1C2422;
+  --border-light: #E2E6E4;
+
+  /* Premium supporting colors */
+  --champagne-gold: #C6A15B;
+  --soft-gold: #D8C18A;
+  --warm-white: #FCFBF7;
+  --deep-black: #101513;
+  --muted-text: #6D7773;
+
+  --sage-line: #C9D3CF;
+  --ivory-deep: #F4F1E8;
+  --desk: #E9ECE9;
+
+  --serif: 'Cormorant Garamond', 'Cormorant', Georgia, serif;
+  --sans: 'Manrope', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --page-w: 210mm;
+  --page-h: 297mm;
+  --pad-x: 20mm;
+  --pad-top: 13mm;
+  --pad-bottom: 10mm;
+
+  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .40 0 0 0 0 .33 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  background: var(--desk);
+  color: var(--text-main);
+  font-family: var(--sans);
+  font-size: 8.8pt;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: lining-nums;
+}
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+
+/* ---------- Screen toolbar (never printed) ---------- */
+.toolbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 12px 24px;
+  background: rgba(16, 21, 19, .94);
+  backdrop-filter: blur(10px);
+  color: var(--warm-white);
+  border-bottom: 1px solid rgba(198, 161, 91, .35);
+}
+.toolbar__brand { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+.toolbar__brand strong { font-family: var(--serif); font-weight: 500; font-size: 20px; letter-spacing: .18em; white-space: nowrap; }
+.toolbar__brand span { font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: var(--soft-gold); white-space: nowrap; }
+.toolbar__actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.btn {
+  appearance: none; cursor: pointer;
+  padding: 9px 16px;
+  border: 1px solid rgba(252, 251, 247, .28);
+  background: transparent;
+  color: var(--warm-white);
+  font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+  transition: background .2s, border-color .2s, color .2s;
+}
+.btn:hover { border-color: var(--champagne-gold); color: var(--soft-gold); }
+.btn:focus-visible { outline: 2px solid var(--champagne-gold); outline-offset: 2px; }
+.btn--gold { background: var(--champagne-gold); border-color: var(--champagne-gold); color: var(--deep-black); }
+.btn--gold:hover { background: var(--soft-gold); color: var(--deep-black); }
+.toolbar__hint {
+  text-align: center; font-size: 11px; color: var(--muted-text);
+  padding: 14px 16px 0; letter-spacing: .04em;
+}
+@media (max-width: 760px) {
+  .toolbar { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+  .toolbar__brand { justify-content: space-between; }
+  .toolbar__actions { justify-content: stretch; }
+  .toolbar__actions .btn { flex: 1 1 calc(50% - 8px); padding: 10px 8px; letter-spacing: .12em; }
+}
+
+/* ---------- The sheet ---------- */
+.document {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12mm; padding: 10mm 0 24mm;
+}
+.page {
+  position: relative;
+  width: var(--page-w);
+  height: var(--page-h);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+  background-color: var(--warm-white);
+  background-image: var(--paper);
+  box-shadow: 0 1px 2px rgba(16, 21, 19, .06), 0 14px 40px rgba(16, 21, 19, .09);
+  break-after: page; page-break-after: always;
+  break-inside: avoid;
+}
+.page:last-child { break-after: auto; page-break-after: auto; }
+.page.is-landscape { width: 297mm; height: 210mm; page: landscape; }
+.page-body {
+  position: relative;
+  flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column;
+  padding: 11mm 0 7mm;
+  overflow: hidden;
+}
+
+/* Geometric corner marks on every internal sheet */
+.page:not(.page--bleed)::after {
+  content: ""; position: absolute; inset: 6mm; pointer-events: none;
+  background:
+    linear-gradient(var(--soft-gold), var(--soft-gold)) top left / 5mm .2mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) top left / .2mm 5mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) top right / 5mm .2mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) top right / .2mm 5mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) bottom left / 5mm .2mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) bottom left / .2mm 5mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) bottom right / 5mm .2mm no-repeat,
+    linear-gradient(var(--soft-gold), var(--soft-gold)) bottom right / .2mm 5mm no-repeat;
+  opacity: .8;
+}
+
+/* ---------- Running header (component: #tpl-head) ---------- */
+.run-head {
+  flex: none;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: end;
+  padding-bottom: 3.2mm;
+  border-bottom: .25mm solid var(--champagne-gold);
+}
+.run-head__brand { display: flex; align-items: center; gap: 2.6mm; }
+.run-head__brand img { width: 6.4mm; height: 6.4mm; object-fit: contain; }
+.run-head__name { font-family: var(--serif); font-size: 12.5pt; font-weight: 600; letter-spacing: .26em; color: var(--primary-brand); line-height: 1; }
+.run-head__tag { font-family: var(--serif); font-style: italic; font-size: 9.5pt; color: var(--secondary-brand); line-height: 1; padding-bottom: .4mm; }
+.run-head__section { justify-self: end; font-size: 6.3pt; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; color: var(--secondary-brand); line-height: 1; padding-bottom: .5mm; }
+
+/* ---------- Running footer (component: #tpl-foot) ---------- */
+.run-foot { flex: none; border-top: .2mm solid var(--border-light); padding-top: 2.8mm; }
+.run-foot__row {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: baseline;
+  font-size: 6.2pt; letter-spacing: .26em; text-transform: uppercase; color: var(--muted-text);
+}
+.run-foot__tag { font-family: var(--serif); font-style: italic; font-size: 8.5pt; letter-spacing: .02em; text-transform: none; color: var(--secondary-brand); }
+.run-foot__page { justify-self: end; }
+.run-foot__page b { color: var(--champagne-gold); font-weight: 700; }
+.run-foot__conf { margin-top: 1.6mm; text-align: center; font-size: 5.6pt; letter-spacing: .38em; color: #8E9894; }
+
+/* ---------- Type system ---------- */
+.eyebrow {
+  display: flex; align-items: center; gap: 3mm;
+  font-size: 6.6pt; font-weight: 600; letter-spacing: .34em; text-transform: uppercase;
+  color: var(--secondary-brand);
+}
+.eyebrow .sec-no { color: var(--champagne-gold); font-weight: 700; letter-spacing: .12em; }
+.eyebrow .sec-no:not(:empty)::after { content: ""; display: inline-block; width: 8mm; height: .2mm; margin-left: 3mm; vertical-align: middle; background: var(--champagne-gold); }
+.display {
+  font-family: var(--serif); font-weight: 400; color: var(--primary-brand);
+  font-size: 34pt; line-height: 1.02; letter-spacing: .005em;
+  margin-top: 4mm;
+}
+.display em { font-style: italic; font-weight: 300; color: var(--secondary-brand); }
+.display--sm { font-size: 27pt; }
+.lede { font-family: var(--serif); font-size: 13.5pt; line-height: 1.45; color: var(--text-main); font-weight: 400; }
+.muted { color: var(--muted-text); }
+.label { font-size: 6.2pt; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; color: var(--muted-text); }
+.value { font-size: 9.2pt; font-weight: 500; color: var(--text-main); }
+.value--serif { font-family: var(--serif); font-size: 14pt; font-weight: 500; line-height: 1.2; color: var(--primary-brand); }
+.gold { color: var(--champagne-gold); }
+.rule { height: .2mm; background: var(--border-light); border: 0; }
+.rule--gold { background: linear-gradient(90deg, var(--champagne-gold), rgba(198,161,91,.15)); }
+.head-block { flex: none; margin-bottom: 8mm; }
+.head-block p.intro { margin-top: 3.5mm; max-width: 125mm; color: var(--muted-text); font-size: 9pt; }
+.num { font-variant-numeric: tabular-nums lining-nums; }
+.spacer { flex: 1 1 auto; }
+
+/* ---------- Key/value grid ---------- */
+.kv { display: grid; column-gap: 8mm; }
+.kv > div { padding: 3.2mm 0 3.4mm; border-top: .2mm solid var(--border-light); }
+.kv .label { display: block; margin-bottom: 1.2mm; }
+.kv--2 { grid-template-columns: repeat(2, 1fr); }
+.kv--4 { grid-template-columns: repeat(4, 1fr); }
+
+/* ---------- Ledger (editorial table) ---------- */
+.ledger { width: 100%; border-collapse: collapse; }
+.ledger th {
+  text-align: left; padding: 0 0 2.4mm;
+  font-size: 6pt; font-weight: 700; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--primary-brand);
+  border-bottom: .3mm solid var(--primary-brand);
+}
+.ledger td { padding: 3mm 0; vertical-align: top; border-bottom: .2mm solid var(--border-light); font-size: 8.6pt; }
+.ledger th + th, .ledger td + td { padding-left: 4mm; }
+.ledger .r { text-align: right; }
+.ledger .c { text-align: center; }
+.ledger .idx { width: 9mm; color: var(--champagne-gold); font-weight: 700; font-size: 7pt; letter-spacing: .1em; padding-top: 3.5mm; }
+.ledger .desc strong { display: block; font-family: var(--serif); font-size: 12.5pt; font-weight: 500; color: var(--text-main); line-height: 1.2; }
+.ledger .desc span { display: block; margin-top: .8mm; font-size: 7.4pt; color: var(--muted-text); line-height: 1.45; }
+.ledger .amt { font-weight: 600; color: var(--primary-brand); white-space: nowrap; }
+.ledger tr.group td {
+  padding-top: 5mm; padding-bottom: 2mm; border-bottom: .2mm solid var(--sage-line);
+  font-family: var(--serif); font-size: 13pt; font-weight: 500; color: var(--primary-brand);
+}
+.ledger tr.group td .gold { font-family: var(--sans); font-size: 6.6pt; font-weight: 700; letter-spacing: .2em; margin-right: 3mm; }
+.ledger tr.group td.r { font-family: var(--sans); font-size: 8.4pt; font-weight: 600; }
+.ledger tr.sub td { font-size: 8pt; padding-top: 2.2mm; padding-bottom: 2.2mm; }
+.ledger tr.sub td:first-child { padding-left: 6mm; }
+.ledger--compact tr.sub td { padding-top: 1.5mm; padding-bottom: 1.5mm; }
+.ledger--spec td { font-size: 7.6pt; padding-top: 2.6mm; padding-bottom: 2.6mm; }
+.ledger--spec td:first-child { font-family: var(--serif); font-size: 11pt; font-weight: 500; color: var(--text-main); line-height: 1.25; }
+.tag {
+  display: inline-block; padding: .5mm 2mm;
+  font-size: 5.8pt; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  border: .2mm solid var(--sage-line); color: var(--secondary-brand); white-space: nowrap;
+}
+.tag--ok { border-color: var(--primary-brand); color: var(--primary-brand); }
+.tag--gold { border-color: var(--champagne-gold); color: #8F6F33; }
+.continued { margin-top: 2mm; text-align: right; font-size: 6.4pt; letter-spacing: .28em; text-transform: uppercase; color: var(--muted-text); }
+
+/* ---------- Totals ---------- */
+.totals { display: grid; grid-template-columns: 1fr 76mm; gap: 9mm; align-items: start; margin-top: 5mm; }
+.totals__note { margin-top: 2.4mm; font-size: 6.8pt; color: var(--muted-text); line-height: 1.55; }
+.totals__note .label { display: block; margin-bottom: 1.5mm; color: var(--secondary-brand); }
+.totals__lines { width: 100%; }
+.totals__line { display: flex; justify-content: space-between; gap: 4mm; padding: 1.6mm 0; border-bottom: .2mm solid var(--border-light); font-size: 8.4pt; }
+.totals__line span:first-child { color: var(--muted-text); }
+.totals__line span:last-child { font-weight: 600; }
+.totals__line.is-less span:last-child { color: var(--secondary-brand); }
+.grand {
+  position: relative;
+  padding: 5mm 6mm 5.2mm;
+  background: var(--primary-brand); color: var(--warm-white);
+}
+.grand::before { content: ""; position: absolute; left: 6mm; right: 6mm; top: 2.2mm; height: .2mm; background: var(--champagne-gold); }
+.grand .label { color: var(--soft-gold); }
+.grand__amount { display: block; margin-top: 1.4mm; font-family: var(--serif); font-size: 25pt; font-weight: 500; line-height: 1; letter-spacing: .01em; }
+.grand__words { display: block; margin-top: 2mm; font-size: 6.6pt; letter-spacing: .04em; color: rgba(252,251,247,.72); line-height: 1.45; }
+
+/* ---------- Payment schedule ---------- */
+.stages { display: flex; flex-direction: column; }
+.stage { display: grid; grid-template-columns: 14mm 1fr 30mm 34mm; gap: 5mm; align-items: center; padding: 5.4mm 0; border-top: .2mm solid var(--border-light); }
+.stage:last-child { border-bottom: .2mm solid var(--border-light); }
+.stage__no { font-family: var(--serif); font-size: 26pt; line-height: 1; color: var(--champagne-gold); font-weight: 400; }
+.stage__name { font-family: var(--serif); font-size: 14pt; font-weight: 500; color: var(--primary-brand); line-height: 1.1; }
+.stage__note { margin-top: .8mm; font-size: 7.4pt; color: var(--muted-text); }
+.stage__bar { position: relative; margin-top: 3mm; height: .8mm; background: var(--border-light); }
+.stage__bar i { position: absolute; inset: 0 auto 0 0; background: var(--secondary-brand); }
+.stage__bar b { position: absolute; top: -.6mm; height: 2mm; width: .3mm; background: var(--champagne-gold); }
+.stage__pct { font-family: var(--serif); font-size: 20pt; color: var(--text-main); text-align: right; line-height: 1; }
+.stage__pct small { font-family: var(--sans); font-size: 6pt; letter-spacing: .2em; color: var(--muted-text); display: block; margin-top: 1mm; }
+.stage__amt { text-align: right; }
+.stage__amt strong { display: block; font-size: 10pt; color: var(--primary-brand); }
+.stage__amt .tag { margin-top: 1.4mm; }
+
+/* ---------- Editorial two-column ---------- */
+.columns { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12mm; }
+.article { padding: 4.4mm 0 4.8mm; border-top: .2mm solid var(--border-light); break-inside: avoid; }
+.article h3 { display: flex; gap: 3mm; align-items: baseline; font-family: var(--serif); font-size: 14pt; font-weight: 500; color: var(--primary-brand); line-height: 1.15; margin-bottom: 1.6mm; }
+.article h3 .gold { font-family: var(--sans); font-size: 6.4pt; font-weight: 700; letter-spacing: .16em; }
+.article p, .article li { font-size: 8pt; color: #3D4744; line-height: 1.62; }
+.article ul { list-style: none; }
+.article li { position: relative; padding-left: 4mm; }
+.article li::before { content: ""; position: absolute; left: 0; top: 2.1mm; width: 2mm; height: .2mm; background: var(--champagne-gold); }
+
+/* ---------- Drawing sheets ---------- */
+.sheet-head {
+  flex: none; display: grid; grid-template-columns: 1.2fr 1.6fr repeat(3, .8fr); align-items: end; gap: 5mm;
+  padding-bottom: 3mm; border-bottom: .25mm solid var(--champagne-gold);
+}
+.sheet-head .run-head__name { display: block; white-space: nowrap; font-size: 11pt; letter-spacing: .2em; }
+.page:not(.is-landscape) .sheet-head { grid-template-columns: 1.1fr 1.6fr .8fr .6fr .8fr; gap: 4mm; }
+.sheet-head__cell .label { display: block; font-size: 5.4pt; margin-bottom: .8mm; }
+.sheet-head__cell .value { font-size: 8.2pt; }
+.sheet-head__title { font-family: var(--serif); font-size: 13pt; font-weight: 500; color: var(--primary-brand); line-height: 1.1; }
+.frame {
+  position: relative; flex: 1 1 auto; min-height: 0;
+  margin-top: 5mm;
+  background: #FFFFFF;
+  border: .3mm solid var(--primary-brand);
+  outline: .2mm solid var(--soft-gold); outline-offset: 1.2mm;
+  display: flex; align-items: center; justify-content: center;
+  padding: 6mm;
+}
+.frame > img, .frame > svg, .frame > canvas {
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain;
+}
+.frame > svg { width: 100%; height: 100%; }
+.frame__meta { flex: none; display: flex; justify-content: space-between; margin-top: 3.4mm; font-size: 6pt; letter-spacing: .24em; text-transform: uppercase; color: var(--muted-text); }
+.placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3mm;
+  text-align: center; color: var(--muted-text);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 9.8mm, rgba(74,107,98,.07) 9.8mm 10mm),
+    repeating-linear-gradient(90deg, transparent 0 9.8mm, rgba(74,107,98,.07) 9.8mm 10mm);
+  border: .2mm dashed var(--sage-line);
+}
+.placeholder strong { font-family: var(--serif); font-size: 18pt; font-weight: 400; color: var(--primary-brand); }
+.placeholder span { font-size: 6.4pt; letter-spacing: .3em; text-transform: uppercase; }
+.placeholder .btn { color: var(--primary-brand); border-color: var(--primary-brand); margin-top: 2mm; }
+.placeholder .btn:hover { background: var(--primary-brand); color: var(--warm-white); }
+.remove-page {
+  position: absolute; top: 3mm; right: 3mm; z-index: 5;
+  appearance: none; cursor: pointer; border: .2mm solid var(--sage-line); background: var(--warm-white);
+  font-size: 6pt; letter-spacing: .2em; text-transform: uppercase; padding: 1mm 2.4mm; color: var(--muted-text);
+}
+.remove-page:hover { color: #9B3B2F; border-color: #9B3B2F; }
+
+/* Drawing ink (inline SVG sample drawings) */
+.zd { font-family: var(--sans); }
+.zd .wall { fill: none; stroke: #1C2422; stroke-width: 9; stroke-linejoin: miter; }
+.zd .wall-out { fill: none; stroke: #1C2422; stroke-width: 16; stroke-linejoin: miter; }
+.zd .cut { fill: #FFFFFF; stroke: none; }
+.zd .thin { fill: none; stroke: #1C2422; stroke-width: 1.6; }
+.zd .hair { fill: none; stroke: #5E6A66; stroke-width: 1; }
+.zd .furn { fill: none; stroke: #4A6B62; stroke-width: 1.8; }
+.zd .furn-fill { fill: rgba(74,107,98,.07); stroke: #4A6B62; stroke-width: 1.8; }
+.zd .hatch { fill: url(#zd-hatch); stroke: #4A6B62; stroke-width: 1.8; }
+.zd .dash { fill: none; stroke: #4A6B62; stroke-width: 1.6; stroke-dasharray: 12 8; }
+.zd .gold { fill: none; stroke: #C6A15B; stroke-width: 1.6; }
+.zd .elec { fill: none; stroke: #083B32; stroke-width: 2; }
+.zd .elec-fill { fill: #083B32; stroke: none; }
+.zd .wire { fill: none; stroke: #C6A15B; stroke-width: 1.4; stroke-dasharray: 6 5; }
+.zd .dim { fill: none; stroke: #6D7773; stroke-width: 1.1; }
+.zd text { fill: #1C2422; }
+.zd .t-room { font-size: 19px; font-weight: 600; letter-spacing: 3.2px; }
+.zd .t-area { font-size: 14px; fill: #6D7773; letter-spacing: .6px; }
+.zd .t-dim { font-size: 15px; fill: #4F5A56; letter-spacing: .5px; }
+.zd .t-note { font-size: 14px; fill: #4A6B62; letter-spacing: 1.2px; }
+.zd .t-title { font-size: 22px; font-weight: 600; letter-spacing: 5px; fill: #083B32; }
+
+/* ---------- Attachment component ---------- */
+.attachment-header {
+  flex: none; display: flex; justify-content: space-between; align-items: baseline;
+  padding-bottom: 2.6mm; border-bottom: .2mm solid var(--sage-line);
+}
+.attachment-header span:first-child { font-size: 6.6pt; font-weight: 700; letter-spacing: .34em; color: var(--secondary-brand); }
+.attachment-header span:last-child { font-family: var(--serif); font-size: 26pt; line-height: .8; color: var(--champagne-gold); }
+.attachment-title { flex: none; margin-top: 4mm; font-family: var(--serif); font-size: 20pt; color: var(--primary-brand); line-height: 1.1; }
+.attachment-sub { flex: none; margin-top: 1mm; font-size: 7.2pt; color: var(--muted-text); }
+.attachment-content { position: relative; flex: 1 1 auto; min-height: 0; margin-top: 5mm; background: #FFFFFF; border: .2mm solid var(--border-light); padding: 5mm; display: flex; align-items: center; justify-content: center; }
+.attachment-content > img, .attachment-content > canvas { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; box-shadow: 0 0 0 .2mm var(--border-light); }
+.attachment-content > .doc-text { width: 100%; height: 100%; overflow: hidden; font-size: 7.4pt; line-height: 1.55; white-space: pre-wrap; font-family: ui-monospace, Consolas, monospace; color: var(--text-main); }
+
+/* ---------- Print ---------- */
+@page { size: A4; margin: 0; }
+@page landscape { size: A4 landscape; margin: 0; }
+@media print {
+  html, body { background: none !important; }
+  .no-print { display: none !important; }
+  .document { display: block; padding: 0; gap: 0; zoom: 1 !important; }
+  .page { box-shadow: none; margin: 0; }
+}
+</style>
+<style>
+/* =============== Page-specific styling =============== */
+
+/* ---- Cover: an invitation, not an invoice ---- */
+.cover { padding: 0; color: var(--warm-white); background: var(--deep-black); }
+.cover__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.72) contrast(1.02); }
+.cover__veil {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 70% at 50% 42%, rgba(8,59,50,.62) 0%, rgba(8,59,50,.84) 55%, rgba(16,21,19,.95) 100%),
+    linear-gradient(180deg, rgba(16,21,19,.55), rgba(8,59,50,.35) 40%, rgba(16,21,19,.9));
+}
+.cover__frame { position: absolute; inset: 11mm; border: .25mm solid rgba(216,193,138,.55); }
+.cover__frame::before, .cover__frame::after {
+  content: ""; position: absolute; width: 9mm; height: 9mm; border: .5mm solid var(--champagne-gold);
+}
+.cover__frame::before { top: -1.6mm; left: -1.6mm; border-right: 0; border-bottom: 0; }
+.cover__frame::after { bottom: -1.6mm; right: -1.6mm; border-left: 0; border-top: 0; }
+.cover__inner {
+  position: relative; z-index: 1; height: 100%;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 26mm 26mm 22mm;
+}
+.cover__logo { width: 58mm; }
+.cover__tag { margin-top: 4mm; font-family: var(--serif); font-style: italic; font-size: 13pt; color: var(--soft-gold); letter-spacing: .04em; }
+.cover__kicker { margin-top: 38mm; font-size: 7.4pt; font-weight: 600; letter-spacing: .6em; padding-left: .6em; color: var(--soft-gold); }
+.cover__title { margin-top: 7mm; font-family: var(--serif); font-weight: 300; font-size: 46pt; line-height: 1.02; letter-spacing: .01em; }
+.cover__title em { font-style: italic; color: var(--soft-gold); }
+.cover__arch { margin: 9mm auto 0; width: 16mm; height: auto; }
+.cover__details { margin-top: 9mm; display: grid; grid-template-columns: 1fr 1fr; gap: 5mm 14mm; text-align: left; width: 118mm; }
+.cover__details div { border-top: .2mm solid rgba(216,193,138,.4); padding-top: 2.2mm; }
+.cover__details .label { color: rgba(216,193,138,.85); font-size: 5.8pt; }
+.cover__details .value { display: block; margin-top: .8mm; color: var(--warm-white); font-size: 9.4pt; font-weight: 500; }
+.cover__details .wide { grid-column: 1 / -1; }
+.cover__details .wide .value { font-family: var(--serif); font-size: 17pt; font-weight: 400; }
+.cover__foot { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: 3mm; }
+.cover__foot .line { width: 36mm; height: .25mm; background: var(--champagne-gold); }
+.cover__foot span { font-size: 7pt; font-weight: 600; letter-spacing: .6em; padding-left: .6em; color: var(--warm-white); }
+.cover__foot small { font-size: 6pt; letter-spacing: .3em; color: rgba(252,251,247,.6); }
+
+/* ---- Introduction ---- */
+.intro-grid { display: grid; grid-template-columns: 1fr 58mm; gap: 12mm; align-items: start; }
+.intro-illus { width: 58mm; height: auto; margin-top: 4mm; }
+.intro-quote { position: relative; margin-top: 9mm; padding-left: 7mm; }
+.intro-quote::before { content: ""; position: absolute; left: 0; top: 1.5mm; bottom: 1.5mm; width: .3mm; background: var(--champagne-gold); }
+.intro-copy { margin-top: 7mm; columns: 2; column-gap: 9mm; font-size: 8.2pt; color: #3D4744; line-height: 1.7; }
+.intro-copy p + p { margin-top: 2.5mm; }
+.intro-details { margin-top: auto; }
+.intro-sign { display: flex; justify-content: space-between; align-items: end; margin-top: 7mm; }
+.intro-sign .sig { font-family: var(--serif); font-style: italic; font-size: 20pt; color: var(--primary-brand); line-height: 1; }
+
+/* ---- Contents ---- */
+.toc { margin-top: 2mm; display: flex; flex-direction: column; }
+.toc__item { display: grid; grid-template-columns: 26mm 1fr auto; align-items: baseline; padding: 3.5mm 0; border-top: .2mm solid var(--border-light); text-decoration: none; color: inherit; }
+.toc__item:last-child { border-bottom: .2mm solid var(--border-light); }
+.toc__no { font-family: var(--serif); font-size: 30pt; font-weight: 300; line-height: .9; color: var(--champagne-gold); }
+.toc__name { font-family: var(--serif); font-size: 17pt; font-weight: 500; color: var(--primary-brand); line-height: 1.1; }
+.toc__name small { display: block; margin-top: .8mm; font-family: var(--sans); font-size: 7pt; color: var(--muted-text); font-weight: 400; }
+.toc__page { font-size: 7pt; letter-spacing: .24em; color: var(--muted-text); }
+.toc__page b { color: var(--primary-brand); }
+
+/* ---- Invoice ---- */
+.inv-top { display: flex; justify-content: space-between; align-items: end; }
+.inv-top .display { font-size: 36pt; }
+.ledger--invoice td { padding-top: 2.3mm; padding-bottom: 2.3mm; }
+.ledger--invoice .idx { padding-top: 2.8mm; }
+.inv-stamp { text-align: right; }
+.inv-stamp .tag { margin-top: 2mm; }
+.inv-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 12mm; margin-top: 6mm; }
+.inv-parties h4 { font-size: 6.4pt; font-weight: 700; letter-spacing: .34em; color: var(--champagne-gold); margin-bottom: 2mm; }
+.inv-parties .value--serif { font-size: 15pt; }
+.inv-parties p { font-size: 8pt; color: #3D4744; line-height: 1.6; }
+.inv-parties dl { margin-top: 2mm; display: grid; grid-template-columns: 22mm 1fr; row-gap: .6mm; font-size: 7.8pt; }
+.inv-parties dt { color: var(--muted-text); font-size: 6.2pt; letter-spacing: .2em; text-transform: uppercase; padding-top: .5mm; }
+
+/* ---- Divider pages ---- */
+.divider { background-color: var(--bg-card); }
+.divider__no { font-family: var(--serif); font-size: 120pt; font-weight: 300; line-height: .8; color: var(--champagne-gold); opacity: .9; }
+.divider__title { margin-top: 6mm; font-family: var(--serif); font-size: 44pt; font-weight: 400; line-height: 1; color: var(--primary-brand); }
+.divider__sub { margin-top: 4mm; font-size: 7pt; font-weight: 600; letter-spacing: .44em; color: var(--secondary-brand); }
+.divider__lines { position: absolute; right: 0; top: 30mm; width: 70mm; height: calc(100% - 58mm); opacity: .9; }
+
+/* ---- Notes ---- */
+.lined { flex: 1 1 auto; min-height: 0; background: repeating-linear-gradient(180deg, transparent 0 9.3mm, var(--border-light) 9.3mm 9.5mm); }
+.prefs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; margin-bottom: 6mm; }
+.prefs div { border-top: .3mm solid var(--primary-brand); padding-top: 2mm; }
+.prefs p { margin-top: 1mm; font-size: 7.8pt; color: #3D4744; }
+
+/* ---- Approval ---- */
+.approval-statement { margin-top: 10mm; font-family: var(--serif); font-size: 17pt; line-height: 1.42; color: var(--text-main); max-width: 150mm; }
+.sign-grid { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 14mm; }
+.sign-block h4 { font-size: 6.4pt; font-weight: 700; letter-spacing: .34em; color: var(--champagne-gold); margin-bottom: 8mm; }
+.sign-field { padding-top: 14mm; border-bottom: .25mm solid var(--text-main); margin-bottom: 1.6mm; position: relative; }
+.sign-field.pre { padding-top: 0; min-height: 14mm; display: flex; align-items: end; padding-bottom: 1.5mm; font-family: var(--serif); font-size: 13pt; }
+.sign-block .label { display: block; margin-bottom: 6mm; }
+.seal { width: 26mm; height: 26mm; border: .25mm solid var(--soft-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 5.2pt; letter-spacing: .26em; color: var(--champagne-gold); line-height: 1.8; }
+
+/* ---- Closing ---- */
+.closing { padding: 0; background: var(--primary-brand); color: var(--warm-white); }
+.closing__lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+.closing__inner { position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 28mm; }
+.closing__title { font-family: var(--serif); font-weight: 300; font-size: 40pt; line-height: 1.06; }
+.closing__title em { display: block; font-style: italic; color: var(--soft-gold); }
+.closing__msg { margin-top: 8mm; max-width: 110mm; font-family: var(--serif); font-size: 14pt; line-height: 1.5; color: rgba(252,251,247,.85); }
+.closing__rule { width: 30mm; height: .25mm; background: var(--champagne-gold); margin: 14mm auto 12mm; }
+.closing__logo { width: 50mm; }
+.closing__tag { margin-top: 3mm; font-family: var(--serif); font-style: italic; font-size: 12pt; color: var(--soft-gold); }
+.closing__contact { margin-top: 12mm; display: grid; grid-template-columns: repeat(2, auto); gap: 4mm 16mm; text-align: left; }
+.closing__contact .label { color: rgba(216,193,138,.85); }
+.closing__contact .value { display: block; color: var(--warm-white); font-size: 8.8pt; margin-top: .6mm; }
+.closing__foot { position: absolute; bottom: 14mm; left: 0; right: 0; text-align: center; font-size: 6pt; letter-spacing: .4em; color: rgba(252,251,247,.55); }
+</style>
+</head>
+<body>
+
+<!-- ================= Screen controls (never printed) ================= -->
+<div class="toolbar no-print" role="toolbar" aria-label="Document controls">
+  <div class="toolbar__brand"><strong>ZEN INTERIOR</strong><span>Project Document</span></div>
+  <div class="toolbar__actions">
+    <button class="btn" type="button" data-action="print">Print Document</button>
+    <button class="btn btn--gold" type="button" data-action="pdf">Download PDF</button>
+    <button class="btn" type="button" data-action="add-blueprint">Add Blueprint</button>
+    <button class="btn" type="button" data-action="add-document">Add Document</button>
+  </div>
+</div>
+<p class="toolbar__hint no-print">A4 · <span id="page-count">—</span> pages. To save a PDF, choose <b>Save as PDF</b> in the print dialog with margins set to <b>None</b> and <b>Background graphics</b> on.</p>
+<input class="no-print" type="file" id="file-blueprint" accept="image/*,application/pdf" multiple hidden>
+<input class="no-print" type="file" id="file-document" accept="image/*,application/pdf,text/plain" multiple hidden>
+<input class="no-print" type="file" id="file-slot" accept="image/*,application/pdf" hidden>
+
+<!-- ================= Reusable components ================= -->
+<template id="tpl-head">
+  <header class="run-head">
+    <div class="run-head__brand"><img src="/brand/zen-mark.png" alt=""><span class="run-head__name">ZEN INTERIOR</span></div>
+    <div class="run-head__tag">Modern Spaces. Better Living</div>
+    <div class="run-head__section">Project Document</div>
+  </header>
+</template>
+
+<template id="tpl-sheet-head">
+  <header class="sheet-head">
+    <div class="sheet-head__cell"><span class="run-head__name">ZEN INTERIOR</span><span class="label" style="margin:1.4mm 0 0">Project Drawings</span></div>
+    <div class="sheet-head__cell"><span class="label">Drawing</span><div class="sheet-head__title" data-f="title"></div><div class="muted" style="font-size:7pt" data-bind="projectName"></div></div>
+    <div class="sheet-head__cell"><span class="label">Drawing No.</span><span class="value" data-f="no"></span></div>
+    <div class="sheet-head__cell"><span class="label">Revision</span><span class="value" data-f="rev"></span></div>
+    <div class="sheet-head__cell"><span class="label">Date</span><span class="value" data-f="date"></span></div>
+  </header>
+</template>
+
+<template id="tpl-foot">
+  <footer class="run-foot">
+    <div class="run-foot__row">
+      <span>ZEN INTERIOR</span>
+      <span class="run-foot__tag">Modern Spaces. Better Living</span>
+      <span class="run-foot__page">PAGE <b class="pg-now">00</b> / <span class="pg-total">00</span></span>
+    </div>
+    <div class="run-foot__conf">CONFIDENTIAL — CLIENT COPY</div>
+  </footer>
+</template>
+
+<template id="tpl-drawing">
+  <section class="page drawing-page" data-section="Project Drawings" data-chrome="sheet">
+    <div class="page-body" style="padding-top:0">
+      <div class="frame"></div>
+      <div class="frame__meta"><span data-f="scale"></span><span data-f="note"></span><span>All dimensions in mm · Verify on site</span></div>
+    </div>
+  </section>
+</template>
+
+<template id="tpl-attachment">
+  <section class="page attachment-page" data-section="Supporting Documents">
+    <div class="page-body">
+      <div class="attachment-header"><span>DOCUMENT</span><span data-f="no">01</span></div>
+      <div class="attachment-title" data-f="title">Attached Document</div>
+      <div class="attachment-sub" data-f="sub"></div>
+      <div class="attachment-content"><!-- Attached document goes here --></div>
+    </div>
+  </section>
+</template>
+
+<!-- ================= THE DOCUMENT ================= -->
+<main class="document" id="document">
+
+  <!-- 01 · COVER -->
+  <section class="page page--bleed cover" data-chrome="none" data-section="Cover">
+    <img class="cover__photo" src="/documents/cover-document.jpg" alt="">
+    <div class="cover__veil"></div>
+    <div class="cover__frame"></div>
+    <div class="cover__inner">
+      <img class="cover__logo" src="/brand/zen-interior-reversed.png" alt="Zen Interior">
+      <p class="cover__tag">Modern Spaces. Better Living</p>
+
+      <p class="cover__kicker">PROJECT DOCUMENT</p>
+      <h1 class="cover__title">Your space,<br><em>crafted with intent.</em></h1>
+      <svg class="cover__arch" viewBox="0 0 60 44" aria-hidden="true"><path d="M4 44V22a26 26 0 0 1 52 0v22" fill="none" stroke="#C6A15B" stroke-width="1"/><path d="M14 44V24a16 16 0 0 1 32 0v20" fill="none" stroke="#C6A15B" stroke-width=".6"/><circle cx="30" cy="30" r="1.4" fill="#C6A15B"/></svg>
+
+      <div class="cover__details">
+        <div class="wide"><span class="label">Prepared for</span><span class="value" data-bind="clientName"></span></div>
+        <div><span class="label">Project</span><span class="value" data-bind="projectName"></span></div>
+        <div><span class="label">Location</span><span class="value" data-bind="location"></span></div>
+        <div><span class="label">Project Reference</span><span class="value" data-bind="projectReference"></span></div>
+        <div><span class="label">Date</span><span class="value" data-bind="invoiceDate"></span></div>
+      </div>
+
+      <div class="cover__foot">
+        <div class="line"></div>
+        <span>CLIENT COPY</span>
+        <small>PRIVATE &amp; CONFIDENTIAL</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 · INTRODUCTION -->
+  <section class="page" data-section="Project Introduction" data-toc="Project Introduction" data-toc-sub="A note from the studio">
+    <div class="page-body">
+      <div class="intro-grid">
+        <div>
+          <p class="eyebrow"><span class="sec-no"></span>Welcome</p>
+          <h2 class="display">A space<br>designed<br><em>around you.</em></h2>
+          <div class="intro-quote">
+            <p class="lede">“Every detail of your space is considered with purpose — from the materials selected to the way light, proportion and functionality come together.”</p>
+          </div>
+        </div>
+        <svg class="intro-illus" viewBox="0 0 160 250" aria-hidden="true">
+          <g fill="none" stroke="#4A6B62" stroke-width=".7">
+            <path d="M10 250V80a70 70 0 0 1 140 0v170"/>
+            <path d="M26 250V84a54 54 0 0 1 108 0v166"/>
+            <path d="M42 250V92a38 38 0 0 1 76 0v158" stroke="#C6A15B"/>
+            <line x1="0" y1="250" x2="160" y2="250"/>
+            <line x1="80" y1="54" x2="80" y2="250" stroke-dasharray="2 3"/>
+            <line x1="42" y1="170" x2="118" y2="170" stroke-dasharray="2 3"/>
+            <path d="M58 250v-40h44v40"/>
+            <circle cx="80" cy="120" r="8" stroke="#C6A15B"/>
+          </g>
+          <g fill="#6D7773" font-family="Manrope, sans-serif" font-size="5" letter-spacing="1.4">
+            <text x="80" y="244" text-anchor="middle">THRESHOLD</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="intro-copy">
+        <p>Thank you for choosing Zen Interior. This document brings together everything that defines your project — the commercial summary, the scope we have agreed, the materials we have selected and the drawings that will guide our craftspeople on site.</p>
+        <p>We have prepared it to be read at leisure and kept for reference. As the project moves from design to handover, each revision of this document will record what has been decided, so that nothing about your home is left to memory.</p>
+        <p>Please review each section carefully. Where you would like to refine a detail, note it on the Client Notes page and your design lead will respond within two working days.</p>
+        <p>We look forward to building a home that feels calm, considered and entirely your own.</p>
+      </div>
+
+      <div class="intro-details">
+        <div class="intro-sign">
+          <div><div class="sig">Zen Interior</div><div class="label" style="margin-top:2mm">Design Studio · <span data-brand="city"></span></div></div>
+          <div class="label" style="text-align:right">Document <span class="gold" data-bind="projectReference"></span></div>
+        </div>
+        <div class="kv" style="grid-template-columns: 1.3fr 1fr 1fr; margin-top: 6mm;">
+          <div><span class="label">Client</span><span class="value" data-bind="clientName"></span></div>
+          <div><span class="label">Project</span><span class="value" data-bind="projectName"></span></div>
+          <div><span class="label">Location</span><span class="value" data-bind="location"></span></div>
+          <div><span class="label">Design Reference</span><span class="value" data-bind="designReference"></span></div>
+          <div><span class="label">Project Reference</span><span class="value" data-bind="projectReference"></span></div>
+          <div><span class="label">Document Date</span><span class="value" data-bind="invoiceDate"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 · CONTENTS -->
+  <section class="page" data-section="Contents">
+    <div class="page-body">
+      <div class="head-block">
+        <p class="eyebrow">Contents</p>
+        <h2 class="display">Inside this<br><em>document.</em></h2>
+      </div>
+      <nav class="toc" id="toc" aria-label="Contents"></nav>
+    </div>
+  </section>
+
+  <!-- 04 · PROJECT INVOICE -->
+  <section class="page" data-section="Project Invoice" data-toc="Invoice" data-toc-sub="Commercial summary and totals" id="invoice-page">
+    <div class="page-body">
+      <div class="inv-top">
+        <div>
+          <p class="eyebrow"><span class="sec-no"></span>Zen Interior / Client Document</p>
+          <h2 class="display">Project Invoice</h2>
+        </div>
+        <div class="inv-stamp">
+          <span class="tag tag--gold">Tax Invoice · Original</span>
+        </div>
+      </div>
+
+      <div class="kv kv--4" style="margin-top:5mm">
+        <div><span class="label">Invoice No.</span><span class="value" data-bind="invoiceNumber"></span></div>
+        <div><span class="label">Invoice Date</span><span class="value" data-bind="invoiceDate"></span></div>
+        <div><span class="label">Due Date</span><span class="value" data-bind="dueDate"></span></div>
+        <div><span class="label">Project Ref.</span><span class="value" data-bind="projectReference"></span></div>
+      </div>
+
+      <div class="inv-parties">
+        <div>
+          <h4>CLIENT</h4>
+          <div class="value--serif" data-bind="clientName"></div>
+          <p data-bind="address"></p>
+          <dl><dt>Phone</dt><dd data-bind="phone"></dd><dt>Email</dt><dd data-bind="email"></dd></dl>
+        </div>
+        <div>
+          <h4>PROJECT</h4>
+          <div class="value--serif" data-bind="projectName"></div>
+          <p data-bind="siteLocation"></p>
+          <dl><dt>Type</dt><dd data-bind="projectType"></dd><dt>Area</dt><dd data-bind="projectArea"></dd></dl>
+        </div>
+      </div>
+
+      <table class="ledger ledger--invoice" style="margin-top:6mm">
+        <thead><tr><th colspan="2">Description</th><th class="c">Qty</th><th>Unit</th><th class="r">Rate</th><th class="r">Amount</th></tr></thead>
+        <tbody id="invoice-rows"></tbody>
+      </table>
+
+      <div class="totals" id="invoice-totals"></div>
+    </div>
+  </section>
+
+  <!-- 05+ · COST BREAKDOWN (generated & paginated) -->
+  <div data-slot="breakdown" hidden></div>
+
+  <!-- PAYMENT SCHEDULE -->
+  <section class="page" data-section="Payment Schedule">
+    <div class="page-body">
+      <div class="head-block">
+        <p class="eyebrow"><span class="sec-no"></span>Payment Schedule</p>
+        <h2 class="display">Paced with<br><em>the work.</em></h2>
+        <p class="intro">Payments are linked to visible milestones. Each instalment is released only when the stage before it is complete and signed off.</p>
+      </div>
+      <div class="stages" id="stages"></div>
+
+      <div class="columns" style="margin-top:auto; column-gap:10mm">
+        <div class="article">
+          <h3><span class="gold">A</span>Payment Information</h3>
+          <dl id="bank"></dl>
+        </div>
+        <div class="article">
+          <h3><span class="gold">B</span>How to Pay</h3>
+          <ul>
+            <li>Bank transfer (NEFT / RTGS / IMPS) or cheque in favour of <b data-brand="legalName"></b>.</li>
+            <li>Please quote <b data-bind="invoiceNumber"></b> as the payment reference.</li>
+            <li>A stamped receipt is issued within one working day of credit.</li>
+            <li>Amounts shown include GST at the applicable rate.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECT OVERVIEW -->
+  <section class="page" data-section="Project Overview" data-toc="Project Overview" data-toc-sub="Scope, execution, timeline and warranty">
+    <div class="page-body">
+      <div class="head-block">
+        <p class="eyebrow"><span class="sec-no"></span>Project Summary</p>
+        <h2 class="display">Project<br><em>overview.</em></h2>
+      </div>
+      <div class="columns" id="overview"></div>
+      <div style="margin-top:auto" id="timeline"></div>
+    </div>
+  </section>
+
+  <!-- MATERIAL & SPECIFICATION SUMMARY (generated & paginated) -->
+  <div data-slot="specs" hidden></div>
+
+  <!-- PROJECT DRAWINGS · divider + register -->
+  <section class="page divider" data-section="Project Drawings" data-toc="Project Drawings" data-toc-sub="Plans, layouts and elevations">
+    <svg class="divider__lines" viewBox="0 0 70 297" preserveAspectRatio="none" aria-hidden="true">
+      <g fill="none" stroke="#C9D3CF" stroke-width=".25"><line x1="10" y1="0" x2="10" y2="297"/><line x1="30" y1="0" x2="30" y2="297"/><line x1="50" y1="0" x2="50" y2="297"/><line x1="0" y1="80" x2="70" y2="80"/><line x1="0" y1="200" x2="70" y2="200"/></g>
+      <line x1="30" y1="40" x2="30" y2="120" stroke="#C6A15B" stroke-width=".4"/>
+    </svg>
+    <div class="page-body" style="padding-right:62mm">
+      <p class="eyebrow"><span class="sec-no"></span>Architectural Documentation</p>
+      <div class="divider__no" data-secno style="margin-top:14mm"></div>
+      <h2 class="divider__title">Project<br>Drawings</h2>
+      <p class="divider__sub">DRAWING REGISTER</p>
+      <table class="ledger" style="margin-top:10mm">
+        <thead><tr><th>No.</th><th>Drawing</th><th>Rev.</th><th class="r">Page</th></tr></thead>
+        <tbody id="drawing-register"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- DRAWING SHEETS (generated from the drawings list; new ones added after) -->
+  <div data-slot="drawings" hidden></div>
+
+  <!-- SUPPORTING DOCUMENTS · divider -->
+  <section class="page divider" data-section="Supporting Documents" data-toc="Supporting Documents" data-toc-sub="Products, installation and attachments">
+    <svg class="divider__lines" viewBox="0 0 70 297" preserveAspectRatio="none" aria-hidden="true">
+      <g fill="none" stroke="#C9D3CF" stroke-width=".25"><line x1="10" y1="0" x2="10" y2="297"/><line x1="30" y1="0" x2="30" y2="297"/><line x1="50" y1="0" x2="50" y2="297"/><line x1="0" y1="80" x2="70" y2="80"/><line x1="0" y1="200" x2="70" y2="200"/></g>
+      <line x1="50" y1="150" x2="50" y2="240" stroke="#C6A15B" stroke-width=".4"/>
+    </svg>
+    <div class="page-body" style="padding-right:62mm">
+      <p class="eyebrow"><span class="sec-no"></span>Project Records</p>
+      <div class="divider__no" data-secno style="margin-top:14mm"></div>
+      <h2 class="divider__title">Supporting<br>Documents</h2>
+      <p class="divider__sub">DOCUMENT INDEX</p>
+      <table class="ledger" style="margin-top:10mm">
+        <thead><tr><th>No.</th><th>Document</th><th class="r">Page</th></tr></thead>
+        <tbody id="document-register"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PRODUCT DETAILS -->
+  <section class="page" data-section="Supporting Documents" data-doc="Product Details">
+    <div class="page-body">
+      <div class="head-block">
+        <p class="eyebrow"><span class="sec-no"></span>Document · Product Details</p>
+        <h2 class="display display--sm">Products &amp; <em>fittings.</em></h2>
+        <p class="intro">Branded products specified for this project. Model numbers are confirmed at order placement and recorded on the delivery challan.</p>
+      </div>
+      <table class="ledger ledger--spec">
+        <thead><tr><th>Product</th><th>Brand / Series</th><th>Location</th><th class="c">Qty</th><th>Warranty</th></tr></thead>
+        <tbody id="products"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- INSTALLATION DETAILS -->
+  <section class="page" data-section="Supporting Documents" data-doc="Installation Details">
+    <div class="page-body">
+      <div class="head-block">
+        <p class="eyebrow"><span class="sec-no"></span>Document · Installation Details</p>
+        <h2 class="display display--sm">On site, <em>in sequence.</em></h2>
+        <p class="intro">Installation follows a fixed order so that finished surfaces are never exposed to wet or heavy work.</p>
+      </div>
+      <div class="stages" id="install-steps"></div>
+      <div class="columns" style="margin-top:auto">
+        <div class="article"><h3><span class="gold">A</span>Site Readiness</h3><ul id="site-ready"></ul></div>
+        <div class="article"><h3><span class="gold">B</span>During Installation</h3><ul id="site-during"></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATTACHED DOCUMENT 01 (placeholder; more are added after it) -->
+  <section class="page attachment-page" data-section="Supporting Documents" data-doc="Material Quotation — Vendor Copy" data-attachment>
+    <div class="page-body">
+      <div class="attachment-header"><span>DOCUMENT</span><span data-f="no">01</span></div>
+      <div class="attachment-title" data-f="title">Material Quotation — Vendor Copy</div>
+      <div class="attachment-sub" data-f="sub">Space reserved for an external document. Use “Add Document” to insert images or PDFs.</div>
+      <div class="attachment-content">
+        <div class="placeholder">
+          <strong>Document to be attached</strong>
+          <span>Image · PDF · Scanned copy</span>
+          <button class="btn no-print" type="button" data-action="fill-slot">Attach here</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div data-slot="attachments" hidden></div>
+
+  <!-- TERMS & CONDITIONS -->
+  <section class="page" data-section="Terms &amp; Warranty" data-toc="Terms &amp; Warranty" data-toc-sub="Payment terms, conditions and care" data-doc="Terms &amp; Conditions">
+    <div class="page-body">
+      <div class="head-block" style="margin-bottom:5mm">
+        <p class="eyebrow"><span class="sec-no"></span>Terms &amp; Conditions</p>
+        <h2 class="display display--sm">The fine print, <em>plainly.</em></h2>
+      </div>
+      <div class="columns" id="terms" style="column-gap:10mm"></div>
+    </div>
+  </section>
+
+  <!-- WARRANTY -->
+  <section class="page" data-section="Terms &amp; Warranty" data-doc="Warranty &amp; Care">
+    <div class="page-body">
+      <div class="head-block">
+        <p class="eyebrow"><span class="sec-no"></span>Warranty</p>
+        <h2 class="display display--sm">Made to last, <em>and looked after.</em></h2>
+        <p class="intro">Your warranty begins on the date of handover recorded on the approval page.</p>
+      </div>
+      <table class="ledger ledger--spec" style="margin-bottom:6mm">
+        <thead><tr><th>Covered</th><th>Period</th><th>Covers</th><th>Provided by</th></tr></thead>
+        <tbody id="warranty"></tbody>
+      </table>
+      <div class="columns" id="care"></div>
+    </div>
+  </section>
+
+  <!-- CLIENT NOTES -->
+  <section class="page" data-section="Client Notes" data-doc="Client Notes">
+    <div class="page-body">
+      <div class="head-block" style="margin-bottom:6mm">
+        <p class="eyebrow"><span class="sec-no"></span>Client Notes</p>
+        <h2 class="display display--sm">In your <em>own words.</em></h2>
+        <p class="intro">Record preferences, questions or changes here. Your design lead will respond in writing within two working days.</p>
+      </div>
+      <div class="prefs">
+        <div><span class="label">Design Lead</span><p data-brand="designLead"></p></div>
+        <div><span class="label">Preferred Contact</span><p data-bind="phone"></p></div>
+        <div><span class="label">Site Access</span><p data-bind="siteAccess"></p></div>
+      </div>
+      <div class="lined"></div>
+    </div>
+  </section>
+
+  <!-- CLIENT APPROVAL -->
+  <section class="page" data-section="Client Approval" data-toc="Client Approval" data-toc-sub="Review and sign-off" data-doc="Approval &amp; Signature">
+    <div class="page-body">
+      <p class="eyebrow"><span class="sec-no"></span>Sign-off</p>
+      <h2 class="display">Client<br><em>approval.</em></h2>
+      <p class="approval-statement">“I confirm that the project details, scope, specifications and commercial terms presented in this document have been reviewed.”</p>
+
+      <div class="kv kv--4" style="margin-top:12mm">
+        <div><span class="label">Project</span><span class="value" data-bind="projectName"></span></div>
+        <div><span class="label">Project Ref.</span><span class="value" data-bind="projectReference"></span></div>
+        <div><span class="label">Invoice</span><span class="value" data-bind="invoiceNumber"></span></div>
+        <div><span class="label">Project Value</span><span class="value" data-total="grand"></span></div>
+      </div>
+
+      <div class="sign-grid">
+        <div class="sign-block">
+          <h4>CLIENT</h4>
+          <div class="sign-field pre" data-bind="clientName"></div><span class="label">Client Name</span>
+          <div class="sign-field"></div><span class="label">Signature</span>
+          <div class="sign-field"></div><span class="label">Date</span>
+        </div>
+        <div class="sign-block">
+          <h4>ZEN INTERIOR</h4>
+          <div class="sign-field pre" data-brand="representative"></div><span class="label">Zen Interior Representative</span>
+          <div class="sign-field"></div><span class="label">Signature</span>
+          <div style="display:flex; justify-content:space-between; align-items:end; gap:6mm">
+            <div style="flex:1"><div class="sign-field"></div><span class="label">Date</span></div>
+            <div class="seal">STUDIO<br>SEAL</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL · THANK YOU -->
+  <section class="page page--bleed closing" data-chrome="none" data-section="Thank You">
+    <svg class="closing__lines" viewBox="0 0 210 297" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M22 283V112a83 83 0 0 1 166 0v171" fill="none" stroke="#C6A15B" stroke-width=".22" opacity=".55"/>
+      <line x1="14" y1="14" x2="196" y2="14" stroke="rgba(252,251,247,.12)" stroke-width=".2"/>
+      <line x1="14" y1="283" x2="196" y2="283" stroke="rgba(252,251,247,.12)" stroke-width=".2"/>
+    </svg>
+    <div class="closing__inner">
+      <h2 class="closing__title">Thank you for trusting<em>Zen Interior</em></h2>
+      <p class="closing__msg">“We look forward to transforming your vision into a space that feels distinctly yours.”</p>
+      <div class="closing__rule"></div>
+      <img class="closing__logo" src="/brand/zen-interior-reversed.png" alt="Zen Interior">
+      <p class="closing__tag">Modern Spaces. Better Living</p>
+      <div class="closing__contact">
+        <div><span class="label">Phone</span><span class="value" data-brand="phone"></span></div>
+        <div><span class="label">Email</span><span class="value" data-brand="email"></span></div>
+        <div><span class="label">Website</span><span class="value" data-brand="website"></span></div>
+        <div><span class="label">Office</span><span class="value" data-brand="address"></span></div>
+      </div>
+    </div>
+    <div class="closing__foot">CONFIDENTIAL — CLIENT COPY</div>
+  </section>
+
+</main>
+
+<script>
+/* =====================================================================
+   DATA — edit this block to prepare a new client document.
+   ===================================================================== */
+const brand = {
+  name: 'ZEN INTERIOR',
+  legalName: 'Zen Interior',
+  tagline: 'Modern Spaces. Better Living',
+  phone: '+91 96007 85286',
+  email: 'naveenplf001@gmail.com',
+  website: 'www.zeninterior.in',
+  address: 'Chennai, Tamil Nadu · Bangalore, Karnataka',
+  city: 'Chennai',
+  gstin: 'GSTIN — to be added',
+  designLead: 'Design Lead, Zen Interior',
+  representative: 'Authorised Signatory',
+  bank: [
+    ['Account Name', 'Zen Interior'],
+    ['Bank', 'XXXXXXXX Bank, Chennai'],
+    ['Account No.', 'XXXX XXXX XXXX'],
+    ['IFSC', 'XXXX0000000'],
+    ['UPI', 'zeninterior@xxxx'],
+  ],
+};
+
+const project = {
+  clientName: 'Mr. & Mrs. Karthik Raman',
+  address: 'Flat 12B, The Palms, Boat Club Road, R. A. Puram, Chennai 600028',
+  phone: '+91 98400 00000',
+  email: 'karthik.raman@example.com',
+  projectName: 'The Raman Residence',
+  projectType: 'Residential Interior · Design & Execution',
+  projectArea: '1,600 sq.ft · 3 BHK',
+  location: 'Boat Club Road, Chennai',
+  siteLocation: 'Flat 12B, The Palms, Boat Club Road, Chennai',
+  siteAccess: 'Weekdays 9:00–18:00 · Security desk',
+  designReference: 'ZI-DS-0142 · Rev. B',
+  projectReference: 'ZI-2026-014',
+  invoiceNumber: 'INV-2026-0142',
+  invoiceDate: '17 September 2026',
+  dueDate: '30 September 2026',
+};
+
+/* Each invoice line may carry a breakdown. When it does, the line's rate is
+   derived from the breakdown so the two can never disagree. */
+const invoiceItems = [
+  {
+    description: 'Modular Kitchen', detail: 'L-shaped kitchen with island, tall unit and full-height storage',
+    quantity: 1, unit: 'Project',
+    breakdown: [
+      { item: 'Carcass — BWP marine plywood, 18 mm', qty: 142, unit: 'sq.ft', rate: 620 },
+      { item: 'Shutters — anti-fingerprint acrylic, handle-less', qty: 118, unit: 'sq.ft', rate: 980 },
+      { item: 'Hardware — Blum Legrabox drawers & Aventos lift-ups', qty: 1, unit: 'Set', rate: 118000 },
+      { item: 'Countertop — quartz, 20 mm, eased edge', qty: 48, unit: 'sq.ft', rate: 1450 },
+      { item: 'Backsplash — fluted glass with LED profile', qty: 32, unit: 'sq.ft', rate: 890 },
+    ],
+  },
+  {
+    description: 'Wardrobe & Storage', detail: 'Master, bedroom 02 and study — floor-to-ceiling with lofts',
+    quantity: 3, unit: 'Nos.',
+    breakdown: [
+      { item: 'Wardrobe carcass — BWP plywood, 18 mm', qty: 190, unit: 'sq.ft', rate: 560 },
+      { item: 'Shutters — PU lacquer, matte, profile handle', qty: 176, unit: 'sq.ft', rate: 860 },
+      { item: 'Internal accessories — pull-outs, trouser rack, drawers', qty: 3, unit: 'Set', rate: 21500 },
+      { item: 'Loft units with lift-up shutters', qty: 54, unit: 'sq.ft', rate: 720 },
+    ],
+  },
+  {
+    description: 'TV & Living Joinery', detail: 'Fluted veneer TV wall, floating console and display shelving',
+    quantity: 1, unit: 'Project',
+    breakdown: [
+      { item: 'Fluted veneer panelling — American walnut', qty: 96, unit: 'sq.ft', rate: 1250 },
+      { item: 'Floating console with push-to-open drawers', qty: 1, unit: 'Nos.', rate: 64000 },
+      { item: 'Display shelving with concealed lighting', qty: 2, unit: 'Nos.', rate: 28500 },
+    ],
+  },
+  {
+    description: 'False Ceiling', detail: 'Gypsum ceiling with cove detailing across living, dining and bedrooms',
+    quantity: 1, unit: 'Lot',
+    breakdown: [
+      { item: 'Gypsum false ceiling — Saint-Gobain Gyproc', qty: 1180, unit: 'sq.ft', rate: 135 },
+      { item: 'Cove and reveal detailing', qty: 260, unit: 'r.ft', rate: 180 },
+      { item: 'Premium emulsion to ceiling', qty: 1180, unit: 'sq.ft', rate: 28 },
+    ],
+  },
+  {
+    description: 'Lighting', detail: 'Layered architectural lighting — downlights, profiles and feature pendants',
+    quantity: 1, unit: 'Lot',
+    breakdown: [
+      { item: 'COB downlights, 9 W, 3000 K, anti-glare', qty: 46, unit: 'Nos.', rate: 1650 },
+      { item: 'Aluminium LED profiles with diffuser', qty: 140, unit: 'r.ft', rate: 420 },
+      { item: 'Feature pendants — dining and foyer', qty: 3, unit: 'Nos.', rate: 18500 },
+      { item: 'Smart dimming controls — living & master', qty: 2, unit: 'Set', rate: 16500 },
+    ],
+  },
+  {
+    description: 'Study & Office Furniture', detail: 'Writing desk, ergonomic chair and book wall',
+    quantity: 1, unit: 'Project',
+    breakdown: [
+      { item: 'Writing desk — walnut veneer with leather inlay', qty: 1, unit: 'Nos.', rate: 72000 },
+      { item: 'Ergonomic task chair', qty: 1, unit: 'Nos.', rate: 46000 },
+      { item: 'Book wall with ladder rail', qty: 64, unit: 'sq.ft', rate: 940 },
+    ],
+  },
+];
+
+const charges = {
+  additional: [
+    { label: 'Design & project management', amount: 85000 },
+    { label: 'Site protection, logistics & cleaning', amount: 24000 },
+  ],
+  discountPercent: 5,
+  discountLabel: 'Studio courtesy',
+  gstPercent: 18,
+};
+
+const paymentSchedule = [
+  { stage: 'Booking / Advance', note: 'On signing this document · design freeze begins', percent: 10, status: 'Received' },
+  { stage: 'Production', note: 'On approval of drawings and material samples', percent: 50, status: 'Due' },
+  { stage: 'Installation', note: 'On delivery of modules to site', percent: 30, status: 'Scheduled' },
+  { stage: 'Final Handover', note: 'On completion, snag closure and walkthrough', percent: 10, status: 'Scheduled' },
+];
+
+const overview = [
+  { t: 'Project Scope', p: 'Complete interior design and turnkey execution of a 3-bedroom residence — living, dining, kitchen, three bedrooms, study, foyer and utility.' },
+  { t: 'Design Scope', list: ['Space planning and furniture layout', 'Photorealistic 3D views of every room', 'Working drawings, electrical and ceiling plans', 'Material, finish and lighting selection'] },
+  { t: 'Materials', p: 'BWP marine plywood carcasses, PU and acrylic finishes, American walnut veneer, quartz worktops and Blum hardware — each sample approved by you before ordering.' },
+  { t: 'Execution', p: 'Joinery is manufactured at our partner facility under studio supervision. A dedicated site manager coordinates civil, electrical and finishing trades.' },
+  { t: 'Installation', p: 'Factory-finished modules are installed dry, in sequence, with floors and finished surfaces protected throughout.' },
+  { t: 'Warranty', p: 'Ten years on joinery carcasses, manufacturer warranty on hardware and appliances, and one year on installation workmanship.' },
+];
+
+const timeline = [
+  { phase: 'Design', weeks: 3 }, { phase: 'Approvals', weeks: 1 }, { phase: 'Production', weeks: 5 },
+  { phase: 'Installation', weeks: 3 }, { phase: 'Handover', weeks: 1 },
+];
+
+const specifications = [
+  ['Carcass — Kitchen', 'Greenply / Century', 'Laminated inside', 'Frosty white', 'BWP 710, 18 mm', 'Approved'],
+  ['Carcass — Wardrobes', 'Greenply / Century', 'Laminated inside', 'Linen grey', 'BWR 303, 18 mm', 'Approved'],
+  ['Kitchen shutters', 'Senosan / Rehau', 'Acrylic, matte AFP', 'Sage green', '18 mm, 2 mm ABS edge', 'Approved'],
+  ['Wardrobe shutters', 'Asian Paints PU', 'PU lacquer, 10% sheen', 'Warm ivory', 'MDF 18 mm, 6-coat', 'Sample due'],
+  ['Veneer panelling', 'Decowood', 'Natural, open pore', 'American walnut', '4 mm on 12 mm ply', 'Approved'],
+  ['Kitchen countertop', 'Caesarstone', 'Honed', 'Calacatta Nuvo', '20 mm, eased edge', 'Approved'],
+  ['Backsplash', 'Saint-Gobain', 'Fluted, toughened', 'Clear', '8 mm', 'Approved'],
+  ['Drawer systems', 'Blum', 'Legrabox pure', 'Orion grey', 'Soft-close, 40 kg', 'Approved'],
+  ['Hinges & lift-ups', 'Blum', 'Clip top Blumotion', 'Nickel', 'Aventos HK-XS', 'Approved'],
+  ['Profile handles', 'Hettich', 'Anodised', 'Champagne', 'Aluminium G-profile', 'Approved'],
+  ['False ceiling', 'Saint-Gobain Gyproc', 'Putty + emulsion', 'Brilliant white', '12.5 mm board', 'Approved'],
+  ['Downlights', 'Philips / Wipro', 'Anti-glare trim', '3000 K', '9 W COB, CRI 90+', 'Approved'],
+  ['LED profiles', 'Klus / Hafele', 'Opal diffuser', '2700 K', '12 V, 10 W/m', 'Approved'],
+  ['Wall finish', 'Asian Paints Royale', 'Matte', 'Sandstone', 'Two coats on putty', 'Client choice'],
+];
+
+const drawings = [
+  { no: 'BP-01', title: 'Blueprint 01 — Floor Plan', kind: 'floor', scale: 'Scale 1:50 @ A3 · NTS on A4', rev: 'R2', date: '12 Sep 2026' },
+  { no: 'BP-02', title: 'Blueprint 02 — Working Plan', kind: null, scale: 'Scale 1:50', rev: '—', date: 'To follow' },
+  { no: 'BP-03', title: 'Blueprint 03 — Setting-out Plan', kind: null, scale: 'Scale 1:50', rev: '—', date: 'To follow' },
+  { no: 'EL-01', title: 'Elevation — Kitchen', kind: 'kitchen', scale: 'Scale 1:25 @ A3', rev: 'R1', date: '10 Sep 2026' },
+  { no: 'EE-01', title: 'Electrical Layout', kind: 'electrical', scale: 'Scale 1:50 @ A3', rev: 'R1', date: '12 Sep 2026' },
+  { no: 'FL-01', title: 'Furniture Layout', kind: 'furniture', scale: 'Scale 1:50 @ A3', rev: 'R2', date: '12 Sep 2026' },
+  { no: 'CL-01', title: 'Ceiling Layout', kind: 'ceiling', scale: 'Scale 1:50 @ A3', rev: 'R1', date: '12 Sep 2026' },
+  { no: 'OT-01', title: 'Other Drawings', kind: null, scale: 'As noted', rev: '—', date: 'To follow' },
+];
+
+const products = [
+  ['Built-in oven', 'Bosch Series 8', 'Kitchen · tall unit', 1, '2 years'],
+  ['Induction hob', 'Bosch Series 6', 'Kitchen', 1, '2 years'],
+  ['Chimney', 'Elica, 90 cm island', 'Kitchen', 1, '5 years (motor)'],
+  ['Sink & mixer', 'Franke / Grohe', 'Kitchen', 1, '10 years'],
+  ['Drawer & lift systems', 'Blum', 'Kitchen & wardrobes', 1, 'Lifetime (mfr.)'],
+  ['Wardrobe internals', 'Hettich / Hafele', 'All wardrobes', 3, '5 years'],
+  ['Downlights & profiles', 'Philips / Klus', 'Throughout', 46, '2 years'],
+  ['Smart dimmers', 'Schneider Wiser', 'Living & master', 2, '2 years'],
+  ['Pendant lights', 'Studio curated', 'Dining & foyer', 3, '1 year'],
+  ['Task chair', 'Herman Miller Sayl', 'Study', 1, '12 years'],
+];
+
+const installSteps = [
+  { stage: 'Site Preparation', note: 'Protection laid, measurements re-verified, services marked', days: 'Day 1–2' },
+  { stage: 'Ceiling & Services', note: 'Gypsum framework, electrical conduits, AC drain lines', days: 'Day 3–8' },
+  { stage: 'Joinery Installation', note: 'Kitchen, wardrobes and panelling installed dry', days: 'Day 9–15' },
+  { stage: 'Finishing & Lighting', note: 'Paint, fixtures, lighting scenes and appliance commissioning', days: 'Day 16–19' },
+  { stage: 'Deep Clean & Walkthrough', note: 'Snag list closed, care briefing, keys and records handed over', days: 'Day 20–21' },
+];
+const siteReady = ['Flooring completed and cured', 'Power and water available on site', 'Lift access booked for delivery days', 'Society permissions for work hours'];
+const siteDuring = ['Daily progress photographs shared', 'Weekly site review with your design lead', 'No wet work after joinery arrives', 'Materials stored in a protected zone'];
+
+const terms = [
+  ['Payment Terms', 'Instalments are payable within seven days of each milestone as set out in the Payment Schedule. Production begins only after the second instalment is received.'],
+  ['Validity', 'The commercial values in this document are valid for thirty days from the document date, after which material prices may be revised.'],
+  ['Scope', 'Work not described in this document — civil alterations, plumbing re-routing, loose furniture not listed — is quoted separately.'],
+  ['Material Selection', 'Natural materials such as stone and veneer vary in grain and tone. Approved samples represent character, not an exact match.'],
+  ['Design Approval', 'Production drawings are issued for signature. Changes after sign-off are handled as variations and may affect cost and timeline.'],
+  ['Variations', 'Every variation is priced in writing and executed only after your written approval.'],
+  ['Timeline', 'Timelines begin on receipt of the production instalment and site readiness. Delays caused by site access or client changes extend the timeline accordingly.'],
+  ['Site Conditions', 'The client provides uninterrupted access, power, water and storage space during working hours agreed with the society.'],
+  ['Ownership', 'Materials remain the property of Zen Interior until the invoice is settled in full. Drawings remain the intellectual property of the studio.'],
+  ['Cancellation', 'Cancellation after production begins is charged at the value of work completed and materials procured, subject to a minimum of the advance paid.'],
+  ['Handover', 'Handover is recorded by a joint walkthrough. Warranties commence on the handover date.'],
+  ['Jurisdiction', 'This document is governed by the laws of India, with courts at Chennai having jurisdiction.'],
+];
+
+const warranty = [
+  ['Joinery carcass', '10 years', 'Swelling, delamination, structural failure', 'Zen Interior'],
+  ['Hardware', 'As per brand', 'Mechanism failure under normal use', 'Manufacturer'],
+  ['Appliances', 'As per brand', 'Manufacturing defects', 'Manufacturer'],
+  ['Installation', '1 year', 'Alignment, fixing and finishing workmanship', 'Zen Interior'],
+  ['Lighting', '2 years', 'Driver and LED failure', 'Manufacturer'],
+];
+const care = [
+  { t: 'Surfaces', p: 'Wipe lacquer and acrylic with a soft damp cloth. Avoid abrasive pads, ammonia and solvent cleaners.' },
+  { t: 'Stone & Quartz', p: 'Use trivets for hot vessels. Wipe spills of turmeric, wine and oil promptly.' },
+  { t: 'Veneer', p: 'Keep away from sustained direct sunlight. Re-oil annually — our team can schedule this for you.' },
+  { t: 'Service', p: 'For any concern, call or email the studio with your project reference. We respond within 48 hours.' },
+];
+
+/* ==== DRAWINGS:BEGIN ==== */
+/* Sample architectural drawings, generated as inline SVG so the document is
+   complete before real drawings are attached. Replace any sheet by
+   attaching an image or PDF to it. Plan units are centimetres. */
+const Drawings = (() => {
+  const W = 1600, H = 1000;
+  const M = { l: 170, t: 150, r: 130, b: 150 };
+  const VW = W + M.l + M.r, VH = H + M.t + M.b;
+
+  const rooms = [
+    { n: 'LIVING & DINING', x: 0, y: 0, w: 900, h: 560, lx: 330, ly: 380 },
+    { n: 'KITCHEN', x: 900, y: 0, w: 400, h: 360, lx: 1070, ly: 290 },
+    { n: 'UTILITY', x: 1300, y: 0, w: 300, h: 360 },
+    { n: 'GALLERY', x: 900, y: 360, w: 450, h: 200 },
+    { n: 'FOYER', x: 1350, y: 360, w: 250, h: 200 },
+    { n: 'MASTER BEDROOM', x: 0, y: 560, w: 560, h: 440, lx: 280, ly: 640 },
+    { n: 'DRESS & BATH', x: 560, y: 560, w: 240, h: 440, ly: 900 },
+    { n: 'BEDROOM 02', x: 800, y: 560, w: 450, h: 440, lx: 1025, ly: 650 },
+    { n: 'BATH 02', x: 1250, y: 560, w: 350, h: 200 },
+    { n: 'STUDY', x: 1250, y: 760, w: 350, h: 240, ly: 830 },
+  ];
+  const openings = [
+    { d: 'v', x: 900, y: 380, len: 160 },
+    { d: 'v', x: 1350, y: 385, len: 150 },
+    { d: 'h', x: 960, y: 360, len: 180 },
+  ];
+  const doors = [
+    { d: 'v', x: 1600, y: 410, len: 110, s: -1, main: true },
+    { d: 'v', x: 1300, y: 200, len: 90, s: 1 },
+    { d: 'h', x: 400, y: 560, len: 100, s: 1 },
+    { d: 'v', x: 560, y: 620, len: 90, s: 1 },
+    { d: 'h', x: 1050, y: 560, len: 100, s: 1 },
+    { d: 'h', x: 1265, y: 560, len: 80, s: 1 },
+    { d: 'v', x: 1250, y: 880, len: 90, s: 1 },
+  ];
+  const windows = [
+    { d: 'h', x: 150, y: 0, len: 300 }, { d: 'h', x: 560, y: 0, len: 220 }, { d: 'h', x: 1020, y: 0, len: 180 },
+    { d: 'h', x: 120, y: 1000, len: 300 }, { d: 'h', x: 900, y: 1000, len: 250 }, { d: 'h', x: 1340, y: 1000, len: 180 },
+    { d: 'v', x: 0, y: 150, len: 250 }, { d: 'v', x: 0, y: 680, len: 200 }, { d: 'v', x: 1600, y: 100, len: 160 },
+  ];
+
+  const f = (n) => Math.round(n * 10) / 10;
+  const R = (x, y, w, h, c, extra = '') => `<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" class="${c}" ${extra}/>`;
+  const L = (x1, y1, x2, y2, c) => `<line x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}" class="${c}"/>`;
+  const C = (cx, cy, r, c) => `<circle cx="${f(cx)}" cy="${f(cy)}" r="${r}" class="${c}"/>`;
+  const T = (x, y, s, c, a = 'middle', extra = '') => `<text x="${f(x)}" y="${f(y)}" class="${c}" text-anchor="${a}" ${extra}>${s}</text>`;
+
+  const defs = `<defs><pattern id="zd-hatch" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="12" stroke="#4A6B62" stroke-width="1"/></pattern></defs>`;
+
+  function dimH(x1, x2, y, label, tickLen = 14) {
+    return L(x1, y, x2, y, 'dim') +
+      L(x1 - 6, y + 6, x1 + 6, y - 6, 'thin') + L(x2 - 6, y + 6, x2 + 6, y - 6, 'thin') +
+      L(x1, y - tickLen, x1, y + tickLen, 'dim') + L(x2, y - tickLen, x2, y + tickLen, 'dim') +
+      T((x1 + x2) / 2, y - 9, label, 't-dim');
+  }
+  function dimV(x, y1, y2, label, tickLen = 14) {
+    const cy = (y1 + y2) / 2;
+    return L(x, y1, x, y2, 'dim') +
+      L(x - 6, y1 + 6, x + 6, y1 - 6, 'thin') + L(x - 6, y2 + 6, x + 6, y2 - 6, 'thin') +
+      L(x - tickLen, y1, x + tickLen, y1, 'dim') + L(x - tickLen, y2, x + tickLen, y2, 'dim') +
+      T(x - 9, cy, label, 't-dim', 'middle', `transform="rotate(-90 ${f(x - 9)} ${f(cy)})"`);
+  }
+
+  function shell() {
+    let s = '';
+    rooms.forEach((r) => { s += R(r.x, r.y, r.w, r.h, 'wall'); });
+    s += R(0, 0, W, H, 'wall-out');
+    openings.forEach((o) => {
+      s += o.d === 'h' ? R(o.x, o.y - 10, o.len, 20, 'cut') : R(o.x - 10, o.y, 20, o.len, 'cut');
+      s += o.d === 'h' ? L(o.x, o.y - 5, o.x, o.y + 5, 'thin') + L(o.x + o.len, o.y - 5, o.x + o.len, o.y + 5, 'thin')
+                       : L(o.x - 5, o.y, o.x + 5, o.y, 'thin') + L(o.x - 5, o.y + o.len, o.x + 5, o.y + o.len, 'thin');
+    });
+    windows.forEach((w) => {
+      if (w.d === 'h') s += R(w.x, w.y - 9, w.len, 18, 'cut') + L(w.x, w.y - 8, w.x + w.len, w.y - 8, 'thin') + L(w.x, w.y, w.x + w.len, w.y, 'hair') + L(w.x, w.y + 8, w.x + w.len, w.y + 8, 'thin');
+      else s += R(w.x - 9, w.y, 18, w.len, 'cut') + L(w.x - 8, w.y, w.x - 8, w.y + w.len, 'thin') + L(w.x, w.y, w.x, w.y + w.len, 'hair') + L(w.x + 8, w.y, w.x + 8, w.y + w.len, 'thin');
+    });
+    doors.forEach((d) => {
+      const sw = d.main ? 'wall' : 'thin';
+      if (d.d === 'h') {
+        s += R(d.x, d.y - 10, d.len, 20, 'cut');
+        s += L(d.x, d.y, d.x, d.y + d.s * d.len, 'thin');
+        s += `<path d="M${d.x} ${d.y + d.s * d.len} A${d.len} ${d.len} 0 0 ${d.s > 0 ? 0 : 1} ${d.x + d.len} ${d.y}" class="hair" stroke-dasharray="5 4"/>`;
+      } else {
+        s += R(d.x - 10, d.y, 20, d.len, 'cut');
+        s += L(d.x, d.y, d.x + d.s * d.len, d.y, sw === 'wall' ? 'thin' : 'thin');
+        s += `<path d="M${d.x + d.s * d.len} ${d.y} A${d.len} ${d.len} 0 0 ${d.s > 0 ? 1 : 0} ${d.x} ${d.y + d.len}" class="hair" stroke-dasharray="5 4"/>`;
+      }
+    });
+    // entry marker
+    s += `<path d="M${W + 70} ${465} l-34 -14 v28 z" class="elec-fill"/>` + T(W + 60, 510, 'ENTRY', 't-note');
+    return s;
+  }
+
+  function labels(withArea = true) {
+    return rooms.map((r) => {
+      const x = r.lx ?? r.x + r.w / 2, y = r.ly ?? r.y + r.h / 2;
+      const m2 = (r.w * r.h) / 10000, ft = Math.round(m2 * 10.764);
+      return T(x, y, r.n, 't-room') + (withArea ? T(x, y + 22, `${m2.toFixed(1)} m² · ${ft} sq.ft`, 't-area') : '');
+    }).join('');
+  }
+
+  function dims() {
+    let s = '';
+    const xs = [0, 900, 1300, 1600];
+    for (let i = 0; i < xs.length - 1; i++) s += dimH(xs[i], xs[i + 1], -60, `${(xs[i + 1] - xs[i]) * 10}`);
+    s += dimH(0, W, -110, `${W * 10}`);
+    const ys = [0, 560, 1000];
+    for (let i = 0; i < ys.length - 1; i++) s += dimV(-60, ys[i], ys[i + 1], `${(ys[i + 1] - ys[i]) * 10}`);
+    s += dimV(-115, 0, H, `${H * 10}`);
+    const bx = [0, 560, 800, 1250, 1600];
+    for (let i = 0; i < bx.length - 1; i++) s += dimH(bx[i], bx[i + 1], H + 60, `${(bx[i + 1] - bx[i]) * 10}`);
+    return s;
+  }
+
+  function furniture() {
+    let s = '';
+    // living
+    s += R(60, 60, 320, 85, 'furn-fill', 'rx="8"') + R(60, 145, 85, 210, 'furn-fill', 'rx="8"');
+    s += R(200, 190, 150, 90, 'furn', 'rx="4"') + C(275, 235, 26, 'furn');
+    s += R(400, 250, 80, 80, 'furn-fill', 'rx="10"');
+    s += R(70, 515, 330, 30, 'hatch');
+    s += R(150, 390, 220, 110, 'hair', 'stroke-dasharray="4 4"');
+    // dining
+    s += R(580, 170, 230, 120, 'furn', 'rx="4"');
+    [605, 670, 735].forEach((x) => { s += R(x, 135, 45, 30, 'furn-fill', 'rx="6"') + R(x, 295, 45, 30, 'furn-fill', 'rx="6"'); });
+    s += C(695, 230, 30, 'hair');
+    // kitchen
+    s += R(912, 12, 380, 62, 'hatch') + R(1230, 74, 62, 240, 'hatch');
+    s += R(1010, 150, 160, 80, 'furn-fill', 'rx="4"');
+    s += C(1040, 43, 14, 'furn') + C(1080, 43, 14, 'furn') + R(1140, 25, 70, 38, 'furn', 'rx="10"');
+    // utility
+    s += R(1312, 12, 276, 60, 'hatch') + C(1540, 280, 34, 'furn');
+    // master
+    s += R(160, 720, 200, 220, 'furn-fill', 'rx="6"') + R(172, 730, 80, 38, 'furn', 'rx="8"') + R(268, 730, 80, 38, 'furn', 'rx="8"');
+    s += L(160, 790, 360, 790, 'furn');
+    s += R(105, 725, 45, 45, 'furn') + R(370, 725, 45, 45, 'furn');
+    s += R(12, 580, 60, 90, 'hatch');
+    s += R(420, 870, 110, 110, 'furn-fill', 'rx="30"');
+    // dress & bath
+    s += R(572, 580, 60, 220, 'hatch') + R(740, 580, 50, 150, 'hatch');
+    s += `<ellipse cx="760" cy="960" rx="22" ry="28" class="furn"/>` + R(575, 850, 70, 45, 'furn', 'rx="14"') + R(680, 820, 108, 70, 'hair', 'stroke-dasharray="4 4"');
+    // bedroom 02
+    s += R(950, 780, 180, 205, 'furn-fill', 'rx="6"') + R(962, 790, 70, 34, 'furn', 'rx="8"') + R(1048, 790, 70, 34, 'furn', 'rx="8"');
+    s += L(950, 845, 1130, 845, 'furn');
+    s += R(812, 580, 58, 230, 'hatch');
+    s += R(812, 880, 90, 100, 'furn');
+    // bath 02
+    s += `<ellipse cx="1560" cy="660" rx="22" ry="28" class="furn"/>` + R(1270, 580, 80, 50, 'furn', 'rx="14"') + R(1440, 690, 150, 60, 'hair', 'stroke-dasharray="4 4"');
+    // study
+    s += R(1270, 925, 220, 62, 'furn-fill') + C(1380, 895, 22, 'furn') + R(1540, 780, 50, 200, 'hatch');
+    return s;
+  }
+
+  const lightPts = [[250, 220], [650, 230], [450, 90], [1100, 180], [1450, 180], [1120, 460], [1475, 460], [260, 800], [680, 700], [1030, 880], [1425, 660], [1425, 860]];
+  function electrical() {
+    let s = '';
+    lightPts.forEach(([x, y]) => { s += C(x, y, 15, 'elec') + L(x - 10, y - 10, x + 10, y + 10, 'elec') + L(x - 10, y + 10, x + 10, y - 10, 'elec'); });
+    const switches = [[1580, 540], [880, 530], [420, 580], [1070, 580], [1330, 150], [540, 700], [1270, 950]];
+    switches.forEach(([x, y]) => { s += R(x - 9, y - 9, 18, 18, 'elec-fill'); });
+    const sockets = [[20, 300], [240, 530], [880, 120], [1000, 80], [1180, 80], [20, 800], [540, 950], [1230, 700], [1580, 950], [1450, 580]];
+    sockets.forEach(([x, y]) => { s += C(x, y, 11, 'elec') + L(x - 11, y, x + 11, y, 'elec'); });
+    const ac = [[30, 240], [30, 780], [1030, 580], [1580, 880]];
+    ac.forEach(([x, y]) => { s += R(x - 12, y - 32, 24, 64, 'elec', 'rx="4"') + T(x + 26, y + 5, 'AC', 't-note', 'start'); });
+    // circuits
+    s += `<path d="M880 530 Q760 380 650 230 M650 230 Q450 160 450 90 M650 230 Q430 260 250 220" class="wire"/>`;
+    s += `<path d="M420 580 Q330 690 260 800 M540 700 Q610 690 680 700" class="wire"/>`;
+    s += `<path d="M1070 580 Q1050 730 1030 880 M1580 540 Q1520 500 1475 460 M1475 460 Q1300 440 1120 460" class="wire"/>`;
+    s += `<path d="M1330 150 Q1390 170 1450 180 M1330 150 Q1210 160 1100 180" class="wire"/>`;
+    // DB
+    s += R(1560, 290, 30, 50, 'elec-fill') + T(1545, 320, 'DB', 't-note', 'end');
+    return s;
+  }
+  function electricalLegend() {
+    const y = H + 115;
+    return `<g transform="translate(260 ${y})">` +
+      C(0, 0, 13, 'elec') + L(-9, -9, 9, 9, 'elec') + L(-9, 9, 9, -9, 'elec') + T(24, 5, 'CEILING LIGHT', 't-note', 'start') +
+      R(200, -9, 18, 18, 'elec-fill') + T(232, 5, 'SWITCH PLATE', 't-note', 'start') +
+      C(420, 0, 11, 'elec') + L(409, 0, 431, 0, 'elec') + T(444, 5, '6/16A SOCKET', 't-note', 'start') +
+      R(628, -16, 20, 32, 'elec', 'rx="4"') + T(660, 5, 'AC POINT', 't-note', 'start') +
+      L(800, 0, 850, 0, 'wire') + T(862, 5, 'SWITCHING CIRCUIT', 't-note', 'start') + `</g>`;
+  }
+
+  function ceiling() {
+    let s = '';
+    const big = rooms.filter((r) => r.w * r.h > 70000);
+    big.forEach((r) => {
+      s += R(r.x + 45, r.y + 45, r.w - 90, r.h - 90, 'dash');
+      s += R(r.x + 60, r.y + 60, r.w - 120, r.h - 120, 'gold');
+      const nx = Math.max(2, Math.round((r.w - 120) / 170)), ny = Math.max(2, Math.round((r.h - 120) / 170));
+      for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) {
+        const x = r.x + 90 + (i * (r.w - 180)) / (nx - 1), y = r.y + 90 + (j * (r.h - 180)) / (ny - 1);
+        s += C(x, y, 7, 'elec') + C(x, y, 2.5, 'elec-fill');
+      }
+      s += T(r.x + r.w - 70, r.y + r.h - 62, 'FC +2850', 't-note', 'end');
+    });
+    rooms.filter((r) => r.w * r.h <= 70000).forEach((r) => {
+      s += C(r.x + r.w / 2, r.y + r.h / 2 - 45, 7, 'elec') + C(r.x + r.w / 2, r.y + r.h / 2 - 45, 2.5, 'elec-fill');
+      s += T(r.x + r.w / 2, r.y + r.h - 22, 'GYPSUM +2700', 't-note');
+    });
+    return s;
+  }
+  function ceilingLegend() {
+    const y = H + 115;
+    return `<g transform="translate(260 ${y})">` +
+      L(0, 0, 60, 0, 'dash') + T(74, 5, 'COVE LINE', 't-note', 'start') +
+      L(230, 0, 290, 0, 'gold') + T(304, 5, 'LED PROFILE', 't-note', 'start') +
+      C(470, 0, 7, 'elec') + C(470, 0, 2.5, 'elec-fill') + T(488, 5, 'COB DOWNLIGHT 9W · 3000K', 't-note', 'start') +
+      T(830, 5, 'FC = FALSE CEILING · LEVELS FROM FFL', 't-note', 'start') + `</g>`;
+  }
+
+  function northAndScale() {
+    const nx = W + 60, ny = -80;
+    return `<g transform="translate(${nx} ${ny})">` + C(0, 0, 30, 'thin') +
+      `<path d="M0 -26 L10 12 L0 5 L-10 12 Z" class="elec-fill"/>` + T(0, -40, 'N', 't-room') + `</g>` +
+      `<g transform="translate(0 ${H + 115})">` +
+      R(0, -6, 50, 12, 'elec-fill') + R(50, -6, 50, 12, 'thin') + R(100, -6, 100, 12, 'elec-fill') +
+      T(0, -14, '0', 't-dim') + T(100, -14, '1', 't-dim') + T(200, -14, '2 m', 't-dim') + `</g>`;
+  }
+
+  function plan(kind) {
+    let body = '';
+    if (kind === 'furniture') body = furniture() + shell() + labels(false);
+    else if (kind === 'electrical') body = furniture().replace(/class="(furn|furn-fill|hatch)"/g, 'class="hair" opacity=".35"') + shell() + electrical() + labels(false) + electricalLegend();
+    else if (kind === 'ceiling') body = shell() + ceiling() + labels(false) + ceilingLegend();
+    else body = shell() + labels(true);
+    return body + dims() + northAndScale();
+  }
+
+  /* ---- Elevations (units: 1 = 2.5 mm) ---- */
+  function kitchenElevation() {
+    const k = 0.4, fl = 1000, X = (mm) => 40 + mm * k, Y = (mm) => fl - mm * k;
+    let s = L(-40, fl, 1620, fl, 'wall') + R(X(0), Y(3000), 3800 * k, 3000 * k, 'hair');
+    // tall unit
+    s += R(X(0), Y(2250), 600 * k, 2150 * k, 'thin') + L(X(0), Y(100), X(600), Y(100), 'thin');
+    s += R(X(40), Y(1350), 520 * k, 520 * k, 'furn') + R(X(40), Y(1950), 520 * k, 500 * k, 'furn');
+    s += R(X(80), Y(1300), 440 * k, 420 * k, 'dash');
+    // base run
+    s += R(X(600), Y(850), 3200 * k, 750 * k, 'thin') + L(X(600), Y(100), X(3800), Y(100), 'thin') + R(X(600), Y(890), 3200 * k, 40 * k, 'furn-fill');
+    [600, 1200, 1800, 2400, 3000].forEach((x) => { s += L(X(x), Y(850), X(x), Y(100), 'thin'); });
+    [1200, 1800].forEach((x) => { s += L(X(x), Y(600), X(x + 600), Y(600), 'thin') + L(X(x), Y(350), X(x + 600), Y(350), 'thin'); });
+    [600, 1200, 1800, 2400, 3000, 3800].forEach((x, i, a) => { if (i < a.length - 1) s += L(X(x + 40), Y(820), X(a[i + 1] - 40), Y(820), 'gold'); });
+    // hob, sink, chimney
+    s += R(X(2450), Y(930), 500 * k, 30 * k, 'elec-fill');
+    s += `<path d="M${X(2500)} ${Y(1600)} L${X(2900)} ${Y(1600)} L${X(2800)} ${Y(2250)} L${X(2600)} ${Y(2250)} Z" class="thin"/>`;
+    s += R(X(1300), Y(930), 600 * k, 40 * k, 'dash') + L(X(1600), Y(930), X(1600), Y(1050), 'thin') + L(X(1600), Y(1050), X(1540), Y(1050), 'thin');
+    // wall units
+    s += R(X(600), Y(2250), 1800 * k, 700 * k, 'thin') + R(X(3000), Y(2250), 800 * k, 700 * k, 'thin');
+    [1200, 1800].forEach((x) => { s += L(X(x), Y(2250), X(x), Y(1550), 'thin'); });
+    s += L(X(3400), Y(2250), X(3400), Y(1550), 'thin');
+    s += L(X(600), Y(1560), X(2400), Y(1560), 'gold') + L(X(3000), Y(1560), X(3800), Y(1560), 'gold');
+    // backsplash
+    s += R(X(600), Y(1550), 3200 * k, 660 * k, 'hair', 'stroke-dasharray="3 5"');
+    // tall unit on right
+    s += R(X(3800), Y(2250), 0, 0, 'thin');
+    // dimensions
+    s += dimV(X(0) - 60, Y(3000), Y(2250), '750') + dimV(X(0) - 60, Y(2250), Y(100), '2150') + dimV(X(0) - 60, Y(100), Y(0), '100');
+    s += dimV(X(3800) + 60, Y(2250), Y(1550), '700') + dimV(X(3800) + 60, Y(1550), Y(890), '660') + dimV(X(3800) + 60, Y(890), Y(0), '890');
+    s += dimH(X(0), X(600), Y(3000) - 50, '600') + dimH(X(600), X(3800), Y(3000) - 50, '3200') + dimH(X(0), X(3800), Y(3000) - 100, '3800');
+    s += T(X(1900), fl + 50, 'FFL ±0', 't-note');
+    s += T(X(2700), Y(1000) - 12, 'HOB', 't-note') + T(X(1600), Y(1000) - 12, 'SINK', 't-note');
+    s += T(X(300), Y(2380), 'TALL UNIT · BUILT-IN OVEN', 't-note') + T(X(2100), Y(2380), 'SOFT-CLOSE LIFT-UP SHUTTERS', 't-note');
+    return s + L(0, 0, 0, 0, 'hair');
+  }
+
+  function tvElevation() {
+    const k = 0.34, fl = 1020, X = (mm) => 50 + mm * k, Y = (mm) => fl - mm * k;
+    let s = L(-40, fl, 1620, fl, 'wall') + R(X(0), Y(3000), 4400 * k, 3000 * k, 'thin');
+    s += R(X(0), Y(3000), 4400 * k, 300 * k, 'dash');
+    // fluted centre
+    s += R(X(1000), Y(2700), 2400 * k, 2700 * k, 'furn-fill');
+    for (let x = 1040; x < 3400; x += 60) s += L(X(x), Y(2690), X(x), Y(10), 'hair');
+    s += L(X(1000), Y(2700), X(3400), Y(2700), 'gold');
+    // tv
+    s += R(X(1550), Y(1850), 1300 * k, 740 * k, 'elec-fill', 'opacity=".9"');
+    // console
+    s += R(X(1150), Y(650), 2100 * k, 300 * k, 'cut') + R(X(1150), Y(650), 2100 * k, 300 * k, 'thin');
+    [1850, 2550].forEach((x) => { s += L(X(x), Y(650), X(x), Y(350), 'thin'); });
+    s += L(X(1150), Y(340), X(3250), Y(340), 'gold');
+    // side shelves
+    [0, 3400].forEach((x0) => {
+      s += R(X(x0 + 150), Y(2700), 700 * k, 2400 * k, 'thin');
+      [900, 1400, 1900, 2400].forEach((y) => { s += L(X(x0 + 150), Y(y), X(x0 + 850), Y(y), 'thin'); });
+      s += R(X(x0 + 150), Y(900), 700 * k, 600 * k, 'hatch');
+      s += C(X(x0 + 500), Y(1650), 26, 'hair') + R(X(x0 + 300), Y(2150), 120 * k, 220 * k, 'hair');
+    });
+    s += dimH(X(0), X(1000), Y(3000) - 50, '1000') + dimH(X(1000), X(3400), Y(3000) - 50, '2400') + dimH(X(3400), X(4400), Y(3000) - 50, '1000') + dimH(X(0), X(4400), Y(3000) - 100, '4400');
+    s += dimV(X(4400) + 60, Y(3000), Y(2700), '300') + dimV(X(4400) + 60, Y(2700), Y(0), '2700');
+    s += dimV(X(0) - 60, Y(1850), Y(1110), '740') + dimV(X(0) - 60, Y(650), Y(350), '300') + dimV(X(0) - 60, Y(350), Y(0), '350');
+    s += T(X(2200), Y(2780), 'FLUTED VENEER PANEL · AMERICAN WALNUT', 't-note') + T(X(2200), Y(500) + 5, 'FLOATING CONSOLE', 't-note');
+    s += T(X(2200), fl + 50, 'FFL ±0', 't-note');
+    return s;
+  }
+
+  function wardrobe() {
+    const k = 0.34, fl = 1030, X = (mm) => 60 + mm * k, Y = (mm) => fl - mm * k;
+    const X2 = (mm) => 900 + mm * k;
+    let s = L(-40, fl, 1640, fl, 'wall');
+    // closed elevation
+    s += R(X(0), Y(2400), 2000 * k, 2300 * k, 'thin') + R(X(0), Y(100), 2000 * k, 100 * k, 'hatch');
+    [500, 1000, 1500].forEach((x) => { s += L(X(x), Y(2400), X(x), Y(100), 'thin'); });
+    [480, 520, 1480, 1520].forEach((x) => { s += L(X(x), Y(1300), X(x), Y(900), 'gold'); });
+    s += L(X(0), Y(2150), X(2000), Y(2150), 'hair');
+    s += T(X(1000), Y(2400) - 110, 'ELEVATION — SHUTTERS CLOSED', 't-title');
+    // open / internal
+    s += R(X2(0), Y(2400), 2000 * k, 2300 * k, 'thin') + R(X2(0), Y(100), 2000 * k, 100 * k, 'hatch');
+    s += L(X2(1000), Y(2400), X2(1000), Y(100), 'thin') + L(X2(0), Y(2150), X2(2000), Y(2150), 'thin');
+    s += L(X2(0), Y(1950), X2(1000), Y(1950), 'furn') + C(X2(40), Y(1950), 4, 'elec-fill');
+    for (let x = 60; x < 960; x += 70) s += `<path d="M${X2(x)} ${Y(1950)} l0 12 l-18 ${40 + (x % 3) * 30} h36 z" class="hair"/>`;
+    s += L(X2(0), Y(900), X2(1000), Y(900), 'thin');
+    [700, 500, 300].forEach((y) => { s += L(X2(0), Y(y), X2(1000), Y(y), 'thin') + L(X2(420), Y(y + 110), X2(580), Y(y + 110), 'gold'); });
+    [1700, 1400, 1100, 800, 500].forEach((y) => { s += L(X2(1000), Y(y), X2(2000), Y(y), 'thin'); });
+    s += R(X2(1100), Y(470), 800 * k, 350 * k, 'dash') + T(X2(1500), Y(300), 'SHOE PULL-OUT', 't-note');
+    s += T(X2(500), Y(1600), 'LONG HANGING', 't-note') + T(X2(1500), Y(1880), 'LOFT', 't-note') + T(X2(500), Y(2280), 'LOFT', 't-note');
+    s += T(X2(500), Y(560), 'DRAWERS · BLUM TANDEMBOX', 't-note');
+    s += T(X2(1000), Y(2400) - 110, 'INTERNAL LAYOUT — SHUTTERS REMOVED', 't-title');
+    s += dimH(X(0), X(2000), Y(2400) - 50, '2000') + dimH(X2(0), X2(1000), Y(2400) - 50, '1000') + dimH(X2(1000), X2(2000), Y(2400) - 50, '1000');
+    s += dimV(X(0) - 40, Y(2400), Y(2150), '250') + dimV(X(0) - 40, Y(2150), Y(100), '2050') + dimV(X(0) - 40, Y(100), Y(0), '100');
+    s += dimV(X2(2000) + 50, Y(1700), Y(1400), '300') + dimV(X2(2000) + 50, Y(900), Y(500), '400');
+    s += T(X(1000), fl + 50, 'FFL ±0', 't-note') + T(X2(1000), fl + 50, 'FFL ±0', 't-note');
+    return s;
+  }
+
+  const titles = {
+    floor: 'FLOOR PLAN', furniture: 'FURNITURE LAYOUT', electrical: 'ELECTRICAL LAYOUT', ceiling: 'REFLECTED CEILING PLAN',
+    kitchen: 'KITCHEN ELEVATION — A', elevation: 'LIVING ROOM — TV WALL ELEVATION', wardrobe: 'MASTER WARDROBE — DETAIL',
+  };
+
+  function render(kind) {
+    let inner;
+    if (kind === 'kitchen') inner = `<g transform="translate(100 60)">${kitchenElevation()}</g>`;
+    else if (kind === 'elevation') inner = `<g transform="translate(90 60)">${tvElevation()}</g>`;
+    else if (kind === 'wardrobe') inner = `<g transform="translate(60 40)">${wardrobe()}</g>`;
+    else inner = `<g transform="translate(${M.l} ${M.t})">${plan(kind)}</g>`;
+    return `<svg class="zd" viewBox="0 0 ${VW} ${VH}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${titles[kind] || 'Drawing'}" xmlns="http://www.w3.org/2000/svg">${defs}${inner}</svg>`;
+  }
+
+  return { render, aspect: VW / VH };
+})();
+/* ==== DRAWINGS:END ==== */
+
+/* ==== ENGINE:BEGIN ==== */
+/* Shared page engine: formatting, pagination, running header/footer,
+   page numbering, contents and file attachments. */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (v) => String(v ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const pad2 = (n) => String(n).padStart(2, '0');
+const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
+const money = (n) => `₹ ${inr.format(Math.round(n))}`;
+const el = (html) => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+
+function amountInWords(num) {
+  const a = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+  const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+  const two = (n) => (n < 20 ? a[n] : `${b[Math.floor(n / 10)]}${n % 10 ? ' ' + a[n % 10] : ''}`);
+  const three = (n) => `${n >= 100 ? a[Math.floor(n / 100)] + ' Hundred' + (n % 100 ? ' ' : '') : ''}${n % 100 ? two(n % 100) : ''}`;
+  let n = Math.round(num);
+  if (n === 0) return 'Zero';
+  const parts = [];
+  const crore = Math.floor(n / 1e7); n %= 1e7;
+  const lakh = Math.floor(n / 1e5); n %= 1e5;
+  const thousand = Math.floor(n / 1e3); n %= 1e3;
+  if (crore) parts.push(`${three(crore)} Crore`);
+  if (lakh) parts.push(`${two(lakh)} Lakh`);
+  if (thousand) parts.push(`${two(thousand)} Thousand`);
+  if (n) parts.push(three(n));
+  return parts.join(' ');
+}
+
+/* Fill [data-bind] from `project` and [data-brand] from `brand`. */
+function bindData(root = document) {
+  $$('[data-bind]', root).forEach((n) => { const v = project[n.dataset.bind]; if (v != null) n.textContent = v; });
+  $$('[data-brand]', root).forEach((n) => { const v = brand[n.dataset.brand]; if (v != null) n.textContent = v; });
+}
+
+/* A page overflows when its body's content is taller than the space it has. */
+const overflows = (page) => { const b = $('.page-body', page); return b.scrollHeight > b.clientHeight + 1; };
+
+/* Flow table rows across as many pages as needed.
+   makePage(isFirst) must return an unattached .page whose table body is [data-flow]. */
+function flowRows({ slot, makePage, rows, tail }) {
+  const pages = [];
+  let page, body;
+  const open = (first) => {
+    page = makePage(first);
+    slot.before(page);
+    applyChrome();
+    body = $('[data-flow]', page);
+    pages.push(page);
+  };
+  open(true);
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    body.append(row);
+    if (overflows(page) && body.children.length > 1) {
+      row.remove();
+      $('.page-body', page).append(el('<p class="continued">Continued overleaf</p>'));
+      // make room for the note, and never strand a group heading at the foot
+      const carry = [];
+      while (body.children.length > 1 && (overflows(page) || body.lastElementChild.classList.contains('group'))) {
+        const last = body.lastElementChild;
+        last.remove();
+        carry.unshift(last);
+      }
+      open(false);
+      carry.forEach((r) => body.append(r));
+      body.append(row);
+    }
+  }
+  // Trailing blocks (summaries, totals) follow the rows; each moves on whole.
+  [].concat(tail || []).forEach((block) => {
+    $('.page-body', page).append(block);
+    if (overflows(page)) {
+      block.remove();
+      open(false);
+      $('[data-flow]', page).closest('table').remove();
+      $('.page-body', page).append(block);
+    }
+  });
+  slot.remove();
+  return pages;
+}
+
+/* Running header, footer and section numbers. */
+function applyChrome() {
+  const head = $('#tpl-head'), sheet = $('#tpl-sheet-head'), foot = $('#tpl-foot');
+  $$('#document > .page').forEach((page) => {
+    const mode = page.dataset.chrome;
+    if (mode === 'none' || page.dataset.chromed) return;
+    page.dataset.chromed = '1';
+    if (mode === 'sheet' && sheet) {
+      const h = sheet.content.firstElementChild.cloneNode(true);
+      const d = page._drawing || {};
+      $$('[data-f]', h).forEach((n) => { n.textContent = d[n.dataset.f] ?? ''; });
+      bindData(h);
+      page.prepend(h);
+    } else {
+      const h = head.content.firstElementChild.cloneNode(true);
+      const tag = $('.run-head__tag', h);
+      if (tag.textContent.trim()) $('.run-head__section', h).textContent = page.dataset.section || 'Project Document';
+      else tag.textContent = page.dataset.section || '';
+      page.prepend(h);
+    }
+    page.append(foot.content.firstElementChild.cloneNode(true));
+  });
+}
+
+/* Page numbers, section numbers, contents and registers — rerun after any change. */
+function renumber() {
+  const pages = $$('#document > .page');
+  const total = pages.length;
+  let sec = 0;
+  const toc = [];
+  pages.forEach((page, i) => {
+    page.id ||= `page-${i + 1}`;
+    if (page.dataset.toc) { sec += 1; toc.push({ no: sec, name: page.dataset.toc, sub: page.dataset.tocSub || '', page: i + 1, id: page.id }); }
+    $$('.sec-no', page).forEach((n) => { n.textContent = sec ? pad2(sec) : ''; });
+    $$('[data-secno]', page).forEach((n) => { n.textContent = pad2(sec); });
+    $$('.pg-now', page).forEach((n) => { n.textContent = pad2(i + 1); });
+    $$('.pg-total', page).forEach((n) => { n.textContent = pad2(total); });
+    page.dataset.pageNo = i + 1;
+  });
+  const tocHost = $('#toc');
+  if (tocHost) {
+    tocHost.innerHTML = toc.map((t) => `<a class="toc__item" href="#${t.id}"><span class="toc__no">${pad2(t.no)}</span><span class="toc__name">${esc(t.name)}<small>${esc(t.sub)}</small></span><span class="toc__page">PAGE <b>${pad2(t.page)}</b></span></a>`).join('');
+  }
+  const count = $('#page-count');
+  if (count) count.textContent = total;
+  if (typeof afterRenumber === 'function') afterRenumber(pages);
+}
+
+/* Screen scaling so an A4 sheet fits narrow screens without reflowing. */
+function fitToScreen() {
+  const doc = $('#document');
+  const mm = 3.7795;
+  const widest = Math.max(...$$('#document > .page').map((p) => p.offsetWidth), 210 * mm);
+  const avail = window.innerWidth - 24;
+  doc.style.zoom = avail < widest ? (avail / widest).toFixed(3) : '';
+}
+window.addEventListener('resize', fitToScreen);
+window.addEventListener('beforeprint', () => { $('#document').style.zoom = ''; });
+window.addEventListener('afterprint', fitToScreen);
+
+/* ---------- Attachments: images directly, PDFs rasterised with pdf.js ---------- */
+let pdfjsReady;
+function loadPdfJs() {
+  pdfjsReady ||= new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      resolve(window.pdfjsLib);
+    };
+    s.onerror = () => reject(new Error('Could not load the PDF renderer. Check your connection.'));
+    document.head.append(s);
+  });
+  return pdfjsReady;
+}
+
+/* Resolves to [{ src, w, h, label }] — one entry per image or PDF page. */
+async function fileToImages(file) {
+  if (file.type === 'application/pdf') {
+    const pdfjs = await loadPdfJs();
+    const pdf = await pdfjs.getDocument({ data: await file.arrayBuffer() }).promise;
+    const out = [];
+    for (let p = 1; p <= pdf.numPages; p++) {
+      const pg = await pdf.getPage(p);
+      const vp = pg.getViewport({ scale: 2 });
+      const canvas = document.createElement('canvas');
+      canvas.width = vp.width; canvas.height = vp.height;
+      await pg.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+      out.push({ src: canvas.toDataURL('image/jpeg', 0.9), w: vp.width, h: vp.height, label: pdf.numPages > 1 ? `${file.name} · page ${p} of ${pdf.numPages}` : file.name });
+    }
+    return out;
+  }
+  if (file.type.startsWith('image/')) {
+    const src = URL.createObjectURL(file);
+    const img = new Image();
+    img.src = src;
+    await img.decode();
+    return [{ src, w: img.naturalWidth, h: img.naturalHeight, label: file.name }];
+  }
+  if (file.type.startsWith('text/')) return [{ text: await file.text(), label: file.name }];
+  throw new Error(`${file.name}: unsupported file type.`);
+}
+
+const titleFromFile = (name) => name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, (c) => c.toUpperCase());
+
+/* Put an image into a frame; landscape images turn the sheet landscape. */
+function placeImage(frame, page, img, allowLandscape) {
+  frame.innerHTML = '';
+  if (img.text != null) {
+    frame.append(el(`<div class="doc-text">${esc(img.text)}</div>`));
+    return;
+  }
+  const node = document.createElement('img');
+  node.src = img.src;
+  node.alt = img.label || 'Attached drawing';
+  node.className = 'drawing-image';
+  frame.append(node);
+  if (allowLandscape) page.classList.toggle('is-landscape', img.w / img.h > 1.15);
+}
+
+function addRemoveButton(page) {
+  const b = el('<button class="remove-page no-print" type="button">Remove page</button>');
+  b.addEventListener('click', () => { page.remove(); refresh(); });
+  page.append(b);
+}
+
+async function withBusy(btn, fn) {
+  const label = btn?.textContent;
+  if (btn) { btn.disabled = true; btn.textContent = 'Working…'; }
+  try { await fn(); } catch (e) { console.error(e); alertInline(e.message); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = label; } }
+}
+function alertInline(msg) {
+  const hint = $('.toolbar__hint');
+  if (!hint) return;
+  const note = el(`<p class="toolbar__hint no-print" role="status" style="color:#9B3B2F">${esc(msg)}</p>`);
+  hint.after(note);
+  setTimeout(() => note.remove(), 6000);
+}
+
+function refresh() { applyChrome(); renumber(); fitToScreen(); }
+
+/* Download PDF — the browser's print-to-PDF gives vector text and exact A4. */
+function printDocument(asPdf) {
+  const prev = document.title;
+  if (asPdf) document.title = `${brand.legalName.replace(/\s+/g, '-')}_${project.projectReference}_${DOC_KIND}`;
+  window.print();
+  setTimeout(() => { document.title = prev; }, 500);
+}
+/* ==== ENGINE:END ==== */
+
+/* =====================================================================
+   RENDER — Project Document
+   ===================================================================== */
+const DOC_KIND = 'Project-Document';
+
+/* ---- Calculations ---- */
+invoiceItems.forEach((it) => {
+  if (it.breakdown?.length) {
+    it.breakdown.forEach((b) => { b.amount = b.qty * b.rate; });
+    const sum = it.breakdown.reduce((s, b) => s + b.amount, 0);
+    it.rate = sum / it.quantity;
+  }
+  it.amount = it.quantity * it.rate;
+});
+const totals = (() => {
+  const subtotal = invoiceItems.reduce((s, it) => s + it.amount, 0);
+  const additional = charges.additional.reduce((s, c) => s + c.amount, 0);
+  const discount = Math.round(subtotal * charges.discountPercent / 100);
+  const taxable = subtotal + additional - discount;
+  const gst = Math.round(taxable * charges.gstPercent / 100);
+  return { subtotal, additional, discount, taxable, gst, grand: taxable + gst };
+})();
+
+function totalsBlock(withNote = true) {
+  const lines = [
+    ['Subtotal', money(totals.subtotal)],
+    ...charges.additional.map((c) => [c.label, money(c.amount)]),
+    [`Discount · ${charges.discountLabel} (${charges.discountPercent}%)`, `− ${money(totals.discount)}`, 'is-less'],
+    [`GST @ ${charges.gstPercent}% on ${money(totals.taxable)}`, money(totals.gst)],
+  ];
+  return el(`<div class="totals">
+    <div class="totals__lines">
+      ${lines.map(([a, b, c]) => `<div class="totals__line ${c || ''}"><span>${esc(a)}</span><span class="num">${b}</span></div>`).join('')}
+    </div>
+    <div>
+      <div class="grand"><span class="label">Total Project Value</span><span class="grand__amount num">${money(totals.grand)}</span><span class="grand__words">Indian Rupees ${amountInWords(totals.grand)} only</span></div>
+      ${withNote ? `<p class="totals__note">Inclusive of materials, manufacture, delivery and installation as itemised overleaf. Due ${esc(project.dueDate)}. ${esc(brand.gstin)}.</p>` : ''}
+    </div>
+  </div>`);
+}
+
+function renderInvoice() {
+  $('#invoice-rows').innerHTML = invoiceItems.map((it, i) => `<tr>
+    <td class="idx">${pad2(i + 1)}</td>
+    <td class="desc"><strong>${esc(it.description)}</strong><span>${esc(it.detail || '')}</span></td>
+    <td class="c num">${it.quantity}</td><td>${esc(it.unit)}</td>
+    <td class="r num">${money(it.rate)}</td><td class="r amt num">${money(it.amount)}</td></tr>`).join('');
+  $('#invoice-totals').replaceWith(totalsBlock());
+  $$('[data-total="grand"]').forEach((n) => { n.textContent = money(totals.grand); });
+}
+
+function renderBreakdown() {
+  const rows = [];
+  invoiceItems.forEach((it, i) => {
+    rows.push(el(`<table><tbody><tr class="group"><td colspan="4"><span class="gold">${pad2(i + 1)}</span>${esc(it.description)}</td><td class="r num">${money(it.amount)}</td></tr></tbody></table>`).querySelector('tr'));
+    (it.breakdown || []).forEach((b) => {
+      rows.push(el(`<table><tbody><tr class="sub"><td>${esc(b.item)}</td><td class="r num">${inr.format(b.qty)}</td><td>${esc(b.unit)}</td><td class="r num">${money(b.rate)}</td><td class="r amt num">${money(b.amount)}</td></tr></tbody></table>`).querySelector('tr'));
+    });
+  });
+  const summary = el(`<div style="margin-top:2mm">
+      <table class="ledger ledger--compact"><tbody>${invoiceItems.map((it, i) => `<tr class="sub"><td><span class="gold" style="font-weight:700;margin-right:3mm">${pad2(i + 1)}</span>${esc(it.description)}</td><td class="r num">${((it.amount / totals.subtotal) * 100).toFixed(1)}%</td><td class="r amt num" style="width:34mm">${money(it.amount)}</td></tr>`).join('')}</tbody></table>
+    </div>`);
+  const tail = [el('<div></div>'), totalsBlock(false)];
+  tail[0].append(el('<p class="eyebrow" style="margin-top:6mm">Cost Summary</p>'), summary);
+  flowRows({
+    slot: $('[data-slot="breakdown"]'),
+    rows,
+    tail,
+    makePage: (first) => el(`<section class="page" data-section="Cost Breakdown" ${first ? 'data-toc="Cost Summary" data-toc-sub="Itemised breakdown and payment schedule"' : ''}>
+      <div class="page-body">
+        <div class="head-block" style="margin-bottom:5mm">
+          <p class="eyebrow"><span class="sec-no"></span>Itemised Cost Breakdown${first ? '' : ' · Continued'}</p>
+          ${first ? '<h2 class="display display--sm">Where your<br><em>investment goes.</em></h2>' : ''}
+        </div>
+        <table class="ledger">
+          <thead><tr><th>Item &amp; Specification</th><th class="r">Qty</th><th>Unit</th><th class="r">Rate</th><th class="r">Amount</th></tr></thead>
+          <tbody data-flow></tbody>
+        </table>
+      </div></section>`),
+  });
+}
+
+function renderSchedule() {
+  let cum = 0;
+  $('#stages').innerHTML = paymentSchedule.map((p, i) => {
+    const from = cum; cum += p.percent;
+    const tag = p.status === 'Received' ? 'tag--ok' : p.status === 'Due' ? 'tag--gold' : '';
+    return `<div class="stage">
+      <div class="stage__no">${pad2(i + 1)}</div>
+      <div><div class="stage__name">${esc(p.stage)}</div><div class="stage__note">${esc(p.note)}</div>
+        <div class="stage__bar" aria-hidden="true"><i style="width:${cum}%"></i><b style="left:${from}%"></b></div></div>
+      <div class="stage__pct">${p.percent}%<small>CUMULATIVE ${cum}%</small></div>
+      <div class="stage__amt"><strong class="num">${money(totals.grand * p.percent / 100)}</strong><span class="tag ${tag}">${esc(p.status)}</span></div>
+    </div>`;
+  }).join('');
+  $('#bank').outerHTML = `<dl id="bank" style="display:grid;grid-template-columns:24mm 1fr;row-gap:1mm;font-size:7.8pt">${brand.bank.map(([k, v]) => `<dt class="label" style="padding-top:.6mm">${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;
+}
+
+function renderOverview() {
+  $('#overview').innerHTML = overview.map((o, i) => `<div class="article"><h3><span class="gold">${pad2(i + 1)}</span>${esc(o.t)}</h3>${o.list ? `<ul>${o.list.map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : `<p>${esc(o.p)}</p>`}</div>`).join('');
+  const total = timeline.reduce((s, t) => s + t.weeks, 0);
+  let at = 0;
+  $('#timeline').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:baseline;border-top:.3mm solid var(--primary-brand);padding-top:3mm">
+      <span class="label" style="color:var(--primary-brand)">Estimated Timeline</span><span class="value--serif">${total} weeks</span></div>
+    <div style="display:grid;grid-template-columns:${timeline.map((t) => `${t.weeks}fr`).join(' ')};gap:1.2mm;margin-top:3mm">
+      ${timeline.map((t, i) => { const s = at + 1; at += t.weeks; return `<div><div style="height:2mm;background:${i % 2 ? 'var(--secondary-brand)' : 'var(--primary-brand)'}"></div><div class="label" style="margin-top:1.6mm;letter-spacing:.14em">${esc(t.phase)}</div><div style="font-size:7pt;color:var(--muted-text)">Wk ${s}${t.weeks > 1 ? `–${at}` : ''}</div></div>`; }).join('')}
+    </div>`;
+}
+
+function renderSpecs() {
+  const rows = specifications.map((s) => {
+    const tag = /approved/i.test(s[5]) ? 'tag--ok' : /due/i.test(s[5]) ? 'tag--gold' : '';
+    return el(`<table><tbody><tr><td>${esc(s[0])}</td><td>${esc(s[1])}</td><td>${esc(s[2])}</td><td>${esc(s[3])}</td><td>${esc(s[4])}</td><td class="r"><span class="tag ${tag}">${esc(s[5])}</span></td></tr></tbody></table>`).querySelector('tr');
+  });
+  flowRows({
+    slot: $('[data-slot="specs"]'),
+    rows,
+    tail: el('<p class="totals__note" style="margin-top:6mm">Samples of every approved finish are retained at the studio and on site. Brands may be substituted only with an equivalent of equal or higher grade, and only with your written approval.</p>'),
+    makePage: (first) => el(`<section class="page" data-section="Material Specifications" ${first ? 'data-toc="Material Specifications" data-toc-sub="Materials, brands and finishes" data-doc="Material Specifications"' : ''}>
+      <div class="page-body">
+        <div class="head-block">
+          <p class="eyebrow"><span class="sec-no"></span>Material &amp; Specification Summary${first ? '' : ' · Continued'}</p>
+          ${first ? '<h2 class="display display--sm">Material &amp;<br><em>specification.</em></h2>' : ''}
+        </div>
+        <table class="ledger ledger--spec">
+          <thead><tr><th>Material</th><th>Brand</th><th>Finish</th><th>Colour</th><th>Specification</th><th class="r">Remarks</th></tr></thead>
+          <tbody data-flow></tbody>
+        </table>
+      </div></section>`),
+  });
+}
+
+function drawingPage(d) {
+  const page = $('#tpl-drawing').content.firstElementChild.cloneNode(true);
+  page._drawing = d;
+  page.dataset.drawing = d.no;
+  $$('[data-f]', page).forEach((n) => { n.textContent = d[n.dataset.f] ?? ''; });
+  const frame = $('.frame', page);
+  if (d.kind) {
+    frame.innerHTML = Drawings.render(d.kind);
+    page.classList.add('is-landscape');
+  } else if (d.image) {
+    placeImage(frame, page, d.image, true);
+  } else {
+    page.classList.add('is-landscape');
+    frame.innerHTML = `<div class="placeholder"><strong>${esc(d.title)}</strong><span>Drawing to be attached · ${esc(d.no)}</span><button class="btn no-print" type="button" data-action="fill-slot">Attach drawing</button></div>`;
+  }
+  return page;
+}
+
+function renderDrawings() {
+  const slot = $('[data-slot="drawings"]');
+  drawings.forEach((d) => {
+    d.note = d.kind ? 'Issued for client review' : 'Awaiting drawing';
+    slot.before(drawingPage(d));
+  });
+  slot.dataset.keep = '1';
+}
+
+function renderDocsContent() {
+  $('#products').innerHTML = products.map((p) => `<tr><td>${esc(p[0])}</td><td>${esc(p[1])}</td><td>${esc(p[2])}</td><td class="c num">${p[3]}</td><td>${esc(p[4])}</td></tr>`).join('');
+  $('#install-steps').innerHTML = installSteps.map((s, i) => `<div class="stage" style="grid-template-columns:14mm 1fr 30mm;padding:3.6mm 0">
+      <div class="stage__no" style="font-size:22pt">${pad2(i + 1)}</div>
+      <div><div class="stage__name" style="font-size:13pt">${esc(s.stage)}</div><div class="stage__note">${esc(s.note)}</div></div>
+      <div class="stage__amt"><span class="tag">${esc(s.days)}</span></div></div>`).join('');
+  $('#site-ready').innerHTML = siteReady.map((s) => `<li>${esc(s)}</li>`).join('');
+  $('#site-during').innerHTML = siteDuring.map((s) => `<li>${esc(s)}</li>`).join('');
+  $('#terms').innerHTML = terms.map(([t, p], i) => `<div class="article" style="padding:3.2mm 0 3.4mm"><h3 style="font-size:12pt;margin-bottom:1mm"><span class="gold">${pad2(i + 1)}</span>${esc(t)}</h3><p style="font-size:7.6pt">${esc(p)}</p></div>`).join('');
+  $('#warranty').innerHTML = warranty.map((w) => `<tr><td>${esc(w[0])}</td><td><span class="tag tag--ok">${esc(w[1])}</span></td><td>${esc(w[2])}</td><td>${esc(w[3])}</td></tr>`).join('');
+  $('#care').innerHTML = care.map((c, i) => `<div class="article"><h3><span class="gold">${pad2(i + 1)}</span>${esc(c.t)}</h3><p>${esc(c.p)}</p></div>`).join('');
+}
+
+/* Registers that depend on final page numbers. */
+function afterRenumber(pages) {
+  const reg = $('#drawing-register');
+  if (reg) {
+    reg.innerHTML = pages.filter((p) => p._drawing).map((p) => {
+      const d = p._drawing;
+      return `<tr><td class="gold" style="font-weight:700;font-size:7pt;letter-spacing:.1em">${esc(d.no)}</td><td>${esc(d.title)}</td><td>${esc(d.rev)}</td><td class="r num">${pad2(p.dataset.pageNo)}</td></tr>`;
+    }).join('');
+  }
+  const dreg = $('#document-register');
+  if (dreg) {
+    let n = 0;
+    dreg.innerHTML = pages.filter((p) => p.dataset.doc).map((p) => {
+      n += 1;
+      return `<tr><td class="gold" style="font-weight:700;font-size:7pt">${pad2(n)}</td><td>${esc(p.dataset.doc)}</td><td class="r num">${pad2(p.dataset.pageNo)}</td></tr>`;
+    }).join('');
+  }
+  $$('.attachment-page').forEach((p, i) => { const no = $('.attachment-header [data-f="no"]', p); if (no) no.textContent = pad2(i + 1); });
+}
+
+/* ---- Attachments ---- */
+let slotTarget = null;
+function attachmentPage(title, sub) {
+  const page = $('#tpl-attachment').content.firstElementChild.cloneNode(true);
+  page.dataset.doc = title;
+  page.dataset.attachment = '';
+  $('[data-f="title"]', page).textContent = title;
+  $('[data-f="sub"]', page).textContent = sub;
+  return page;
+}
+
+async function addBlueprints(files) {
+  let anchor = $$('.drawing-page').pop();
+  let n = $$('.drawing-page').length;
+  for (const file of files) {
+    for (const img of await fileToImages(file)) {
+      n += 1;
+      const d = { no: `DR-${pad2(n)}`, title: titleFromFile(img.label), kind: null, image: img, scale: 'As drawn', rev: 'R0', date: project.invoiceDate, note: 'Attached drawing' };
+      const page = drawingPage(d);
+      addRemoveButton(page);
+      anchor.after(page);
+      anchor = page;
+    }
+  }
+  refresh();
+  anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function addDocuments(files) {
+  let anchor = $$('.attachment-page').pop();
+  for (const file of files) {
+    for (const img of await fileToImages(file)) {
+      const page = attachmentPage(titleFromFile(file.name), img.label);
+      placeImage($('.attachment-content', page), page, img, false);
+      addRemoveButton(page);
+      anchor.after(page);
+      anchor = page;
+    }
+  }
+  refresh();
+  anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function fillSlot(file) {
+  const page = slotTarget;
+  const imgs = await fileToImages(file);
+  const first = imgs[0];
+  if (page._drawing) {
+    page._drawing.image = first;
+    page._drawing.note = 'Attached drawing';
+    placeImage($('.frame', page), page, first, true);
+    $$('.frame__meta [data-f="note"]', page).forEach((n) => { n.textContent = first.label; });
+  } else {
+    placeImage($('.attachment-content', page), page, first, false);
+    $('[data-f="sub"]', page).textContent = first.label;
+  }
+  // extra PDF pages follow as their own sheets
+  let anchor = page;
+  imgs.slice(1).forEach((img) => {
+    const p = page._drawing
+      ? drawingPage({ ...page._drawing, image: img, kind: null, title: `${page._drawing.title} (cont.)` })
+      : attachmentPage($('[data-f="title"]', page).textContent, img.label);
+    if (!page._drawing) placeImage($('.attachment-content', p), p, img, false);
+    addRemoveButton(p);
+    anchor.after(p);
+    anchor = p;
+  });
+  refresh();
+}
+
+function wireControls() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const a = btn.dataset.action;
+    if (a === 'print') printDocument(false);
+    else if (a === 'pdf') printDocument(true);
+    else if (a === 'add-blueprint') $('#file-blueprint').click();
+    else if (a === 'add-document') $('#file-document').click();
+    else if (a === 'fill-slot') { slotTarget = btn.closest('.page'); $('#file-slot').click(); }
+  });
+  $('#file-blueprint').addEventListener('change', (e) => { const f = [...e.target.files]; e.target.value = ''; if (f.length) withBusy($('[data-action="add-blueprint"]'), () => addBlueprints(f)); });
+  $('#file-document').addEventListener('change', (e) => { const f = [...e.target.files]; e.target.value = ''; if (f.length) withBusy($('[data-action="add-document"]'), () => addDocuments(f)); });
+  $('#file-slot').addEventListener('change', (e) => { const f = e.target.files[0]; e.target.value = ''; if (f && slotTarget) withBusy(null, () => fillSlot(f)); });
+}
+
+/* ---- Boot ---- */
+(async function boot() {
+  bindData();
+  renderInvoice();
+  renderSchedule();
+  renderOverview();
+  renderDocsContent();
+  renderDrawings();
+  $('[data-slot="drawings"]').remove();
+  await document.fonts.ready;
+  // chrome first so pagination measures the real space left for content
+  applyChrome();
+  renderBreakdown();
+  renderSpecs();
+  refresh();
+  wireControls();
+  document.documentElement.dataset.ready = '1';
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+---
+/**
+ * /1 — Project Document (client invoice package).
+ * The document is a self-contained HTML file with its own styles and script,
+ * so it is served verbatim rather than through BaseLayout.
+ */
+import html from '../documents/project-document.html?raw';
+---
+
+<Fragment set:html={html} />
